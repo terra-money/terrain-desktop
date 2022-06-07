@@ -1,7 +1,7 @@
 const path = require('path');
 
 const { app, BrowserWindow } = require('electron');
-const isDev = require('electron-is-dev');
+// const isDev = require('electron-is-dev');
 
 function createWindow() {
   // Create the browser window.
@@ -13,7 +13,7 @@ function createWindow() {
     },
   });
 
-  win.maximize()
+  win.maximize();
 
   // and load the index.html of the app.
   // win.loadFile("index.html");

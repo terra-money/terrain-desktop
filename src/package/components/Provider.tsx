@@ -26,7 +26,7 @@ export function Provider(props : {children : any, config ?: ITerraConfig}) {
     return (
         <TerraContext.Provider value={terra}>
             <TerraSocketContext.Provider value={ws}>
-            {props.children}
+                {props.children}
             </TerraSocketContext.Provider>
         </TerraContext.Provider>
     )
