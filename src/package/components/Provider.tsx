@@ -5,7 +5,7 @@ export const TerraContext = React.createContext({});
 export const TerraSocketContext = React.createContext({})
 const config : ITerraConfig = {
     url: "http://localhost:1317",
-    chainId: "phoenix-1"
+    chainId: "localterra"
 }
 export function Provider(props : {children : any, config ?: ITerraConfig}) {
     const terra = React.useMemo(() => {
@@ -15,15 +15,15 @@ export function Provider(props : {children : any, config ?: ITerraConfig}) {
         })
     }, [props.config])
 
-    const ws = React.useMemo(() => {
-        return new WebSocketClient("ws://localhost:26657/websocket");
-    }, [])
+    // const ws = React.useMemo(() => {
+    //     // return new WebSocketClient("ws://localhost:26657/websocket");
+    // }, [])
     
     return (
         <TerraContext.Provider value={terra}>
-            <TerraSocketContext.Provider value={ws}>
+            {/* <TerraSocketContext.Provider value={ws}> */}
                 {props.children}
-            </TerraSocketContext.Provider>
+            {/* </TerraSocketContext.Provider> */}
         </TerraContext.Provider>
     )
 }

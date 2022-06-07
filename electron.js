@@ -1,5 +1,5 @@
 const path = require('path');
-
+const { WebSocketClient } = require('@terra-money/terra.js');
 const { app, BrowserWindow } = require('electron');
 // const isDev = require('electron-is-dev');
 
@@ -9,7 +9,9 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
+      contextIsolation: false,
       nodeIntegration: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
@@ -18,6 +20,15 @@ function createWindow() {
   // and load the index.html of the app.
   // win.loadFile("index.html");
   win.loadURL(`file://${path.join(__dirname, 'dist/index.html')}`);
+
+  win.webContents.openDevTools({ mode: 'right' });
+
+  const ws = new WebSocketClient('ws://localhost:26657/websocket');
+  ws.subscribe('NewBlock', {}, ({ value }) => {
+    win.webContents.send('NewBlock', value);
+  });
+
+  ws.start();
   // Open the DevTools.
 //   if (isDev) {
 //     win.webContents.openDevTools({ mode: 'detach' });
