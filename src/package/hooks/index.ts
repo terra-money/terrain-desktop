@@ -67,8 +67,6 @@ export function useTerra() {
 }
 
 export function useGetBlocks() {
-  const terra = useContext(TerraContext) as LCDClient;
-  const ws = useContext(TerraSocketContext) as WebSocketClient;
   const [state, setState] = useState({
     blocks: [],
     loading: true,
@@ -77,30 +75,8 @@ export function useGetBlocks() {
 
   useEffect(() => {
     let bInfoArr: BlockInfo[] = [];
-    terra.tendermint
-      .blockInfo()
-      .then(async (bi) => {
-        let latestHeight = parseInt(bi.block.header.height);
-        if (latestHeight > 0) {
-          for (let index = 0; index < latestHeight; index++) {
-            let xbi = await terra.tendermint.blockInfo(index);
-            bInfoArr.push(xbi);
-          }
-        }
-        bInfoArr.push(bi);
-        setState({ ...state, blocks: bInfoArr as never[], loading: false });
-      })
-      .catch((err) => {
-        setState({ ...state, error: err });
-      });
-
-    // ws.subscribe("NewBlock", {}, data => {
-    //     let bi = data.value
-    //     let nArr = [...state.blocks, bi]
-    //     setState({...state, blocks : nArr as never[]})
-    // })
-
     const listener = (_: any, bi: BlockInfo) => {
+      bInfoArr.push(bi);
       let nArr = [...state.blocks, bi];
       setState({ ...state, blocks: nArr as never[] });
     };
