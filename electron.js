@@ -1,38 +1,33 @@
 const path = require('path');
 
 const { app, BrowserWindow } = require('electron');
-const { WebSocketClient } = require('@terra-money/terra.js');
-const isDev = require('electron-is-dev');
+// const isDev = require('electron-is-dev');
 
-function createApp() {
+function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
       nodeIntegration: true,
-      sandbox: false,
     },
   });
+
   win.maximize();
 
   // and load the index.html of the app.
   // win.loadFile("index.html");
   win.loadURL(`file://${path.join(__dirname, 'dist/index.html')}`);
   // Open the DevTools.
-  if (isDev) {
-    win.webContents.openDevTools({ mode: 'right' });
-  }
-  const ws = new WebSocketClient('ws://localhost:26657/websocket');
-  ws.subscribe('NewBlock', {}, ({ value }) => {
-    win.webContents.send('NewBlock', value);
-  });
+//   if (isDev) {
+//     win.webContents.openDevTools({ mode: 'detach' });
+//   }
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(createApp);
+app.whenReady().then(createWindow);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -45,6 +40,6 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    createApp();
+    createWindow();
   }
 });

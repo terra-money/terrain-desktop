@@ -2,11 +2,9 @@ import { BlockInfo, LCDClient, LocalTerra, Wallet, WebSocketClient } from "@terr
 import React, { useContext, useEffect, useState } from "react"
 import { TerraContext, TerraSocketContext } from "../components/Provider"
 import { ITerraHook } from "../interface/ITerraHook"
-import useIpcListener from 'electron-use-ipc-listener';
-
 export function useTerra() {
     const terra = useContext(TerraContext) as LCDClient
-    const ws = useContext(TerraSocketContext) as WebSocket
+    const ws = useContext(TerraSocketContext) as WebSocketClient
     let hookExport: ITerraHook = {
         terra,
         getTestAccounts(): Wallet[] {
@@ -20,33 +18,30 @@ export function useTerra() {
         },
 
         listenToAccountTx(address: string, cb: Function) {
-            // ws.onmessage({
-            //     "message.sender": address
-            // }, data => {
-            //     cb(data.value)
-            // })
+            ws.subscribeTx({
+                "message.sender": address
+            }, data => {
+                cb(data.value)
+            })
         },
         blocks: [],
         latestBlockHeight: 0
     }
     const [hook, setHook] = useState(hookExport)
     useEffect(() => {
-        useIpcListener('NewBlock', ((event: any, ...args: any) => {
-            console.log('event', event)
-            console.log('Received message from Main Process', ...args)
-        }));
-        // ws.subscribe("NewBlock", {}, data => {
-        //     let bi = data.value as BlockInfo
-        //     let newBlocks = [...hook.blocks, bi]
-        //     setHook({ ...hook, latestBlockHeight: parseInt(bi.block.header.height), blocks: newBlocks })
-        // })
+        ws.subscribe("NewBlock", {}, data => {
+            console.log('data', data)
+            let bi = data.value as BlockInfo
+            let newBlocks = [...hook.blocks, bi]
+            setHook({ ...hook, latestBlockHeight: parseInt(bi.block.header.height), blocks: newBlocks })
+        })
     }, [])
     return hook
 }
 
 export function useGetBlocks(){
     const terra = useContext(TerraContext) as LCDClient
-    // const ws = useContext(TerraSocketContext) as WebSocketClient
+    const ws = useContext(TerraSocketContext) as WebSocketClient
     const [state, setState] = useState({
         blocks : [],
         loading : true,
@@ -69,11 +64,11 @@ export function useGetBlocks(){
             setState({...state, error : err})
         })
 
-        // ws.subscribe("NewBlock", {}, data => {
-        //     let bi = data.value
-        //     let nArr = [...state.blocks, bi]
-        //     setState({...state, blocks : nArr as never[]})
-        // })
+        ws.subscribe("NewBlock", {}, data => {
+            let bi = data.value
+            let nArr = [...state.blocks, bi]
+            setState({...state, blocks : nArr as never[]})
+        })
     }, [])
 
     return state
