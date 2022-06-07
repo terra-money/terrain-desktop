@@ -9,9 +9,10 @@ export function useTerra() {
         terra,
         getTestAccounts(): Wallet[] {
             // @ts-ignore (Coz is in the documentation)
-            let wallet = terra["wallets"];
+            const wallet = terra["wallets"];
             return Object.values(wallet)
         },
+    // @ts-ignore (Coz is in the documentation)
         getBalance: async (address: string) => {
             return terra.bank.balance(address)
         },
@@ -29,6 +30,7 @@ export function useTerra() {
     const [hook, setHook] = useState(hookExport)
     useEffect(() => {
         ws.subscribe("NewBlock", {}, data => {
+            console.log('data', data)
             let bi = data.value as BlockInfo
             let newBlocks = [...hook.blocks, bi]
             setHook({ ...hook, latestBlockHeight: parseInt(bi.block.header.height), blocks: newBlocks })

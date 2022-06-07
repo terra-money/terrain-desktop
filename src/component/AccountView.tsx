@@ -1,8 +1,8 @@
-import { TxInfo, Wallet} from "@terra-money/terra.js";
+import { TxInfo, Wallet } from "@terra-money/terra.js";
 import React, { useEffect, useState } from "react";
 import { useTerra } from "../package";
 
-function AccountView(props : {wallet : Wallet}) {
+function AccountView(props : { wallet : Wallet }) {
     const [balance, setBalance] = useState(0.00)
     const {getBalance, listenToAccountTx} = useTerra()
     const [txInfos, setTxInfos] = useState([])
