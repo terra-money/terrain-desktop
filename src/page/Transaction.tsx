@@ -1,3 +1,3 @@
 export default function TransactionPage() {
-    return null
+  return null;
 }

@@ -1,13 +1,14 @@
-import { Routes, Route, Link } from "react-router-dom";
-import NavLink from "./component/NavLink";
-import AccountsPage from "./page/Account";
-import BlockPage from "./page/Block";
-import {useTerra} from "./package"
-import TransactionPage from "./page/Transaction";
+import { Routes, Route } from 'react-router-dom';
+import React from 'react';
+import NavLink from './component/NavLink';
+import AccountsPage from './page/Account';
+import BlockPage from './page/Block';
+import { useTerra } from './package';
+import TransactionPage from './page/Transaction';
 
 const menu = [
   {
-    name: "Accounts",
+    name: 'Accounts',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -24,10 +25,11 @@ const menu = [
         />
       </svg>
     ),
-    url: "/"
+    url: '/',
   },
   {
-    name: "Blocks",
+    name: 'Blocks',
+
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -44,10 +46,10 @@ const menu = [
         />
       </svg>
     ),
-    url : "/blocks"
+    url: '/blocks',
   },
   {
-    name: "Transactions",
+    name: 'Transactions',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -65,11 +67,11 @@ const menu = [
       </svg>
     ),
 
-    url: "/transactions"
+    url: '/transactions',
   },
 
   {
-    name: "Contracts",
+    name: 'Contracts',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -86,11 +88,11 @@ const menu = [
         />
       </svg>
     ),
-    url: "/contracts"
+    url: '/contracts',
   },
 
   {
-    name: "Events",
+    name: 'Events',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -108,11 +110,11 @@ const menu = [
       </svg>
     ),
 
-    url: "/events"
+    url: '/events',
   },
 
   {
-    name: "Logs",
+    name: 'Logs',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -129,17 +131,18 @@ const menu = [
         />
       </svg>
     ),
-    url: "/logs"
+    url: '/logs',
   },
 ];
 function App() {
-  const {terra, latestBlockHeight} = useTerra()
+  const { terra, latestBlockHeight } = useTerra();
   return (
     <>
       <nav className="bg-blue-800 px-6 py-2 flex justify-between items-center">
         <ul className="flex items-center space-x-3">
-          {menu.map((m,i) => (
-            <NavLink key={i} to={m.url}>
+          {menu.map((m) => (
+            // @ts-ignore @eslint-ignore
+            <NavLink key={m.name} to={m.url}>
               {m.icon}
               <p className="text-xl">{m.name}</p>
             </NavLink>
@@ -183,9 +186,9 @@ function App() {
       </section>
       <main className="min-h-screen bg-blue-100">
         <Routes>
-        <Route path="/" element={<AccountsPage />} />
-        <Route path="/blocks" element={<BlockPage />} />
-        <Route path="/transactions" element={<TransactionPage/>}/>
+          <Route path="/" element={<AccountsPage />} />
+          <Route path="/blocks" element={<BlockPage />} />
+          <Route path="/transactions" element={<TransactionPage />} />
         </Routes>
       </main>
     </>

@@ -37,7 +37,7 @@ export function useTerra() {
       const newBlocks = [...hook.blocks, bi];
       setHook({
         ...hook,
-        latestBlockHeight: parseInt(bi.block.header.height),
+        latestBlockHeight: parseInt(bi.block.header.height, 10),
         blocks: newBlocks,
       });
     };

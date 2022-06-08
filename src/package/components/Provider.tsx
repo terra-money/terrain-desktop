@@ -4,20 +4,22 @@ import { ITerraConfig } from '../interface/ITerraConfig';
 
 export const TerraContext = React.createContext({});
 export const TerraSocketContext = React.createContext({});
-const config : ITerraConfig = {
+const defaultConfig : ITerraConfig = {
   url: 'http://localhost:1317',
   chainId: 'localterra',
 };
 
-export function Provider(props : {children : any, config: ITerraConfig}) {
+export function Provider({ children, config } : {children : any, config?: ITerraConfig}) {
   const terra = React.useMemo(() => new LCDClient({
-    URL: props.config?.url || config.url,
-    chainID: props.config?.chainId || config.chainId,
-  }), [props.config]);
+    URL: config!.url,
+    chainID: config!.chainId,
+  }), [config]);
 
   return (
     <TerraContext.Provider value={terra}>
-      {props.children}
+      {children}
     </TerraContext.Provider>
   );
 }
+
+Provider.defaultProps = { config: defaultConfig };

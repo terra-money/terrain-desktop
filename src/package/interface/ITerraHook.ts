@@ -1,4 +1,7 @@
-import { BlockInfo, Coins, LCDClient, Wallet} from "@terra-money/terra.js"
+import {
+  BlockInfo, Coins, LCDClient, Wallet,
+} from '@terra-money/terra.js';
+
 export interface ITerraHook {
     terra : LCDClient,
     latestBlockHeight:number

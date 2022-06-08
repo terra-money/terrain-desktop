@@ -1,5 +1,7 @@
-import AccountView from "../component/AccountView";
-import { useTerra } from "../package";
+import React from 'react';
+import AccountView from '../component/AccountView';
+import { useTerra } from '../package';
+
 export default function AccountsPage() {
   const { getTestAccounts } = useTerra();
   return (
