@@ -3,15 +3,13 @@ import {
   LCDClient,
   LocalTerra,
   Wallet,
-  WebSocketClient,
 } from "@terra-money/terra.js";
-import React, { useContext, useEffect, useState } from "react";
-import { TerraContext, TerraSocketContext } from "../components/Provider";
+import { useContext, useEffect, useState } from "react";
+import { TerraContext } from "../components/Provider";
 import { ITerraHook } from "../interface/ITerraHook";
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LCDClient;
-  const ws = useContext(TerraSocketContext) as WebSocketClient;
   let hookExport: ITerraHook = {
     terra,
     getTestAccounts(): Wallet[] {
@@ -45,10 +43,10 @@ export function useTerra() {
         blocks: newBlocks,
       });
     };
-    (window as any).ipcRenderer.on("NewBlock", listener);
+    window.ipcRenderer.on("NewBlock", listener);
     
     return () => {
-      (window as any).ipcRenderer.removeListener("NewBlock", listener);
+      window.ipcRenderer.removeListener("NewBlock", listener);
     };
   }, []);
   return hook;
@@ -67,7 +65,7 @@ export function useGetBlocks() {
       bInfoArr.push(bi);
       setState({ ...state, blocks: bInfoArr as never[] });
     }
-    (window as any).ipcRenderer.on("NewBlock", listener);
+    window.ipcRenderer.on("NewBlock", listener);
   }, []);
   return state;
 }
