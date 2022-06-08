@@ -17,8 +17,6 @@ function createWindow() {
     },
   });
 
-  win.maximize();
-
   // and load the index.html of the app.
   // win.loadFile("index.html");
   win.loadURL(`file://${path.join(__dirname, 'dist/index.html')}`);
