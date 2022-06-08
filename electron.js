@@ -3,6 +3,7 @@ const { WebSocketClient } = require('@terra-money/terra.js');
 const { app, BrowserWindow } = require('electron');
 // const isDev = require('electron-is-dev');
 
+const ws = new WebSocketClient('ws://localhost:26657/websocket');
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
@@ -11,6 +12,7 @@ function createWindow() {
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
+      enableRemoteModule: true,
       preload: path.join(__dirname, 'preload.js'),
     },
   });
@@ -21,9 +23,9 @@ function createWindow() {
   // win.loadFile("index.html");
   win.loadURL(`file://${path.join(__dirname, 'dist/index.html')}`);
 
-  win.webContents.openDevTools({ mode: 'right' });
+  win.webContents.openDevTools();
+  // win.loadURL('http://localhost:3000');
 
-  const ws = new WebSocketClient('ws://localhost:26657/websocket');
   ws.subscribe('NewBlock', {}, ({ value }) => {
     win.webContents.send('NewBlock', value);
   });
@@ -44,6 +46,7 @@ app.whenReady().then(createWindow);
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
+  ws.destroy();
   if (process.platform !== 'darwin') {
     app.quit();
   }
