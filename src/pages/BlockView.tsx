@@ -5,6 +5,9 @@ import { useGetTxFromHeight } from '../package';
 function BlockItemView({ block } : {block : BlockInfo}) {
   const txInfos = useGetTxFromHeight(parseInt(block.block.header.height, 10));
   const dateString = (new Date(block.block.header.time)).toDateString();
+  let gasUsed: number = 0;
+  txInfos.forEach(({ gas_used: gas } : { gas_used: number }) => { gasUsed += gas; });
+
   return (
     <button type="button" className="w-full text-right flex">
       <div className="w-1/12 bg-blue-200 px-2 text-center py-2">
@@ -18,7 +21,7 @@ function BlockItemView({ block } : {block : BlockInfo}) {
         </div>
         <div>
           <p>Gas Used</p>
-          <p>N/A</p>
+          <p>{gasUsed}</p>
         </div>
         <div>
           <p>Transactions</p>

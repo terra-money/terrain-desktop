@@ -13,9 +13,7 @@ export function useTerra() {
   const hookExport: ITerraHook = {
     terra,
     getTestAccounts(): Wallet[] {
-      // @ts-ignore (Coz is in the documentation)
-      const wallet = terra.wallets;
-      return Object.values(wallet);
+      return Object.values(terra.wallet);
     },
     // @ts-ignore (Coz is in the documentation)
     getBalance: async (address: string) => terra.bank.balance(address),
@@ -28,7 +26,7 @@ export function useTerra() {
     //     })
     // },
     blocks: [],
-    latestBlockHeight: 1,
+    latestBlockHeight: 0,
   };
   const [hook, setHook] = useState(hookExport);
 

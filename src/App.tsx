@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
 import React from 'react';
 import NavLink from './component/NavLink';
-import AccountsPage from './page/Account';
-import BlockPage from './page/Block';
+import AccountsPage from './pages/Account';
+import BlockPage from './pages/Block';
 import { useTerra } from './package';
-import TransactionPage from './page/Transaction';
+import TransactionPage from './pages/Transaction';
 
 const menu = [
   {
