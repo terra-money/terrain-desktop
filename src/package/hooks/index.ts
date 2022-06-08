@@ -3,24 +3,22 @@ import {
   LCDClient,
   LocalTerra,
   Wallet,
-} from "@terra-money/terra.js";
-import { useContext, useEffect, useState } from "react";
-import { TerraContext } from "../components/Provider";
-import { ITerraHook } from "../interface/ITerraHook";
+} from '@terra-money/terra.js';
+import { useContext, useEffect, useState } from 'react';
+import { TerraContext } from '../components/Provider';
+import { ITerraHook } from '../interface/ITerraHook';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LCDClient;
-  let hookExport: ITerraHook = {
+  const hookExport: ITerraHook = {
     terra,
     getTestAccounts(): Wallet[] {
       // @ts-ignore (Coz is in the documentation)
-      const wallet = terra["wallets"];
+      const wallet = terra.wallets;
       return Object.values(wallet);
     },
     // @ts-ignore (Coz is in the documentation)
-    getBalance: async (address: string) => {
-      return terra.bank.balance(address);
-    },
+    getBalance: async (address: string) => terra.bank.balance(address),
 
     // listenToAccountTx(address: string, cb: Function) {
     //     ws.subscribeTx({
@@ -36,24 +34,24 @@ export function useTerra() {
 
   useEffect(() => {
     const listener = (_: any, bi: BlockInfo) => {
-      let newBlocks = [...hook.blocks, bi];
+      const newBlocks = [...hook.blocks, bi];
       setHook({
         ...hook,
         latestBlockHeight: parseInt(bi.block.header.height),
         blocks: newBlocks,
       });
     };
-    window.ipcRenderer.on("NewBlock", listener);
-    
+    window.ipcRenderer.on('NewBlock', listener);
+
     return () => {
-      window.ipcRenderer.removeListener("NewBlock", listener);
+      window.ipcRenderer.removeListener('NewBlock', listener);
     };
   }, []);
   return hook;
 }
 
 export function useGetBlocks() {
-  let bInfoArr: BlockInfo[] = [];
+  const bInfoArr: BlockInfo[] = [];
   const [state, setState] = useState({
     blocks: bInfoArr,
     loading: true,
@@ -64,8 +62,8 @@ export function useGetBlocks() {
     const listener = (_: any, bi: BlockInfo) => {
       bInfoArr.push(bi);
       setState({ ...state, blocks: bInfoArr as never[] });
-    }
-    window.ipcRenderer.on("NewBlock", listener);
+    };
+    window.ipcRenderer.on('NewBlock', listener);
   }, []);
   return state;
 }
@@ -81,4 +79,3 @@ export function useGetTxFromHeight(height?: number) {
 
   return txInfo;
 }
-
