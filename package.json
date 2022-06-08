@@ -7,7 +7,7 @@
       "serve":"vite preview",
       "dev-electron":"concurrently -k \"BROWSER=none npm run dev\" \"npm:electron\"",
       "electron":"npm run build && electron .",
-      "dev:watch": "nodemon --exec npm run dev-electron"
+      "dev:watch": "nodemon --watch 'src/**/*' -e ts,tsx --exec npm run dev-electron"
    },
    "dependencies":{
       "@terra-money/terra.js":"^3.1.3",
