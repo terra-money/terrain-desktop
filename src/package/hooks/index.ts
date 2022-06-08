@@ -35,30 +35,18 @@ export function useTerra() {
     latestBlockHeight: 1,
   };
   const [hook, setHook] = useState(hookExport);
-  // useEffect(() => {
-  //     // ws.subscribe("NewBlock", {}, data => {
-  //     //     console.log('data', data)
-  //     //     let bi = data.value as BlockInfo
-  //     //     let newBlocks = [...hook.blocks, bi]
-  //     //     setHook({ ...hook, latestBlockHeight: parseInt(bi.block.header.height), blocks: newBlocks })
-  //     // })
-  //     useIpcListener('NewBlock', ((block: any) => {
-  //         console.log('Received message from Main Process', block)
-  //     }));
-  // }, [])
 
   useEffect(() => {
     const listener = (_: any, bi: BlockInfo) => {
       let newBlocks = [...hook.blocks, bi];
-      console.log(bi);
       setHook({
         ...hook,
         latestBlockHeight: parseInt(bi.block.header.height),
         blocks: newBlocks,
       });
     };
-
     (window as any).ipcRenderer.on("NewBlock", listener);
+    
     return () => {
       (window as any).ipcRenderer.removeListener("NewBlock", listener);
     };
@@ -67,23 +55,20 @@ export function useTerra() {
 }
 
 export function useGetBlocks() {
+  let bInfoArr: BlockInfo[] = [];
   const [state, setState] = useState({
-    blocks: [],
+    blocks: bInfoArr,
     loading: true,
     error: null,
   });
 
   useEffect(() => {
-    let bInfoArr: BlockInfo[] = [];
     const listener = (_: any, bi: BlockInfo) => {
       bInfoArr.push(bi);
-      let nArr = [...state.blocks, bi];
-      setState({ ...state, blocks: nArr as never[] });
-    };
-
+      setState({ ...state, blocks: bInfoArr as never[] });
+    }
     (window as any).ipcRenderer.on("NewBlock", listener);
   }, []);
-
   return state;
 }
 
@@ -98,3 +83,4 @@ export function useGetTxFromHeight(height?: number) {
 
   return txInfo;
 }
+

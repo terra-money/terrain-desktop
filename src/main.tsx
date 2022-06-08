@@ -7,8 +7,7 @@ import { Provider } from "./package";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider
-    >
+    <Provider>
       <BrowserRouter>
         <App />
       </BrowserRouter>
