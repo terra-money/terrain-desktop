@@ -7,8 +7,14 @@ import { useContext, useEffect, useState } from 'react';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
 
+// const Dockerode = require('dockerode');
+// const DockerodeCompose = require('dockerode-compose');
+
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
+  // const docker = new Dockerode();
+  /* const compose = new DockerodeCompose();
+  */
   const hookExport: ITerraHook = {
     terra,
     getTestAccounts(): Wallet[] {
@@ -16,11 +22,11 @@ export function useTerra() {
     },
     getBalance: async (address: string) => terra.bank.balance(address),
     listenToAccountTx(address: string, cb: Function) {
-    //     ws.subscribeTx({
-    //         "message.sender": address
-    //     }, data => {
-    //         cb(data.value)
-    //     })
+      //     ws.subscribeTx({
+      //         "message.sender": address
+      //     }, data => {
+      //         cb(data.value)
+      //     })
     },
     blocks: [],
     latestBlockHeight: 0,

@@ -2,12 +2,12 @@ import { BlockInfo } from '@terra-money/terra.js';
 import React from 'react';
 import { useGetTxFromHeight } from '../package';
 
-function BlockItemView({ block } : {block : BlockInfo}) {
+function BlockItemView({ block }: { block: BlockInfo }) {
   const { header } = block.block;
   const txInfos = useGetTxFromHeight(parseInt(header.height, 10));
   const dateString = (new Date(header.time)).toDateString();
   let gasUsed: number = 0;
-  txInfos.forEach(({ gas_used: gas } : { gas_used: number }) => { gasUsed += gas; });
+  txInfos.forEach(({ gas_used: gas }: { gas_used: number }) => { gasUsed += gas; });
 
   return (
     <button type="button" className="w-full text-right flex">
@@ -21,7 +21,7 @@ function BlockItemView({ block } : {block : BlockInfo}) {
           <p>{dateString}</p>
         </div>
         <div>
-          <p>Gas Usedss</p>
+          <p>Gas Used</p>
           <p>{gasUsed}</p>
         </div>
         <div>

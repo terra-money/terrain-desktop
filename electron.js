@@ -1,12 +1,15 @@
 /* eslint-disable global-require */
 const path = require('path');
 const { WebSocketClient } = require('@terra-money/terra.js');
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, dialog } = require('electron');
+const Dockerode = require('dockerode');
+const DockerodeCompose = require('dockerode-compose');
 
 // const isDev = require('electron-is-dev');
-
+const docker = new Dockerode();
+let compose;
 const ws = new WebSocketClient('ws://localhost:26657/websocket');
-function createWindow() {
+async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
@@ -35,6 +38,12 @@ function createWindow() {
   //   if (isDev) {
   //     win.webContents.openDevTools({ mode: 'detach' });
   //   }
+
+  const { filePaths } = await dialog.showOpenDialog({ properties: ['openFile'] });
+  compose = new DockerodeCompose(docker, filePaths[0], 'terra');
+  await compose.pull();
+  const state = await compose.up();
+  console.log(state);
 }
 
 // This method will be called when Electron has finished
@@ -47,6 +56,8 @@ app.whenReady().then(createWindow);
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   ws.destroy();
+  console.log(compose);
+  compose.down();
   if (process.platform !== 'darwin') {
     app.quit();
   }
