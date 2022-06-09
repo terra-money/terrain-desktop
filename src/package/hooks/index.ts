@@ -6,6 +6,7 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
+import { parseMessageFromTx } from '../../utils';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
@@ -16,11 +17,14 @@ export function useTerra() {
     },
     getBalance: async (address: string) => terra.bank.balance(address),
     listenToAccountTx(address: string, cb: Function) {
-    //     ws.subscribeTx({
-    //         "message.sender": address
-    //     }, data => {
-    //         cb(data.value)
-    //     })
+      const listener = (_: any, tx: any) => {
+        const { from_address: add } = parseMessageFromTx(tx.TxResult);
+        if (add === address) { cb(add); }
+      };
+      window.ipcRenderer.on('Tx', listener);
+      return () => {
+        window.ipcRenderer.removeListener('Tx', listener);
+      };
     },
     blocks: [],
     latestBlockHeight: 0,

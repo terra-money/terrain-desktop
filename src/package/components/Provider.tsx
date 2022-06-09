@@ -1,5 +1,5 @@
 import React from 'react';
-import { LCDClient, LocalTerra } from '@terra-money/terra.js';
+import { LocalTerra } from '@terra-money/terra.js';
 import { ITerraConfig } from '../interface/ITerraConfig';
 
 export const TerraContext = React.createContext({});
