@@ -1,6 +1,5 @@
 import {
   BlockInfo,
-  LCDClient,
   LocalTerra,
   Wallet,
 } from '@terra-money/terra.js';
@@ -9,22 +8,20 @@ import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
 
 export function useTerra() {
-  const terra = useContext(TerraContext) as LCDClient;
+  const terra = useContext(TerraContext) as LocalTerra;
   const hookExport: ITerraHook = {
     terra,
     getTestAccounts(): Wallet[] {
-      return Object.values(terra.wallet);
+      return Object.values(terra.wallets);
     },
-    // @ts-ignore (Coz is in the documentation)
     getBalance: async (address: string) => terra.bank.balance(address),
-
-    // listenToAccountTx(address: string, cb: Function) {
+    listenToAccountTx(address: string, cb: Function) {
     //     ws.subscribeTx({
     //         "message.sender": address
     //     }, data => {
     //         cb(data.value)
     //     })
-    // },
+    },
     blocks: [],
     latestBlockHeight: 0,
   };
