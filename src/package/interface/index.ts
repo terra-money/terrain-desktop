@@ -1,2 +1,2 @@
-export * from "./ITerraConfig"
-export * from "./ITerraHook"
+export * from './ITerraConfig';
+export * from './ITerraHook';

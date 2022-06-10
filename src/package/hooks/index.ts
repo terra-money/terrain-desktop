@@ -1,85 +1,80 @@
-import { BlockInfo, LCDClient, LocalTerra, Wallet, WebSocketClient } from "@terra-money/terra.js"
-import React, { useContext, useEffect, useState } from "react"
-import { TerraContext, TerraSocketContext } from "../components/Provider"
-import { ITerraHook } from "../interface/ITerraHook"
+import {
+  BlockInfo,
+  LocalTerra,
+  Wallet,
+} from '@terra-money/terra.js';
+import { useContext, useEffect, useState } from 'react';
+import { TerraContext } from '../components/Provider';
+import { ITerraHook } from '../interface/ITerraHook';
+import { parseMessageFromTx } from '../../utils';
+
 export function useTerra() {
-    const terra = useContext(TerraContext) as LCDClient
-    const ws = useContext(TerraSocketContext) as WebSocketClient
-    let hookExport: ITerraHook = {
-        terra,
-        getTestAccounts(): Wallet[] {
-            // @ts-ignore (Coz is in the documentation)
-            let wallet = terra["wallets"];
-            return Object.values(wallet)
-        },
-        getBalance: async (address: string) => {
-            return terra.bank.balance(address)
-        },
+  const terra = useContext(TerraContext) as LocalTerra;
+  const hookExport: ITerraHook = {
+    terra,
+    getTestAccounts(): Wallet[] {
+      return Object.values(terra.wallets);
+    },
+    getBalance: async (address: string) => terra.bank.balance(address),
+    listenToAccountTx(address: string, cb: Function) {
+      const listener = (_: any, tx: any) => {
+        const { from_address: add } = parseMessageFromTx(tx.TxResult);
+        if (add === address) { cb(add); }
+      };
+      window.ipcRenderer.on('Tx', listener);
+      return () => {
+        window.ipcRenderer.removeListener('Tx', listener);
+      };
+    },
+    blocks: [],
+    latestBlockHeight: 0,
+  };
+  const [hook, setHook] = useState(hookExport);
 
-        listenToAccountTx(address: string, cb: Function) {
-            ws.subscribeTx({
-                "message.sender": address
-            }, data => {
-                cb(data.value)
-            })
-        },
-        blocks: [],
-        latestBlockHeight: 0
-    }
-    const [hook, setHook] = useState(hookExport)
-    useEffect(() => {
-        ws.subscribe("NewBlock", {}, data => {
-            let bi = data.value as BlockInfo
-            let newBlocks = [...hook.blocks, bi]
-            setHook({ ...hook, latestBlockHeight: parseInt(bi.block.header.height), blocks: newBlocks })
-        })
-    }, [])
-    return hook
+  useEffect(() => {
+    const listener = (_: any, bi: BlockInfo) => {
+      const newBlocks = [...hook.blocks, bi];
+      setHook({
+        ...hook,
+        latestBlockHeight: parseInt(bi.block.header.height, 10),
+        blocks: newBlocks,
+      });
+    };
+    window.ipcRenderer.on('NewBlock', listener);
+
+    return () => {
+      window.ipcRenderer.removeListener('NewBlock', listener);
+    };
+  }, []);
+  return hook;
 }
 
-export function useGetBlocks(){
-    const terra = useContext(TerraContext) as LCDClient
-    const ws = useContext(TerraSocketContext) as WebSocketClient
-    const [state, setState] = useState({
-        blocks : [],
-        loading : true,
-        error : null
-    })
-    
-    useEffect(() => {
-        let bInfoArr : BlockInfo[] = []
-        terra.tendermint.blockInfo().then(async bi => {
-            let latestHeight = parseInt(bi.block.header.height)
-            if(latestHeight > 0){
-                for (let index = 0; index < latestHeight; index++) {
-                   let xbi = await terra.tendermint.blockInfo(index)
-                    bInfoArr.push(xbi)
-                }
-            }
-            bInfoArr.push(bi)
-            setState({...state, blocks: bInfoArr as never[], loading : false})
-        }).catch(err => {
-            setState({...state, error : err})
-        })
+export function useGetBlocks() {
+  const bInfoArr: BlockInfo[] = [];
+  const [state, setState] = useState({
+    blocks: bInfoArr,
+    loading: true,
+    error: null,
+  });
 
-        ws.subscribe("NewBlock", {}, data => {
-            let bi = data.value
-            let nArr = [...state.blocks, bi]
-            setState({...state, blocks : nArr as never[]})
-        })
-    }, [])
-
-    return state
+  useEffect(() => {
+    const listener = (_: any, bi: BlockInfo) => {
+      bInfoArr.push(bi);
+      setState({ ...state, blocks: bInfoArr as never[] });
+    };
+    window.ipcRenderer.on('NewBlock', listener);
+  }, []);
+  return state;
 }
 
-export function useGetTxFromHeight(height ?: number) {
-    const terra = useContext(TerraContext) as LocalTerra
-    const [txInfo, setInfo] = useState([])
-    useEffect(() => {
-        terra.tx.txInfosByHeight(height).then(tx => {
-            setInfo(tx as never[])
-        })
-    }, [])
+export function useGetTxFromHeight(height?: number) {
+  const terra = useContext(TerraContext) as LocalTerra;
+  const [txInfo, setInfo] = useState([]);
+  useEffect(() => {
+    terra.tx.txInfosByHeight(height).then((tx) => {
+      setInfo(tx as never[]);
+    });
+  }, []);
 
-    return txInfo
+  return txInfo;
 }

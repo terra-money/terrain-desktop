@@ -1,33 +1,25 @@
-import React from "react"
-import { ITerraConfig } from "../interface/ITerraConfig";
-//import {LCDClient, LocalTerra} from "@terra-money/terra.js"
+import React from 'react';
+import { LocalTerra } from '@terra-money/terra.js';
+import { ITerraConfig } from '../interface/ITerraConfig';
+
 export const TerraContext = React.createContext({});
-export const TerraSocketContext = React.createContext({})
-const config : ITerraConfig = {
-    url : "123",
-    chainId: ""
-}
-export function Provider(props : {children : any, config ?: ITerraConfig}) {
 
-    const terra = React.useMemo(() => {
-        //@ts-ignore
-        // return new Terra.LCDClient({
-        //     URL: props.config?.url || config.url,
-        //     chainID: props.config?.chainId || config.chainId
-        // })
-        return new Terra.LocalTerra()
-    }, [props.config])
+const defaultConfig : ITerraConfig = {
+  url: 'http://localhost:1317',
+  chainId: 'localterra',
+};
 
-    const ws = React.useMemo(() => {
-        // @ts-ignore
-        return new Terra.WebSocketClient("ws://localhost:26657/websocket");
-    }, [])
-    
-    return (
-        <TerraContext.Provider value={terra}>
-            <TerraSocketContext.Provider value={ws}>
-                {props.children}
-            </TerraSocketContext.Provider>
-        </TerraContext.Provider>
-    )
+export function Provider({ children, config } : {children : any, config?: ITerraConfig}) {
+  // const terra = React.useMemo(() => new LCDClient({
+  //   URL: config!.url,
+  //   chainID: config!.chainId,
+  // }), [config]);
+  const terra = React.useMemo(() => new LocalTerra(), [config]);
+  return (
+    <TerraContext.Provider value={terra}>
+      {children}
+    </TerraContext.Provider>
+  );
 }
+
+Provider.defaultProps = { config: defaultConfig };
