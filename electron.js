@@ -31,6 +31,10 @@ async function createWindow() {
   ws.subscribe('NewBlock', {}, ({ value }) => {
     win.webContents.send('NewBlock', value);
   });
+  ws.subscribeTx({}, async ({ value }) => {
+    console.log('value', value);
+    win.webContents.send('Tx', value);
+  });
 
   // Open the DevTools.
   //   if (isDev) {
