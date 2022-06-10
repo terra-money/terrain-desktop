@@ -3,11 +3,39 @@ const path = require('path');
 const { WebSocketClient } = require('@terra-money/terra.js');
 const { app, BrowserWindow, dialog } = require('electron');
 const { spawn } = require('child_process');
+const { Warning } = require('postcss');
 
 let compose;
 let exiting = false;
 let started = false;
 const ws = new WebSocketClient('ws://localhost:26657/websocket');
+
+async function startLocalTerra(filePath) {
+  compose = spawn('docker-compose', ['up'], { cwd: filePath });
+
+  compose.stdout.on('data', (data) => {
+    if (!started && data.includes('indexed block')) {
+      console.log('starting websocket');
+      started = true;
+      ws.start();
+    }
+  });
+
+  compose.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  compose.on('close', () => {
+    if (exiting) {
+      app.quit();
+    } else {
+      dialog.showMessageBoxSync({ message: 'LocalTerra has stopped. Now restarting...', title: 'Terrarium', type: 'warning' });
+      started = false;
+      startLocalTerra(filePath);
+    }
+  });
+}
+
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
@@ -40,27 +68,7 @@ async function createWindow() {
   const { filePaths } = await dialog.showOpenDialog({
     properties: ['openDirectory'],
   });
-  compose = spawn('docker-compose', ['up'], { cwd: filePaths[0] });
-
-  compose.stdout.on('data', (data) => {
-    if (!started && data.includes('indexed block')) {
-      console.log('starting websocket');
-      started = true;
-      ws.start();
-    }
-  });
-
-  compose.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
-
-  compose.on('close', () => {
-    if (exiting) {
-      app.quit();
-    }
-
-    // TODO: Docker crashed for some reason, fix it.
-  });
+  startLocalTerra(filePaths[0]);
 }
 
 // This method will be called when Electron has finished
