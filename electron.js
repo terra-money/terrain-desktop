@@ -1,10 +1,14 @@
+/* eslint-disable global-require */
 const path = require('path');
 const { WebSocketClient } = require('@terra-money/terra.js');
-const { app, BrowserWindow } = require('electron');
-// const isDev = require('electron-is-dev');
+const { app, BrowserWindow, dialog } = require('electron');
+const { spawn } = require('child_process');
 
+let compose;
+let exiting = false;
+let started = false;
 const ws = new WebSocketClient('ws://localhost:26657/websocket');
-function createWindow() {
+async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
@@ -18,7 +22,7 @@ function createWindow() {
   });
 
   // and load the index.html of the app.
-  // win.loadFile("index.html");
+  // win.loadFile('index.html');
   win.loadURL(`file://${path.join(__dirname, 'dist/index.html')}`);
 
   win.webContents.openDevTools();
@@ -32,11 +36,35 @@ function createWindow() {
     win.webContents.send('Tx', value);
   });
 
-  ws.start();
   // Open the DevTools.
-//   if (isDev) {
-//     win.webContents.openDevTools({ mode: 'detach' });
-//   }
+  //   if (isDev) {
+  //     win.webContents.openDevTools({ mode: 'detach' });
+  //   }
+
+  const { filePaths } = await dialog.showOpenDialog({
+    properties: ['openDirectory'],
+  });
+  compose = spawn('docker-compose', ['up'], { cwd: filePaths[0] });
+
+  compose.stdout.on('data', (data) => {
+    if (!started && data.includes('indexed block')) {
+      console.log('starting websocket');
+      started = true;
+      ws.start();
+    }
+  });
+
+  compose.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  compose.on('close', () => {
+    if (exiting) {
+      app.quit();
+    }
+
+    // TODO: Docker crashed for some reason, fix it.
+  });
 }
 
 // This method will be called when Electron has finished
@@ -49,13 +77,7 @@ app.whenReady().then(createWindow);
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   ws.destroy();
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
+  exiting = true;
+  compose.kill();
 });

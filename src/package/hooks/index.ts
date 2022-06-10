@@ -8,8 +8,14 @@ import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
 import { parseMessageFromTx } from '../../utils';
 
+// const Dockerode = require('dockerode');
+// const DockerodeCompose = require('dockerode-compose');
+
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
+  // const docker = new Dockerode();
+  /* const compose = new DockerodeCompose();
+  */
   const hookExport: ITerraHook = {
     terra,
     getTestAccounts(): Wallet[] {
