@@ -17,8 +17,7 @@ function AccountView({ wallet } : { wallet : Wallet }) {
   }, []);
 
   useEffect(() => {
-    listenToAccountTx(wallet.key.accAddress, (data : any) => {
-      const tx = data as TxInfo;
+    listenToAccountTx(wallet.key.accAddress, (tx : TxInfo) => {
       const nTx = [...txInfos, tx];
       setTxInfos(nTx as never[]);
     });
