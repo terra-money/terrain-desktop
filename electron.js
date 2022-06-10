@@ -3,7 +3,6 @@ const path = require('path');
 const { WebSocketClient } = require('@terra-money/terra.js');
 const { app, BrowserWindow, dialog } = require('electron');
 const { spawn } = require('child_process');
-const { Warning } = require('postcss');
 
 let compose;
 let exiting = false;
@@ -58,10 +57,6 @@ async function createWindow() {
 
   ws.subscribe('NewBlock', {}, ({ value }) => {
     win.webContents.send('NewBlock', value);
-  });
-  ws.subscribeTx({}, async ({ value }) => {
-    console.log('value', value);
-    win.webContents.send('Tx', value);
   });
 
   // Open the DevTools.
