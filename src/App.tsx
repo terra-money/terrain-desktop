@@ -139,23 +139,6 @@ function App() {
   const { latestHeight } = useGetBlocks();
   return (
     <>
-      <nav className="bg-blue-800 px-6 py-2 flex justify-between items-center">
-        <ul className="flex items-center space-x-3">
-          {menu.map((m) => (
-            <NavLink key={m.name} to={m.url}>
-              {m.icon}
-              <p className="text-xl">{m.name}</p>
-            </NavLink>
-          ))}
-        </ul>
-
-        <div className="w-1/4">
-          <input
-            placeholder="Search Tx Hashes, block numbers"
-            className="rounded-full w-full text-sm text-blue-100 bg-transparent border px-2 py-2 border-blue-100"
-          />
-        </div>
-      </nav>
       <section className="bg-blue-900 px-6 py-2 flex justify-between items-center">
         <ul className="flex items-center space-x-3">
           <li className="text-xs font-bold">
@@ -184,7 +167,25 @@ function App() {
           </li>
         </ul>
       </section>
-      <main className="min-h-screen bg-blue-100">
+      <main className="min-h-screen bg-blue-100 flex flex-row">
+        <aside className="w-64 basis-1/4" aria-label="Sidebar">
+          <nav className="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800">
+            <ul className="space-y-2">
+              {menu.map((m) => (
+                <NavLink key={m.name} to={m.url}>
+                  {m.icon}
+                  <p className="text-xl">{m.name}</p>
+                </NavLink>
+              ))}
+            </ul>
+            <div className="w-3/4">
+              <input
+                placeholder="Search Tx Hashes, block numbers"
+                className="rounded-full w-full text-sm text-blue-100 bg-transparent border px-2 py-2 border-blue-100"
+              />
+            </div>
+          </nav>
+        </aside>
         <Routes>
           <Route path="/" element={<AccountsPage />} />
           <Route path="/blocks" element={<BlockPage />} />
