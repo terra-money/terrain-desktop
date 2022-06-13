@@ -3,7 +3,7 @@ import React from 'react';
 import NavLink from './component/NavLink';
 import AccountsPage from './pages/Account';
 import BlockPage from './pages/Block';
-import { useTerra } from './package';
+import { useTerra, useGetBlocks } from './package';
 import TransactionPage from './pages/Transaction';
 
 const menu = [
@@ -135,13 +135,13 @@ const menu = [
   },
 ];
 function App() {
-  const { terra, latestBlockHeight } = useTerra();
+  const { terra } = useTerra();
+  const { latestHeight } = useGetBlocks();
   return (
     <>
       <nav className="bg-blue-800 px-6 py-2 flex justify-between items-center">
         <ul className="flex items-center space-x-3">
           {menu.map((m) => (
-            // @ts-ignore @eslint-ignore
             <NavLink key={m.name} to={m.url}>
               {m.icon}
               <p className="text-xl">{m.name}</p>
@@ -160,7 +160,7 @@ function App() {
         <ul className="flex items-center space-x-3">
           <li className="text-xs font-bold">
             <p className="uppercase text-blue-200 m-0">current block</p>
-            <p className="text-blue-400 m-0">{latestBlockHeight}</p>
+            <p className="text-blue-400 m-0">{latestHeight}</p>
           </li>
           <li className="text-xs font-bold">
             <p className="uppercase text-blue-200 m-0">gas price</p>

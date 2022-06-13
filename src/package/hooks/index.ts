@@ -4,18 +4,14 @@ import {
   Wallet,
 } from '@terra-money/terra.js';
 import { useContext, useEffect, useState } from 'react';
+import { Downgraded } from '@hookstate/core';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
 import { parseMessageFromTx } from '../../utils';
-
-// const Dockerode = require('dockerode');
-// const DockerodeCompose = require('dockerode-compose');
+import { blockState, txState } from '../stores';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
-  // const docker = new Dockerode();
-  /* const compose = new DockerodeCompose();
-  */
   const hookExport: ITerraHook = {
     terra,
     getTestAccounts(): Wallet[] {
@@ -32,18 +28,13 @@ export function useTerra() {
         window.ipcRenderer.removeListener('Tx', listener);
       };
     },
-    blocks: [],
-    latestBlockHeight: 0,
   };
   const [hook, setHook] = useState(hookExport);
 
   useEffect(() => {
-    const listener = (_: any, bi: BlockInfo) => {
-      const newBlocks = [...hook.blocks, bi];
+    const listener = () => {
       setHook({
         ...hook,
-        latestBlockHeight: parseInt(bi.block.header.height, 10),
-        blocks: newBlocks,
       });
     };
     window.ipcRenderer.on('NewBlock', listener);
@@ -56,21 +47,14 @@ export function useTerra() {
 }
 
 export function useGetBlocks() {
-  const bInfoArr: BlockInfo[] = [];
-  const [state, setState] = useState({
-    blocks: bInfoArr,
-    loading: true,
-    error: null,
-  });
+  const blocks = blockState.attach(Downgraded).get();
+  return blocks;
+}
 
-  useEffect(() => {
-    const listener = (_: any, bi: BlockInfo) => {
-      bInfoArr.push(bi);
-      setState({ ...state, blocks: bInfoArr as never[] });
-    };
-    window.ipcRenderer.on('NewBlock', listener);
-  }, []);
-  return state;
+export function useGetTxs() {
+  const txs = txState.attach(Downgraded).get();
+  console.log('txs in hook', txs);
+  return txs;
 }
 
 export function useGetTxFromHeight(height?: number) {

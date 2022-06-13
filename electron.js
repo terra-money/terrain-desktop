@@ -7,7 +7,8 @@ const { spawn } = require('child_process');
 let compose;
 let exiting = false;
 let started = false;
-const ws = new WebSocketClient('ws://localhost:26657/websocket');
+const blockWs = new WebSocketClient('ws://localhost:26657/websocket');
+const txWs = new WebSocketClient('ws://localhost:26657/websocket');
 
 async function startLocalTerra(filePath) {
   compose = spawn('docker-compose', ['up'], { cwd: filePath });
@@ -16,7 +17,8 @@ async function startLocalTerra(filePath) {
     if (!started && data.includes('indexed block')) {
       console.log('starting websocket');
       started = true;
-      ws.start();
+      blockWs.start();
+      txWs.start();
     }
   });
 
@@ -36,7 +38,6 @@ async function startLocalTerra(filePath) {
 }
 
 async function createWindow() {
-  // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -48,14 +49,14 @@ async function createWindow() {
     },
   });
 
-  // and load the index.html of the app.
-  // win.loadFile('index.html');
   win.loadURL(`file://${path.join(__dirname, 'dist/index.html')}`);
 
   win.webContents.openDevTools();
-  // win.loadURL('http://localhost:3000');
+  txWs.subscribeTx({}, async ({ value }) => {
+    win.webContents.send('Tx', value);
+  });
 
-  ws.subscribe('NewBlock', {}, ({ value }) => {
+  blockWs.subscribe('NewBlock', {}, ({ value }) => {
     win.webContents.send('NewBlock', value);
   });
 
@@ -79,8 +80,8 @@ app.whenReady().then(createWindow);
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  ws.destroy();
-
+  txWs.destroy();
+  blockWs.destroy();
   exiting = true;
   compose.kill();
 });
