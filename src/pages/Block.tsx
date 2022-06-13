@@ -1,6 +1,6 @@
 import React from 'react';
-import BlockView from './BlockView';
-import { useGetBlocks } from '../package';
+import BlockView from '../component/BlockView';
+import { useGetBlocks } from '../package/hooks';
 
 export default function BlockPage() {
   const { blocks } = useGetBlocks();
