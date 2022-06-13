@@ -9,6 +9,7 @@ let exiting = false;
 let started = false;
 const ws = new WebSocketClient('ws://localhost:26657/websocket');
 
+// start localTerra node
 async function startLocalTerra(filePath) {
   compose = spawn('docker-compose', ['up'], { cwd: filePath });
 
@@ -33,6 +34,12 @@ async function startLocalTerra(filePath) {
       startLocalTerra(filePath);
     }
   });
+}
+
+// stop localTerra node
+async function stopLocalTerra() {
+  ws.destroy();
+  compose.kill();
 }
 
 async function createWindow() {
@@ -79,8 +86,6 @@ app.whenReady().then(createWindow);
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  ws.destroy();
-
   exiting = true;
-  compose.kill();
+  stopLocalTerra();
 });
