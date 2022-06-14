@@ -1,22 +1,31 @@
-/* eslint-disable global-require */
 const path = require('path');
 const { WebSocketClient } = require('@terra-money/terra.js');
 const { app, BrowserWindow, dialog } = require('electron');
 const { spawn } = require('child_process');
+const settings = require('electron-settings');
 
 let compose;
-let exiting = false;
-let started = false;
+let isExiting = false;
+let isStarted = false;
+
 const blockWs = new WebSocketClient('ws://localhost:26657/websocket');
 const txWs = new WebSocketClient('ws://localhost:26657/websocket');
 
-async function startLocalTerra(filePath) {
-  compose = spawn('docker-compose', ['up'], { cwd: filePath });
+const LOCALTERRA_PATH_DIALOG = { message: 'Select your LocalTerra directory', type: 'info', properties: ['openDirectory'] };
+const LOCALTERRA_STOP_DIALOG = { message: 'LocalTerra stopped. Restarting now...', title: 'Terrarium', type: 'warning' };
+
+async function startLocalTerra() {
+  let ltPath = await settings.get('localTerraPath');
+  if (!ltPath) {
+    const { filePaths } = await dialog.showOpenDialog(LOCALTERRA_PATH_DIALOG);
+    ltPath = await settings.set('localTerraPath', filePaths[0]);
+  }
+  compose = spawn('docker-compose', ['up'], { cwd: ltPath });
 
   compose.stdout.on('data', (data) => {
-    if (!started && data.includes('indexed block')) {
+    if (!isStarted && data.includes('indexed block')) {
       console.log('starting websocket');
-      started = true;
+      isStarted = true;
       blockWs.start();
       txWs.start();
     }
@@ -27,12 +36,12 @@ async function startLocalTerra(filePath) {
   });
 
   compose.on('close', () => {
-    if (exiting) {
+    if (isExiting) {
       app.quit();
     } else {
-      dialog.showMessageBoxSync({ message: 'LocalTerra has stopped. Now restarting...', title: 'Terrarium', type: 'warning' });
-      started = false;
-      startLocalTerra(filePath);
+      dialog.showMessageBoxSync(LOCALTERRA_STOP_DIALOG);
+      isStarted = false;
+      startLocalTerra();
     }
   });
 }
@@ -52,6 +61,9 @@ async function createWindow() {
   win.loadURL(`file://${path.join(__dirname, 'dist/index.html')}`);
 
   win.webContents.openDevTools();
+
+  startLocalTerra();
+
   txWs.subscribeTx({}, async ({ value }) => {
     win.webContents.send('Tx', value);
   });
@@ -59,21 +71,8 @@ async function createWindow() {
   blockWs.subscribe('NewBlock', {}, ({ value }) => {
     win.webContents.send('NewBlock', value);
   });
-
-  // Open the DevTools.
-  //   if (isDev) {
-  //     win.webContents.openDevTools({ mode: 'detach' });
-  //   }
-
-  const { filePaths } = await dialog.showOpenDialog({
-    properties: ['openDirectory'],
-  });
-  startLocalTerra(filePaths[0]);
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(createWindow);
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -82,6 +81,11 @@ app.whenReady().then(createWindow);
 app.on('window-all-closed', () => {
   txWs.destroy();
   blockWs.destroy();
-  exiting = true;
+  isExiting = true;
   compose.kill();
 });
+
+// Open the DevTools.
+//   if (isDev) {
+//     win.webContents.openDevTools({ mode: 'detach' });
+//   }
