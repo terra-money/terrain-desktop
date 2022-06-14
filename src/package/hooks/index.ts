@@ -53,7 +53,6 @@ export function useGetBlocks() {
 
 export function useGetTxs() {
   const txs = txState.attach(Downgraded).get();
-  console.log('txs in hook', txs);
   return txs;
 }
 
