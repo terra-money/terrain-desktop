@@ -2,9 +2,7 @@ const settings = require('electron-settings');
 const { dialog, app } = require('electron');
 const { spawn } = require('child_process');
 const { WebSocketClient } = require('@terra-money/terra.js');
-const {
-  LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCAL_WS,
-} = require('./constants');
+const { LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCAL_WS } = require('./constants');
 
 let compose;
 const isExiting = false;

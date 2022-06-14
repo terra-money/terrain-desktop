@@ -1,5 +1,5 @@
 const path = require('path');
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, shell } = require('electron');
 const { startLocalTerra, blockWs, txWs } = require('./utils');
 
 let compose;
@@ -17,6 +17,11 @@ async function createWindow() {
   });
 
   win.loadURL(`file://${path.join(__dirname, 'dist/index.html')}`);
+
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
 
   win.webContents.openDevTools();
 
