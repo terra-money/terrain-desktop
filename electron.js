@@ -11,15 +11,28 @@ let isStarted = false;
 const blockWs = new WebSocketClient('ws://localhost:26657/websocket');
 const txWs = new WebSocketClient('ws://localhost:26657/websocket');
 
-const LOCALTERRA_PATH_DIALOG = { message: 'Select your LocalTerra directory', type: 'info', properties: ['openDirectory'] };
-const LOCALTERRA_STOP_DIALOG = { message: 'LocalTerra stopped. Restarting now...', title: 'Terrarium', type: 'warning' };
+const LOCALTERRA_PATH_DIALOG = { message: 'Select your LocalTerra directory.', type: 'info', properties: ['openDirectory'] };
+const LOCALTERRA_STOP_DIALOG = { message: 'LocalTerra stopped. Restarting...', title: 'Terrarium', type: 'warning' };
+// const LOCALTERRA_BAD_DIR_DIALOG = { message: 'Please select the correct LocalTerra directory', title: 'Terrarium', type: 'warning' };
 
-async function startLocalTerra() {
+async function getLocalTerraPath() {
   let ltPath = await settings.get('localTerraPath');
   if (!ltPath) {
     const { filePaths } = await dialog.showOpenDialog(LOCALTERRA_PATH_DIALOG);
     ltPath = await settings.set('localTerraPath', filePaths[0]);
   }
+  return ltPath;
+
+  // const isValidLocalTerra = ltPath.path.match(/([^/]*)\/*$/)[1] === 'LocalTerra';
+  // if (!isValidLocalTerra) {
+  //   dialog.showMessageBoxSync(LOCALTERRA_BAD_DIR_DIALOG);
+  //   getLocalTerraPath();
+  //   return {};
+  // }
+}
+
+async function startLocalTerra() {
+  const ltPath = await getLocalTerraPath();
   compose = spawn('docker-compose', ['up'], { cwd: ltPath });
 
   compose.stdout.on('data', (data) => {
