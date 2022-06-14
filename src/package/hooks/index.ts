@@ -1,5 +1,5 @@
 import {
-  BlockInfo,
+  Coin,
   LocalTerra,
   Wallet,
 } from '@terra-money/terra.js';
@@ -17,7 +17,10 @@ export function useTerra() {
     getTestAccounts(): Wallet[] {
       return Object.values(terra.wallets);
     },
-    getBalance: async (address: string) => terra.bank.balance(address),
+    getBalance: async (address: string) => {
+      const [coins] = (await terra.bank.balance(address));
+      return coins.toData();
+    },
     listenToAccountTx(address: string, cb: Function) {
       const listener = (_: any, tx: any) => {
         const { from_address: add } = parseMessageFromTx(tx.TxResult);
