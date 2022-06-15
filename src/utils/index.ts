@@ -8,13 +8,13 @@ export function decodeTx(encodedTx: any) {
   });
 }
 
-export const parseTxMessage = (tx: Tx) => {
+export const parseTxMsg = (tx: Tx) => {
   const unpacked = decodeTx(tx);
   return unpacked.body.messages[0] as any;
 };
 
 export function parseTxDescription(tx: Tx) {
-  const txEncodedMsgDescription = parseTxMessage(tx);
+  const txEncodedMsgDescription = parseTxMsg(tx);
   return readMsg(txEncodedMsgDescription);
 }
 
