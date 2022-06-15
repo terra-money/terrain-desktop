@@ -31,11 +31,12 @@ async function getLocalTerraPath() {
   // }
 }
 
-async function startLocalTerra() {
+async function startLocalTerra(win) {
   const ltPath = await getLocalTerraPath();
   compose = spawn('docker-compose', ['up'], { cwd: ltPath });
 
   compose.stdout.on('data', (data) => {
+    win.webContents.send('NewLogs', data.toString());
     if (!isStarted && data.includes('indexed block')) {
       console.log('starting websocket');
       isStarted = true;
@@ -75,7 +76,7 @@ async function createWindow() {
 
   win.webContents.openDevTools();
 
-  startLocalTerra();
+  startLocalTerra(win);
 
   txWs.subscribeTx({}, async ({ value }) => {
     win.webContents.send('Tx', value);
