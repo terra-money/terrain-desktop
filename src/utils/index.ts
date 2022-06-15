@@ -8,25 +8,19 @@ export function decodeTx(encodedTx: any) {
   });
 }
 
-export const parseTxMessage = (tx: any) => {
+export const parseTxMessage = (tx: Tx) => {
   const unpacked = decodeTx(tx);
   return unpacked.body.messages[0] as any;
 };
 
-export function parseTxDescription(value: any) {
-  const txEncodedMsgDescription = parseTxMessage(value);
+export function parseTxDescription(tx: Tx) {
+  const txEncodedMsgDescription = parseTxMessage(tx);
   return readMsg(txEncodedMsgDescription);
 }
 
 export const MICRO = 1000000;
-
-export function microfy(num: number) {
-  return num * MICRO as number;
-}
-
-export function demicrofy(num: number) {
-  return num / MICRO as number;
-}
+export const microfy = (num: number) => num * MICRO as number;
+export const demicrofy = (num: number) => num / MICRO as number;
 
 export function truncate(
   text: string = '',
