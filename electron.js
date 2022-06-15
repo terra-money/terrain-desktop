@@ -86,12 +86,6 @@ async function createWindow() {
   startLocalTerra();
 
   txWs.subscribeTx({}, async ({ value }) => {
-    // console.log(value);
-    // const decoded = decode(value.TxResult.tx);
-    // const msgToUse = (await decoded).body.messages[0];
-    // const final = readMsg(msgToUse);
-    // console.log(final);
-
     win.webContents.send('Tx', value);
   });
 

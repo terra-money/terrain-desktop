@@ -2,7 +2,6 @@ import React from 'react';
 import { parseTxDescription } from '../utils';
 
 function TransactionItemView({ tx }: { tx: any }) {
-  console.log('tx in transactionView: ', tx);
   return (
     <button type="button" className="w-full text-right flex">
       <div className="w-1/12 bg-blue-200 px-2 text-center py-2">

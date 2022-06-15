@@ -10,13 +10,10 @@ export function decodeTx(encodedTx: any) {
 
 export const parseTxMessage = (tx: any) => {
   const unpacked = decodeTx(tx);
-  console.log('Unpacked here: ', unpacked);
   return unpacked.body.messages[0] as any;
 };
 
 export function parseTxDescription(value: any) {
-  console.log(value);
   const txEncodedMsgDescription = parseTxMessage(value);
-  console.log('TxMsgDescript here: ', txEncodedMsgDescription);
   return readMsg(txEncodedMsgDescription);
 }

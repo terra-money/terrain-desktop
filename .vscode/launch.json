@@ -14,8 +14,7 @@
         ],
         "windows": {
           "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
-        },
-        "protocol": "legacy"
+        }
       }
     ]
   }
