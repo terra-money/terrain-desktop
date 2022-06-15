@@ -1,10 +1,10 @@
 import { createState } from '@hookstate/core';
-import { BlockInfo, TxInfo, TxResult } from '@terra-money/terra.js';
+import { BlockInfo, TxInfo } from '@terra-money/terra.js';
 import { IBlockState } from '../interface';
 
 export const blockState = createState<IBlockState>({ blocks: [], latestHeight: 0 });
 export const txState = createState<TxInfo[]>([]);
-export const logsState = createState<string>('');
+export const logsState = createState<string[]>([]);
 
 window.ipcRenderer.on('NewBlock', ((_: any, block: BlockInfo) => {
   const bHeight = Number(block.block.header.height);
@@ -17,6 +17,5 @@ window.ipcRenderer.on('Tx', (_: any, tx: any) => {
 });
 
 window.ipcRenderer.on('NewLogs', ((_: any, log: string) => {
-  const currentLog = logsState.get();
-  logsState.set(currentLog + log);
+  logsState.merge([log]);
 }));

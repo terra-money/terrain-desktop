@@ -1,4 +1,3 @@
-import { TxInfo } from '@terra-money/terra.js';
 import React from 'react';
 
 function TransactionItemView({ tx }: { tx: any }) {
