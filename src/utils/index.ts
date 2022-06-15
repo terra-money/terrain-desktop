@@ -16,6 +16,7 @@ export const parseTxMessage = (tx: any) => {
 export function parseTxDescription(value: any) {
   const txEncodedMsgDescription = parseTxMessage(value);
   return readMsg(txEncodedMsgDescription);
+}
 
 export const MICRO = 1000000;
 
