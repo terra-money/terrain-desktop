@@ -1,14 +1,10 @@
-import {
-  BlockInfo,
-  LocalTerra,
-  Wallet,
-} from '@terra-money/terra.js';
+import { LocalTerra, Wallet } from '@terra-money/terra.js';
 import { useContext, useEffect, useState } from 'react';
 import { Downgraded } from '@hookstate/core';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
-import { parseMessageFromTx } from '../../utils';
-import { blockState, txState, logsState } from '../stores';
+import { parseTxMsg } from '../../utils';
+import { blockState, txState } from '../stores';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
@@ -17,10 +13,13 @@ export function useTerra() {
     getTestAccounts(): Wallet[] {
       return Object.values(terra.wallets);
     },
-    getBalance: async (address: string) => terra.bank.balance(address),
+    getBalance: async (address: string) => {
+      const [coins] = (await terra.bank.balance(address));
+      return coins.toData();
+    },
     listenToAccountTx(address: string, cb: Function) {
       const listener = (_: any, tx: any) => {
-        const { from_address: add } = parseMessageFromTx(tx.TxResult);
+        const { from_address: add } = parseTxMsg(tx.TxResult);
         if (add === address) { cb(add); }
       };
       window.ipcRenderer.on('Tx', listener);
