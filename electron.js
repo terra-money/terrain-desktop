@@ -1,5 +1,6 @@
 const path = require('path');
-const { WebSocketClient } = require('@terra-money/terra.js');
+const { WebSocketClient, Tx } = require('@terra-money/terra.js');
+const { readMsg } = require('@terra-money/msg-reader');
 const { app, BrowserWindow, dialog } = require('electron');
 const { spawn } = require('child_process');
 const settings = require('electron-settings');
@@ -13,7 +14,10 @@ const txWs = new WebSocketClient('ws://localhost:26657/websocket');
 
 const LOCALTERRA_PATH_DIALOG = { message: 'Select your LocalTerra directory.', type: 'info', properties: ['openDirectory'] };
 const LOCALTERRA_STOP_DIALOG = { message: 'LocalTerra stopped. Restarting...', title: 'Terrarium', type: 'warning' };
-// const LOCALTERRA_BAD_DIR_DIALOG = { message: 'Please select the correct LocalTerra directory', title: 'Terrarium', type: 'warning' };
+/* const LOCALTERRA_BAD_DIR_DIALOG = /
+{ message: 'Please select the correct LocalTerra directory', /
+title: 'Terrarium', type: 'warning' };
+*/
 
 async function getLocalTerraPath() {
   let ltPath = await settings.get('localTerraPath');
@@ -59,6 +63,10 @@ async function startLocalTerra() {
   });
 }
 
+async function decode(encodedTx) {
+  return Tx.unpackAny({ value: Buffer.from(encodedTx, 'base64') });
+}
+
 async function createWindow() {
   const win = new BrowserWindow({
     width: 800,
@@ -78,6 +86,12 @@ async function createWindow() {
   startLocalTerra();
 
   txWs.subscribeTx({}, async ({ value }) => {
+    // console.log(value);
+    // const decoded = decode(value.TxResult.tx);
+    // const msgToUse = (await decoded).body.messages[0];
+    // const final = readMsg(msgToUse);
+    // console.log(final);
+
     win.webContents.send('Tx', value);
   });
 

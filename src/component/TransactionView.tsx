@@ -1,7 +1,8 @@
-import { TxInfo } from '@terra-money/terra.js';
 import React from 'react';
+import { parseTxDescription } from '../utils';
 
 function TransactionItemView({ tx }: { tx: any }) {
+  console.log('tx in transactionView: ', tx);
   return (
     <button type="button" className="w-full text-right flex">
       <div className="w-1/12 bg-blue-200 px-2 text-center py-2">
@@ -12,6 +13,10 @@ function TransactionItemView({ tx }: { tx: any }) {
         <div>
           <p>Block Height</p>
           <p>{tx.height}</p>
+        </div>
+        <div>
+          <p>Description</p>
+          <p>{parseTxDescription(tx.tx)}</p>
         </div>
         <div>
           <p>Gas Used</p>
