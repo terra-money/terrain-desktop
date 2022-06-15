@@ -1,4 +1,5 @@
 import React from 'react';
+import { parseTxDescription } from '../utils';
 import { FINDER_URL } from '../constants';
 import { truncate } from '../utils';
 
@@ -17,6 +18,10 @@ function TransactionItemView({ tx }: { tx: any }) {
         <div>
           <p>Block Height</p>
           <p>{tx.height}</p>
+        </div>
+        <div>
+          <p>Description</p>
+          <p>{parseTxDescription(tx.tx)}</p>
         </div>
         <div>
           <p>Gas Used</p>
