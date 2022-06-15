@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Downgraded } from '@hookstate/core';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
-import { parseTxMessage } from '../../utils';
+import { parseTxMsg } from '../../utils';
 import { blockState, txState } from '../stores';
 
 export function useTerra() {
@@ -19,7 +19,7 @@ export function useTerra() {
     },
     listenToAccountTx(address: string, cb: Function) {
       const listener = (_: any, tx: any) => {
-        const { from_address: add } = parseTxMessage(tx.TxResult);
+        const { from_address: add } = parseTxMsg(tx.TxResult);
         if (add === address) { cb(add); }
       };
       window.ipcRenderer.on('Tx', listener);
