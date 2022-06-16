@@ -163,16 +163,19 @@ function App() {
                 <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
               </div>
             </div>
-          </nav>
-        </aside>
-        <Routes>
-          <Route path="/" element={<AccountsPage />} />
-          <Route path="/blocks" element={<BlockPage />} />
-          <Route path="/transactions" element={<TransactionPage />} />
-          <Route path="/logs" element={<LogsPage />} />
-        </Routes>
-      </main>
-    </>
+          </div>
+        </header>
+        <main>
+          <Routes>
+            <Route path="/" element={<AccountsPage />} />
+            <Route path="/blocks" element={<BlockPage />} />
+            <Route path="/transactions" element={<TransactionPage />} />
+            <Route path="/logs" element={<LogsPage />} />
+          </Routes>
+        </main>
+      </div>
+    </div>
+
   );
 }
 

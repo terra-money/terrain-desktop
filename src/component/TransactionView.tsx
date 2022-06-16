@@ -1,7 +1,6 @@
 import React from 'react';
-import { parseTxDescription } from '../utils';
+import { parseTxDescription, truncate } from '../utils';
 import { FINDER_URL } from '../constants';
-import { truncate } from '../utils';
 
 function TransactionItemView({ tx }: { tx: any }) {
   const txHref = `${FINDER_URL}/tx/${tx.txhash}`;

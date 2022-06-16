@@ -2,8 +2,6 @@ const path = require('path');
 const { app, BrowserWindow, shell } = require('electron');
 const { startLocalTerra, blockWs, txWs } = require('./utils');
 
-let compose;
-
 async function createWindow() {
   const win = new BrowserWindow({
     width: 800,
@@ -25,7 +23,7 @@ async function createWindow() {
 
   win.webContents.openDevTools();
 
-  compose = startLocalTerra(win);
+  const compose = await startLocalTerra(win);
 
   txWs.subscribeTx({}, async ({ value }) => {
     win.webContents.send('Tx', value);
@@ -34,6 +32,12 @@ async function createWindow() {
   blockWs.subscribe('NewBlock', {}, ({ value }) => {
     win.webContents.send('NewBlock', value);
   });
+
+  app.on('window-all-closed', () => {
+    txWs.destroy();
+    blockWs.destroy();
+    compose.kill();
+  });
 }
 
 app.whenReady().then(createWindow);
@@ -41,11 +45,6 @@ app.whenReady().then(createWindow);
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  txWs.destroy();
-  blockWs.destroy();
-  compose.kill();
-});
 
 // Open the DevTools.
 //   if (isDev) {
