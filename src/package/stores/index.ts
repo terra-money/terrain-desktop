@@ -1,5 +1,5 @@
 import { createState } from '@hookstate/core';
-import { BlockInfo, TxInfo, TxResult } from '@terra-money/terra.js';
+import { BlockInfo, TxInfo } from '@terra-money/terra.js';
 import { IBlockState } from '../interface';
 
 export const blockState = createState<IBlockState>({ blocks: [], latestHeight: 0 });

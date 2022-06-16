@@ -8,12 +8,25 @@ export function decodeTx(encodedTx: any) {
   });
 }
 
-export const parseTxMessage = (tx: any) => {
+export const parseTxMsg = (tx: Tx) => {
   const unpacked = decodeTx(tx);
   return unpacked.body.messages[0] as any;
 };
 
-export function parseTxDescription(value: any) {
-  const txEncodedMsgDescription = parseTxMessage(value);
+export function parseTxDescription(tx: Tx) {
+  const txEncodedMsgDescription = parseTxMsg(tx);
   return readMsg(txEncodedMsgDescription);
+}
+
+export const MICRO = 1000000;
+export const microfy = (num: number) => num * MICRO as number;
+export const demicrofy = (num: number) => num / MICRO as number;
+
+export function truncate(
+  text: string = '',
+  [h, t]: [number, number] = [6, 6],
+): string {
+  const head = text.slice(0, h);
+  const tail = text.slice(-1 * t, text.length);
+  return text.length > h + t ? [head, tail].join('...') : text;
 }
