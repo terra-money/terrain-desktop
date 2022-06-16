@@ -4,7 +4,7 @@ import { Downgraded } from '@hookstate/core';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
 import { parseTxMsg } from '../../utils';
-import { blockState, txState } from '../stores';
+import { blockState, txState, logsState } from '../stores';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
