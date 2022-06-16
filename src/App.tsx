@@ -5,9 +5,8 @@ import logo from './assets/terraLogo.png';
 import NavLink from './component/NavLink';
 import AccountsPage from './pages/Account';
 import BlockPage from './pages/Block';
-import { useTerra, useGetBlocks } from './package';
+import { useTerra, useGetBlocks } from './package/hooks';
 import TransactionPage from './pages/Transaction';
-import LogsPage from './pages/Logs';
 
 const menu = [
   {
@@ -78,9 +77,6 @@ function App() {
   const { terra } = useTerra();
   const { latestHeight } = useGetBlocks();
   const [open, setOpen] = useState(true);
-  // const [isLocalTerraConnected, setLocalTerraConnected] = useState(true);
-
-  // setLocalTerraConnected(true);
 
   return (
     <div className="flex">
@@ -163,16 +159,18 @@ function App() {
                 <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
               </div>
             </div>
-          </nav>
-        </aside>
-        <Routes>
-          <Route path="/" element={<AccountsPage />} />
-          <Route path="/blocks" element={<BlockPage />} />
-          <Route path="/transactions" element={<TransactionPage />} />
-          <Route path="/logs" element={<LogsPage />} />
-        </Routes>
-      </main>
-    </>
+          </div>
+        </header>
+        <main>
+          <Routes>
+            <Route path="/" element={<AccountsPage />} />
+            <Route path="/blocks" element={<BlockPage />} />
+            <Route path="/transactions" element={<TransactionPage />} />
+          </Routes>
+        </main>
+      </div>
+    </div>
+
   );
 }
 
