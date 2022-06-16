@@ -3,7 +3,12 @@ import Ansi from 'ansi-to-react';
 
 function LogItemView({ log }: { log: any }) {
   return (
-    <div className="w-full text-left flex">
+    <div
+      style={{
+        whiteSpace: 'pre-line',
+        overflowWrap: 'break-word',
+      }}
+    >
       <Ansi>
         {log}
       </Ansi>
