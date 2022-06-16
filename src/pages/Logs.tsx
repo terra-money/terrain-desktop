@@ -4,7 +4,7 @@ import LogView from '../component/LogView';
 
 export default function LogsPage() {
   return (
-    <ul className="flex flex-col max-h-screen overflow-y-scroll">
+    <ul className="flex flex-col max-h-screen overflow-y-scroll flex-wrap-reverse">
       {useGetLogs().map((log) => (<LogView log={log} />))}
     </ul>
   );

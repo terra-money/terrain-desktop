@@ -1,6 +1,8 @@
 const path = require('path');
 const { app, BrowserWindow, shell } = require('electron');
-const { startLocalTerra, blockWs, txWs } = require('./utils');
+const {
+  startLocalTerra, stopLocalTerra, blockWs, txWs,
+} = require('./utils');
 
 async function createWindow() {
   const win = new BrowserWindow({
@@ -34,9 +36,7 @@ async function createWindow() {
   });
 
   app.on('window-all-closed', () => {
-    txWs.destroy();
-    blockWs.destroy();
-    compose.kill();
+    stopLocalTerra(compose);
   });
 }
 

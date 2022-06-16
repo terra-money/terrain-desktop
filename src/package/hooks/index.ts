@@ -4,8 +4,9 @@ import { Downgraded } from '@hookstate/core';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
 import { parseTxMsg } from '../../utils';
-import { blockState, txState, logsState } from '../stores';
-
+import {
+  blockState, txState, logsState, localTerraState,
+} from '../stores';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
@@ -59,6 +60,10 @@ export function useGetLogs() {
 export function useGetTxs() {
   const txs = txState.attach(Downgraded).get();
   return txs;
+}
+export function useGetLocalTerraStatus() {
+  const ltState = localTerraState.attach(Downgraded).get();
+  return ltState;
 }
 
 export function useGetTxFromHeight(height?: number) {
