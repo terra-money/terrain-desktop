@@ -1,7 +1,7 @@
 import { Link, useMatch, useResolvedPath } from 'react-router-dom';
 import React from 'react';
 
-function NavLink(props : {to: any, children: any}) {
+function NavLink(props: { to: any, children: any }) {
   const resolved = useResolvedPath(props.to);
   const match = useMatch({ path: resolved.pathname, end: true });
   return (

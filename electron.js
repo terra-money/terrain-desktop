@@ -1,64 +1,8 @@
 const path = require('path');
-const { WebSocketClient } = require('@terra-money/terra.js');
-const { app, BrowserWindow, dialog } = require('electron');
-const { spawn } = require('child_process');
-const settings = require('electron-settings');
+const { app, BrowserWindow, shell } = require('electron');
+const { startLocalTerra, blockWs, txWs } = require('./utils');
 
 let compose;
-let isExiting = false;
-let isStarted = false;
-
-const blockWs = new WebSocketClient('ws://localhost:26657/websocket');
-const txWs = new WebSocketClient('ws://localhost:26657/websocket');
-
-const LOCALTERRA_PATH_DIALOG = { message: 'Select your LocalTerra directory.', type: 'info', properties: ['openDirectory'] };
-const LOCALTERRA_STOP_DIALOG = { message: 'LocalTerra stopped. Restarting...', title: 'Terrarium', type: 'warning' };
-// const LOCALTERRA_BAD_DIR_DIALOG = { message: 'Please select the correct LocalTerra directory', title: 'Terrarium', type: 'warning' };
-
-async function getLocalTerraPath() {
-  let ltPath = await settings.get('localTerraPath');
-  if (!ltPath) {
-    const { filePaths } = await dialog.showOpenDialog(LOCALTERRA_PATH_DIALOG);
-    ltPath = await settings.set('localTerraPath', filePaths[0]);
-  }
-  return ltPath;
-
-  // const isValidLocalTerra = ltPath.path.match(/([^/]*)\/*$/)[1] === 'LocalTerra';
-  // if (!isValidLocalTerra) {
-  //   dialog.showMessageBoxSync(LOCALTERRA_BAD_DIR_DIALOG);
-  //   getLocalTerraPath();
-  //   return {};
-  // }
-}
-
-async function startLocalTerra(win) {
-  const ltPath = await getLocalTerraPath();
-  compose = spawn('docker-compose', ['up'], { cwd: ltPath });
-
-  compose.stdout.on('data', (data) => {
-    win.webContents.send('NewLogs', data.toString());
-    if (!isStarted && data.includes('indexed block')) {
-      console.log('starting websocket');
-      isStarted = true;
-      blockWs.start();
-      txWs.start();
-    }
-  });
-
-  compose.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
-
-  compose.on('close', () => {
-    if (isExiting) {
-      app.quit();
-    } else {
-      dialog.showMessageBoxSync(LOCALTERRA_STOP_DIALOG);
-      isStarted = false;
-      startLocalTerra();
-    }
-  });
-}
 
 async function createWindow() {
   const win = new BrowserWindow({
@@ -74,9 +18,14 @@ async function createWindow() {
 
   win.loadURL(`file://${path.join(__dirname, 'dist/index.html')}`);
 
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
+
   win.webContents.openDevTools();
 
-  startLocalTerra(win);
+  compose = startLocalTerra(win);
 
   txWs.subscribeTx({}, async ({ value }) => {
     win.webContents.send('Tx', value);
@@ -95,7 +44,6 @@ app.whenReady().then(createWindow);
 app.on('window-all-closed', () => {
   txWs.destroy();
   blockWs.destroy();
-  isExiting = true;
   compose.kill();
 });
 

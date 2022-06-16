@@ -20,6 +20,8 @@ module.exports = {
   rules: {
     'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'react/destructuring-assignment': 0,
+    'consistent-return': 0,
+    'no-use-before-define': 0,
     'import/extensions': [
       'error',
       'ignorePackages',

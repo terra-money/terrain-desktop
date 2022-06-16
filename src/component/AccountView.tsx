@@ -1,44 +1,50 @@
-import { TxInfo, Wallet } from '@terra-money/terra.js';
+import { TxInfo, Wallet, Denom } from '@terra-money/terra.js';
 import React, { useEffect, useState } from 'react';
 import { useTerra } from '../package';
+import { FINDER_URL } from '../constants';
+import { demicrofy } from '../utils';
 
 function AccountView({ wallet } : { wallet : Wallet }) {
   const [balance, setBalance] = useState(0.00);
   const { getBalance, listenToAccountTx } = useTerra();
   const [txInfos, setTxInfos] = useState([]);
 
+  const { accAddress } = wallet.key;
+  const acctHref = `${FINDER_URL}/address/${accAddress}`;
+
   useEffect(() => {
-    getBalance(wallet.key.accAddress).then((c: any) => {
-      const luna = c.get('uluna');
-      if (luna) {
-        setBalance(luna.amount.toNumber());
-      }
+    getBalance(accAddress).then((coins: any) => {
+      const { amount } = coins.find(({ denom } : { denom: Denom }) => denom === 'uluna');
+      setBalance(demicrofy(Number(amount)));
     });
   }, []);
 
   useEffect(() => {
-    listenToAccountTx(wallet.key.accAddress, (tx : TxInfo) => {
+    listenToAccountTx(accAddress, (tx : TxInfo) => {
       const nTx = [...txInfos, tx];
       setTxInfos(nTx as never[]);
     });
   }, [txInfos]);
+
   return (
-    <button type="button" className="flex text-left justify-between px-4 py-2 border-b border-blue-900">
-      <div className="flex">
-        <div>
-          <p className="text-xs font-bold text-blue-600 uppercase">
-            Address
-          </p>
-          <p className="text-2xl">{wallet.key.accAddress}</p>
+    <div className="flex text-left justify-between px-4 py-2 border-b border-blue-900">
+      <a href={acctHref} target="_blank" rel="noreferrer">
+        <div className="flex">
+          <div>
+            <p className="text-xs font-bold text-blue-600 uppercase">
+              Address
+            </p>
+            <p className="text-2xl">{accAddress}</p>
+          </div>
         </div>
+      </a>
+      <div className="flex space-x-6">
         <div className="ml-6">
           <p className="text-xs font-bold text-blue-600 uppercase">
             Luna
           </p>
           <p className="text-xl text-blue-900">{balance}</p>
         </div>
-      </div>
-      <div className="flex space-x-6">
         <div>
           <p className="text-xs font-bold text-blue-600 uppercase">
             TX Count
@@ -62,7 +68,7 @@ function AccountView({ wallet } : { wallet : Wallet }) {
           </svg>
         </button>
       </div>
-    </button>
+    </div>
   );
 }
 
