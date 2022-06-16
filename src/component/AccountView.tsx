@@ -1,16 +1,20 @@
-import { TxInfo, Wallet, Denom } from '@terra-money/terra.js';
+import { TxInfo, Denom } from '@terra-money/terra.js';
 import React, { useEffect, useState } from 'react';
 import { useTerra } from '../package';
 import { FINDER_URL } from '../constants';
 import { demicrofy } from '../utils';
+import KeyView from './KeyView';
 
-function AccountView({ wallet } : { wallet : Wallet }) {
+function AccountView({ wallet } : { wallet : any }) {
+  const { accAddress, mnemonic } = wallet.key;
+
   const [balance, setBalance] = useState(0.00);
   const { getBalance, listenToAccountTx } = useTerra();
   const [txInfos, setTxInfos] = useState([]);
+  const [open, setOpen] = useState(false);
 
-  const { accAddress } = wallet.key;
-  const acctHref = `${FINDER_URL}/address/${accAddress}`;
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     getBalance(accAddress).then((coins: any) => {
@@ -28,7 +32,8 @@ function AccountView({ wallet } : { wallet : Wallet }) {
 
   return (
     <div className="flex text-left justify-between px-4 py-2 border-b border-blue-900">
-      <a href={acctHref} target="_blank" rel="noreferrer">
+      {open && <KeyView mnemonic={mnemonic} handleClose={handleClose} />}
+      <a href={`${FINDER_URL}/address/${accAddress}`} target="_blank" rel="noreferrer">
         <div className="flex">
           <div>
             <p className="text-xs font-bold text-blue-600 uppercase">
@@ -51,7 +56,7 @@ function AccountView({ wallet } : { wallet : Wallet }) {
           </p>
           <p className="text-xs font-bold text-blue-600 uppercase">{txInfos.length}</p>
         </div>
-        <button type="button" className="text-blue-500">
+        <button type="button" onClick={handleOpen} className="text-blue-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
