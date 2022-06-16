@@ -1,6 +1,5 @@
 const path = require('path');
 const { WebSocketClient, Tx } = require('@terra-money/terra.js');
-const { readMsg } = require('@terra-money/msg-reader');
 const { app, BrowserWindow, dialog } = require('electron');
 const { spawn } = require('child_process');
 const settings = require('electron-settings');
@@ -61,10 +60,6 @@ async function startLocalTerra() {
       startLocalTerra();
     }
   });
-}
-
-async function decode(encodedTx) {
-  return Tx.unpackAny({ value: Buffer.from(encodedTx, 'base64') });
 }
 
 async function createWindow() {
