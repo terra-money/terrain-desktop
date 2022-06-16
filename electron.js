@@ -25,7 +25,7 @@ async function createWindow() {
 
   win.webContents.openDevTools();
 
-  compose = startLocalTerra();
+  compose = startLocalTerra(win);
 
   txWs.subscribeTx({}, async ({ value }) => {
     win.webContents.send('Tx', value);
