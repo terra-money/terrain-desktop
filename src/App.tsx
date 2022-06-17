@@ -4,6 +4,7 @@ import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import logo from './assets/terraLogo.png';
 import NavLink from './component/NavLink';
 import AccountsPage from './pages/Account';
+import LogsPage from './pages/Logs';
 import BlockPage from './pages/Block';
 import { useTerra, useGetBlocks } from './package/hooks';
 import TransactionPage from './pages/Transaction';
@@ -165,7 +166,6 @@ function App() {
                 <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
               </div>
             </button>
-            </div>
           </div>
         </header>
         <main>

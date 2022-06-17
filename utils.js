@@ -44,7 +44,7 @@ async function startLocalTerra(win) {
   const compose = spawn('docker-compose', ['up'], { cwd: ltPath });
 
   compose.stdout.on('data', (data) => {
-    // win.webContents.send('NewLogs', data.toString());
+    win.webContents.send('NewLogs', data.toString());
     if (!isStarted && data.includes('indexed block')) {
       console.log('starting websocket');
       isStarted = true;
@@ -59,7 +59,6 @@ async function startLocalTerra(win) {
   });
 
   ipcMain.on('LocalTerra', (_, shouldBeActive) => {
-    console.log('shouldBeActive', shouldBeActive);
     if (shouldBeActive) {
       startLocalTerra(win);
     } else {
@@ -81,14 +80,10 @@ async function startLocalTerra(win) {
 }
 
 async function stopLocalTerra(compose, win) {
-  try {
-    if (win) { win.webContents.send('LocalTerra', false); }
-    txWs.destroy();
-    blockWs.destroy();
-    compose.kill();
-  } catch (err) {
-    console.log('err', err);
-  }
+  if (win) { win.webContents.send('LocalTerra', false); }
+  txWs.destroy();
+  blockWs.destroy();
+  compose.kill();
 }
 
 module.exports = {
