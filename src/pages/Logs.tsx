@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGetLogs } from '../package/hooks';
-import LogView from '../component/LogView';
+import { LogView } from '../component';
 
 export default function LogsPage() {
   return (
