@@ -19,11 +19,7 @@ export function useTerra() {
       const [coins] = (await terra.bank.balance(address));
       return coins.toData();
     },
-    getLocalTerraStatus: () => {
-      const ltState = localTerraState.attach(Downgraded).get();
-      console.log('ltState', ltState);
-      return ltState;
-    },
+    getLocalTerraStatus: () => localTerraState.attach(Downgraded).get(),
     listenToAccountTx(address: string, cb: Function) {
       const listener = (_: any, tx: any) => {
         const { from_address: add } = parseTxMsg(tx.TxResult);
@@ -39,9 +35,7 @@ export function useTerra() {
 
   useEffect(() => {
     const listener = () => {
-      setHook({
-        ...hook,
-      });
+      setHook({ ...hook });
     };
     window.ipcRenderer.on('NewBlock', listener);
 
