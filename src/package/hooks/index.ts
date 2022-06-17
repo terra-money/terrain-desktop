@@ -19,6 +19,11 @@ export function useTerra() {
       const [coins] = (await terra.bank.balance(address));
       return coins.toData();
     },
+    getLocalTerraStatus: () => {
+      const ltState = localTerraState.attach(Downgraded).get();
+      console.log('ltState', ltState);
+      return ltState;
+    },
     listenToAccountTx(address: string, cb: Function) {
       const listener = (_: any, tx: any) => {
         const { from_address: add } = parseTxMsg(tx.TxResult);
@@ -60,10 +65,6 @@ export function useGetLogs() {
 export function useGetTxs() {
   const txs = txState.attach(Downgraded).get();
   return txs;
-}
-export function useGetLocalTerraStatus() {
-  const ltState = localTerraState.attach(Downgraded).get();
-  return ltState;
 }
 
 export function useGetTxFromHeight(height?: number) {
