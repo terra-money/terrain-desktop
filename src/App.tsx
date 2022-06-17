@@ -5,11 +5,8 @@ import logo from './assets/terraLogo.png';
 import NavLink from './component/NavLink';
 import AccountsPage from './pages/Account';
 import BlockPage from './pages/Block';
-import {
-  useTerra, useGetBlocks,
-} from './package/hooks';
+import { useTerra, useGetBlocks } from './package/hooks';
 import TransactionPage from './pages/Transaction';
-import LogsPage from './pages/Logs';
 
 const menu = [
   {
@@ -168,6 +165,7 @@ function App() {
                 <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
               </div>
             </button>
+            </div>
           </div>
         </header>
         <main>
