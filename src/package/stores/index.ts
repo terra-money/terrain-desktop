@@ -5,6 +5,7 @@ import { IBlockState } from '../interface';
 export const blockState = createState<IBlockState>({ blocks: [], latestHeight: 0 });
 export const txState = createState<TxInfo[]>([]);
 export const logsState = createState<string[]>([]);
+export const localTerraState = createState<boolean>(false);
 
 window.ipcRenderer.on('NewBlock', ((_: any, block: BlockInfo) => {
   const bHeight = Number(block.block.header.height);
@@ -18,4 +19,8 @@ window.ipcRenderer.on('Tx', (_: any, tx: any) => {
 
 window.ipcRenderer.on('NewLogs', ((_: any, log: string) => {
   logsState.merge([log]);
+}));
+
+window.ipcRenderer.on('LocalTerra', ((_: any, status: boolean) => {
+  localTerraState.set(status);
 }));

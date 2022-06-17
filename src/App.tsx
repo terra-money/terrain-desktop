@@ -1,9 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import logo from './assets/terraLogo.png';
 import NavLink from './component/NavLink';
 import AccountsPage from './pages/Account';
+import LogsPage from './pages/Logs';
 import BlockPage from './pages/Block';
 import { useTerra, useGetBlocks } from './package/hooks';
 import TransactionPage from './pages/Transaction';
@@ -39,7 +40,6 @@ const menu = [
 
     url: '/transactions',
   },
-
   {
     name: 'Contracts',
     icon: (
@@ -49,7 +49,6 @@ const menu = [
     ),
     url: '/contracts',
   },
-
   {
     name: 'Events',
     icon: (
@@ -60,7 +59,6 @@ const menu = [
 
     url: '/events',
   },
-
   {
     name: 'Logs',
     icon: (
@@ -74,9 +72,19 @@ const menu = [
 ];
 
 function App() {
-  const { terra } = useTerra();
-  const { latestHeight } = useGetBlocks();
   const [open, setOpen] = useState(true);
+  const [localTerraActive, setLocalTerraActive] = useState(false);
+  const { terra, getLocalTerraStatus } = useTerra();
+  const { latestHeight } = useGetBlocks();
+
+  useEffect(() => {
+    setLocalTerraActive(getLocalTerraStatus());
+  }, [latestHeight]);
+
+  const toggleLocalTerra = async () => {
+    await window.ipcRenderer.send('LocalTerra', !localTerraActive);
+    setLocalTerraActive(!localTerraActive); // could experiment with polling here
+  };
 
   return (
     <div className="flex">
@@ -150,15 +158,14 @@ function App() {
                   <p className="uppercase">RPC Server</p>
                   <p className="text-terra-mid-blue text-xs m-0">{terra.config.URL}</p>
                 </li>
-
               </div>
             </ul>
-            <div className="flex items-center justify-center rounded-lg w-40 h-10 border-4 border-gray-brackground">
+            <button type="button" onClick={toggleLocalTerra} className="flex items-center justify-center rounded-lg w-40 h-10 border-4 border-gray-brackground">
               <div className="flex items-center justify-center space-x-3 text-xs">
-                <BsCircleFill className="text-is-connected-green" />
+                <BsCircleFill className={localTerraActive ? 'text-is-connected-green' : 'text-not-connected-red'} />
                 <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
               </div>
-            </div>
+            </button>
           </div>
         </header>
         <main>
@@ -166,6 +173,7 @@ function App() {
             <Route path="/" element={<AccountsPage />} />
             <Route path="/blocks" element={<BlockPage />} />
             <Route path="/transactions" element={<TransactionPage />} />
+            <Route path="/logs" element={<LogsPage />} />
           </Routes>
         </main>
       </div>

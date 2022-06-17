@@ -1,15 +1,13 @@
 const settings = require('electron-settings');
-const { dialog, app } = require('electron');
+const { dialog, app, ipcMain } = require('electron');
 const { spawn } = require('child_process');
 const { WebSocketClient } = require('@terra-money/terra.js');
 const { promises: fs } = require('fs');
 const yaml = require('js-yaml');
-
 const {
   LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCAL_WS, LOCALTERRA_BAD_DIR_DIALOG,
 } = require('./constants');
 
-let compose;
 const isExiting = false;
 let isStarted = false;
 
@@ -41,16 +39,18 @@ async function getLocalTerraPath() {
   }
 }
 
-async function startLocalTerra() {
+async function startLocalTerra(win) {
   const ltPath = await getLocalTerraPath();
-  compose = spawn('docker-compose', ['up'], { cwd: ltPath });
+  const compose = spawn('docker-compose', ['up'], { cwd: ltPath });
 
   compose.stdout.on('data', (data) => {
+    win.webContents.send('NewLogs', data.toString());
     if (!isStarted && data.includes('indexed block')) {
       console.log('starting websocket');
       isStarted = true;
       blockWs.start();
       txWs.start();
+      win.webContents.send('LocalTerra', true);
     }
   });
 
@@ -58,7 +58,16 @@ async function startLocalTerra() {
     console.error(`stderr: ${data}`);
   });
 
+  ipcMain.on('LocalTerra', (_, shouldBeActive) => {
+    if (shouldBeActive) {
+      startLocalTerra(win);
+    } else {
+      stopLocalTerra(compose, win);
+    }
+  });
+
   compose.on('close', () => {
+    win.webContents.send('LocalTerra', false);
     if (isExiting) {
       app.quit();
     } else {
@@ -70,8 +79,16 @@ async function startLocalTerra() {
   return compose;
 }
 
+async function stopLocalTerra(compose, win) {
+  if (win) { win.webContents.send('LocalTerra', false); }
+  txWs.destroy();
+  blockWs.destroy();
+  compose.kill();
+}
+
 module.exports = {
   startLocalTerra,
+  stopLocalTerra,
   blockWs,
   txWs,
 };
