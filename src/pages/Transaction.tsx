@@ -1,5 +1,5 @@
 import React from 'react';
-import TransactionView from '../component/TransactionView';
+import { TransactionView } from '../component';
 import { useGetTxs } from '../package';
 
 export default function TransactionPage() {
