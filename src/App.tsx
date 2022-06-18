@@ -112,62 +112,48 @@ function App() {
               <div className={`text-white text-base font-medium flex-1 items-center cursor-pointer ${!open && 'hidden'}`}>
                 <p>{m.name}</p>
               </div>
-
             </NavLink>
           ))}
         </ul>
       </div>
 
-      <div className="flex-1 bg-gray-background">
-        <header className="p-4 bg-white items-center">
-          <div className="flex justify-end items-center space-x-10 w-full h-full">
-            <ul className="flex flex-row mt-0 font-medium">
-              <div className="flex-col py-2">
-                <li className="block font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                  <p className="uppercase">Current Block</p>
-                  <p className="text-terra-mid-blue text-xs m-0">{latestHeight}</p>
-                </li>
-              </div>
-              <div className="flex-col py-2 pr-4 pl-3">
-                <li className="block font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                  <p className="uppercase">Gas Price</p>
-                  <p className="text-terra-mid-blue text-xs m-0">20000000</p>
-                </li>
-              </div>
-              <div className="flex-col py-2 pr-4 pl-3">
-                <li className="block font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                  <p className="uppercase">Gas Limit</p>
-                  <p className="text-terra-mid-blue text-xs m-0">0</p>
-                </li>
-              </div>
-              <div className="flex-col py-2 pr-4 pl-3">
-                <li className="block font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                  <p className="uppercase">Hardfork</p>
-                  <p className="text-terra-mid-blue text-xs m-0">0</p>
-                </li>
-              </div>
-              <div className="flex-col py-2 pr-4 pl-3">
-                <li className="block font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                  <p className="uppercase">Network ID</p>
-                  <p className="text-terra-mid-blue text-xs m-0">{terra.config.chainID}</p>
-                </li>
+      <div className="flex-auto bg-gray-background">
 
-              </div>
-              <div className="flex-col py-2 pr-4 pl-3">
-                <li className="block font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                  <p className="uppercase">RPC Server</p>
-                  <p className="text-terra-mid-blue text-xs m-0">{terra.config.URL}</p>
-                </li>
-              </div>
-            </ul>
-            <button type="button" onClick={toggleLocalTerra} className="flex items-center justify-center rounded-lg w-40 h-10 border-4 border-gray-brackground">
-              <div className="flex items-center justify-center space-x-3 text-xs">
+        <header className="p-4 bg-white">
+          <ul className="flex flex-row justify-between items-center font-medium">
+            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <p className="text-center uppercase">Current Block</p>
+              <p className="text-center text-terra-mid-blue">{latestHeight}</p>
+            </li>
+            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <p className="text-center uppercase">Gas Price</p>
+              <p className="text-center text-terra-mid-blue">20000000</p>
+            </li>
+            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <p className="text-center uppercase">Gas Limit</p>
+              <p className="text-center text-terra-mid-blue">0</p>
+            </li>
+            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <p className="text-center uppercase">Hardfork</p>
+              <p className="text-center text-terra-mid-blue">0</p>
+            </li>
+            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <p className="text-center uppercase">Network ID</p>
+              <p className="text-center text-terra-mid-blue">{terra.config.chainID}</p>
+            </li>
+            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <p className="text-center uppercase">RPC Server</p>
+              <p className="text-center text-terra-mid-blue">{terra.config.URL}</p>
+            </li>
+            <li>
+              <button type="button" onClick={toggleLocalTerra} className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground">
                 <BsCircleFill className={localTerraActive ? 'text-is-connected-green' : 'text-not-connected-red'} />
                 <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
-              </div>
-            </button>
-          </div>
+              </button>
+            </li>
+          </ul>
         </header>
+
         <main>
           <Routes>
             <Route path="/" element={<AccountsPage />} />
@@ -176,9 +162,10 @@ function App() {
             <Route path="/logs" element={<LogsPage />} />
           </Routes>
         </main>
-      </div>
-    </div>
 
+      </div>
+
+    </div>
   );
 }
 
