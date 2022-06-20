@@ -6,7 +6,6 @@ function KeyView({ mnemonic, handleClose }: { mnemonic: string, handleClose: any
       <div className="bg-white px-16 py-14 rounded-md max-w-sm text-center">
         <h1 className="text-xl mb-4 font-bold text-slate-500">Account Mnemonic</h1>
         <h4>{mnemonic}</h4>
-        <button type="button" className="bg-blue-500 px-4 py-2 rounded-md text-md text-white">Copy</button>
         <button type="button" onClick={handleClose} className="bg-blue-500 px-4 py-2 rounded-md text-md text-white">Close</button>
       </div>
     </div>

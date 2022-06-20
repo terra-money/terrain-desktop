@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTerra } from '../package';
 import { FINDER_URL } from '../constants';
 import { demicrofy } from '../utils';
-import KeyView from './KeyView';
+import { KeyView } from '.';
 
 function AccountView({ wallet } : { wallet : any }) {
   const { accAddress, mnemonic } = wallet.key;
