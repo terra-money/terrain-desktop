@@ -2,10 +2,10 @@ import { Routes, Route } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import logo from './assets/terraLogo.png';
-import { NavLink } from './component';
+import { NavLink, Spinner } from './component';
 import { useTerra, useGetBlocks } from './package/hooks';
 import {
-  TransactionPage, LogsPage, AccountsPage, BlockPage,
+  TransactionPage, LogsPage, AccountsPage, BlockPage, ContractsPage, EventsPage,
 } from './pages';
 
 const menu = [
@@ -17,7 +17,7 @@ const menu = [
         <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
       </svg>
     ),
-    url: '/',
+    url: '',
   },
   {
     name: 'Blocks',
@@ -149,18 +149,21 @@ function App() {
             </li>
           </ul>
         </header>
-
         <main>
-          <Routes>
-            <Route path="/" element={<AccountsPage />} />
-            <Route path="/blocks" element={<BlockPage />} />
-            <Route path="/transactions" element={<TransactionPage />} />
-            <Route path="/logs" element={<LogsPage />} />
-          </Routes>
+          {localTerraActive
+            ? (
+              <Routes>
+                <Route path="*" element={<AccountsPage />} />
+                <Route path="/blocks" element={<BlockPage />} />
+                <Route path="/transactions" element={<TransactionPage />} />
+                <Route path="/logs" element={<LogsPage />} />
+                <Route path="/contracts" element={<ContractsPage />} />
+                <Route path="/events" element={<EventsPage />} />
+              </Routes>
+            )
+            : <Spinner />}
         </main>
-
       </div>
-
     </div>
   );
 }
