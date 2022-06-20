@@ -1,6 +1,6 @@
 import React from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import BlockView from '../component/BlockView';
+import { BlockView } from '../component';
 import { useGetBlocks } from '../package/hooks';
 
 export default function BlockPage() {

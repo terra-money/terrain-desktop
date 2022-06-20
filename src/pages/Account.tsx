@@ -1,5 +1,5 @@
 import React from 'react';
-import AccountView from '../component/AccountView';
+import { AccountView } from '../component';
 import { useTerra } from '../package';
 
 export default function AccountsPage() {

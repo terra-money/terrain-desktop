@@ -1,12 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import logo from './assets/terraLogo.png';
-import NavLink from './component/NavLink';
-import AccountsPage from './pages/Account';
-import BlockPage from './pages/Block';
+import { NavLink } from './component';
 import { useTerra, useGetBlocks } from './package/hooks';
-import TransactionPage from './pages/Transaction';
+import {
+  TransactionPage, LogsPage, AccountsPage, BlockPage,
+} from './pages';
 
 const menu = [
   {
@@ -21,7 +21,6 @@ const menu = [
   },
   {
     name: 'Blocks',
-
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="white" className="w-6 aspect-square py-2  bi bi-grid" viewBox="0 0 16 16">
         <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
@@ -36,10 +35,8 @@ const menu = [
         <path fillRule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z" />
       </svg>
     ),
-
     url: '/transactions',
   },
-
   {
     name: 'Contracts',
     icon: (
@@ -49,7 +46,6 @@ const menu = [
     ),
     url: '/contracts',
   },
-
   {
     name: 'Events',
     icon: (
@@ -57,10 +53,8 @@ const menu = [
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z" />
       </svg>
     ),
-
     url: '/events',
   },
-
   {
     name: 'Logs',
     icon: (
@@ -74,9 +68,19 @@ const menu = [
 ];
 
 function App() {
-  const { terra } = useTerra();
-  const { latestHeight } = useGetBlocks();
   const [open, setOpen] = useState(true);
+  const [localTerraActive, setLocalTerraActive] = useState(false);
+  const { terra, getLocalTerraStatus } = useTerra();
+  const { latestHeight } = useGetBlocks();
+
+  useEffect(() => {
+    setLocalTerraActive(getLocalTerraStatus());
+  }, [latestHeight]);
+
+  const toggleLocalTerra = async () => {
+    await window.ipcRenderer.send('LocalTerra', !localTerraActive);
+    setLocalTerraActive(!localTerraActive); // could experiment with polling here
+  };
 
   return (
     <div className="flex">
@@ -104,73 +108,60 @@ function App() {
               <div className={`text-white text-base font-medium flex-1 items-center cursor-pointer ${!open && 'hidden'}`}>
                 <p>{m.name}</p>
               </div>
-
             </NavLink>
           ))}
         </ul>
       </div>
 
-      <div className="flex-1 bg-gray-background">
-        <header className="p-4 bg-white items-center">
-          <div className="flex justify-end items-center space-x-10 w-full h-full">
-            <ul className="flex flex-row mt-0 font-medium">
-              <div className="flex-col py-2">
-                <li className="block font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                  <p className="uppercase">Current Block</p>
-                  <p className="text-terra-mid-blue text-xs m-0">{latestHeight}</p>
-                </li>
-              </div>
-              <div className="flex-col py-2 pr-4 pl-3">
-                <li className="block font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                  <p className="uppercase">Gas Price</p>
-                  <p className="text-terra-mid-blue text-xs m-0">20000000</p>
-                </li>
-              </div>
-              <div className="flex-col py-2 pr-4 pl-3">
-                <li className="block font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                  <p className="uppercase">Gas Limit</p>
-                  <p className="text-terra-mid-blue text-xs m-0">0</p>
-                </li>
-              </div>
-              <div className="flex-col py-2 pr-4 pl-3">
-                <li className="block font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                  <p className="uppercase">Hardfork</p>
-                  <p className="text-terra-mid-blue text-xs m-0">0</p>
-                </li>
-              </div>
-              <div className="flex-col py-2 pr-4 pl-3">
-                <li className="block font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                  <p className="uppercase">Network ID</p>
-                  <p className="text-terra-mid-blue text-xs m-0">{terra.config.chainID}</p>
-                </li>
+      <div className="flex-auto bg-gray-background">
 
-              </div>
-              <div className="flex-col py-2 pr-4 pl-3">
-                <li className="block font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                  <p className="uppercase">RPC Server</p>
-                  <p className="text-terra-mid-blue text-xs m-0">{terra.config.URL}</p>
-                </li>
-
-              </div>
-            </ul>
-            <div className="flex items-center justify-center rounded-lg w-40 h-10 border-4 border-gray-brackground">
-              <div className="flex items-center justify-center space-x-3 text-xs">
-                <BsCircleFill className="text-is-connected-green" />
+        <header className="p-4 bg-white">
+          <ul className="flex flex-row justify-between items-center font-medium">
+            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <p className="text-center uppercase">Current Block</p>
+              <p className="text-center text-terra-mid-blue">{latestHeight}</p>
+            </li>
+            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <p className="text-center uppercase">Gas Price</p>
+              <p className="text-center text-terra-mid-blue">20000000</p>
+            </li>
+            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <p className="text-center uppercase">Gas Limit</p>
+              <p className="text-center text-terra-mid-blue">0</p>
+            </li>
+            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <p className="text-center uppercase">Hardfork</p>
+              <p className="text-center text-terra-mid-blue">0</p>
+            </li>
+            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <p className="text-center uppercase">Network ID</p>
+              <p className="text-center text-terra-mid-blue">{terra.config.chainID}</p>
+            </li>
+            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <p className="text-center uppercase">RPC Server</p>
+              <p className="text-center text-terra-mid-blue">{terra.config.URL}</p>
+            </li>
+            <li>
+              <button type="button" onClick={toggleLocalTerra} className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground">
+                <BsCircleFill className={localTerraActive ? 'text-is-connected-green' : 'text-not-connected-red'} />
                 <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
-              </div>
-            </div>
-          </div>
+              </button>
+            </li>
+          </ul>
         </header>
+
         <main>
           <Routes>
             <Route path="/" element={<AccountsPage />} />
             <Route path="/blocks" element={<BlockPage />} />
             <Route path="/transactions" element={<TransactionPage />} />
+            <Route path="/logs" element={<LogsPage />} />
           </Routes>
         </main>
-      </div>
-    </div>
 
+      </div>
+
+    </div>
   );
 }
 

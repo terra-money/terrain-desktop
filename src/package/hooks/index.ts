@@ -4,8 +4,9 @@ import { Downgraded } from '@hookstate/core';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
 import { parseTxMsg } from '../../utils';
-import { blockState, txState, logsState } from '../stores';
-
+import {
+  blockState, txState, logsState, localTerraState,
+} from '../stores';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
@@ -18,6 +19,7 @@ export function useTerra() {
       const [coins] = (await terra.bank.balance(address));
       return coins.toData();
     },
+    getLocalTerraStatus: () => localTerraState.attach(Downgraded).get(),
     listenToAccountTx(address: string, cb: Function) {
       const listener = (_: any, tx: any) => {
         const { from_address: add } = parseTxMsg(tx.TxResult);
@@ -33,9 +35,7 @@ export function useTerra() {
 
   useEffect(() => {
     const listener = () => {
-      setHook({
-        ...hook,
-      });
+      setHook({ ...hook });
     };
     window.ipcRenderer.on('NewBlock', listener);
 
