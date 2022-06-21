@@ -13,11 +13,11 @@ function BlockItemView({ block }: { block: BlockInfo }) {
 
   return (
     <a href={blockHref} target="_blank" className="w-full text-right flex" rel="noreferrer">
-      <div className="w-1/12 bg-blue-200 px-2 text-center py-2">
+      <div className="w-2/12 bg-blue-200 px-2 text-center py-2">
         <p className="text-xs text-blue-800 font-bold">Block Number</p>
         <p className="text-blue-800">{height}</p>
       </div>
-      <div className="w-11/12 flex justify-between px-4">
+      <div className="w-10/12 flex justify-between px-4">
         <div>
           <p>Mined</p>
           <p>{dateString}</p>
