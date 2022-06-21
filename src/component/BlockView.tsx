@@ -17,17 +17,17 @@ function BlockItemView({ block }: { block: BlockInfo }) {
         <p className="text-xs text-blue-800 font-bold">Block Number</p>
         <p className="text-blue-800">{height}</p>
       </div>
-      <div className="w-11/12 flex text-center justify-around py-3">
-        <div flex-initial w-32>
-          <p className="box-decoration-slice bg-gradient-to-r from-indigo-600 to-pink-500 text-white px-2">Mined</p>
+      <div className="flex w-11/12 text-center justify-around py-3">
+        <div>
+          <p className="box-decoration-slice bg-terra-dark-blue/75 text-white px-2">Mined</p>
           <p>{dateString}</p>
         </div>
-        <div flex-initial w-32>
-          <p className="box-decoration-slice bg-gradient-to-r from-indigo-600 to-pink-500 text-white px-2">Gas Used</p>
+        <div>
+          <p className="box-decoration-slice bg-terra-dark-blue/75 text-white px-2">Gas Used</p>
           <p>{gasUsed}</p>
         </div>
-        <div flex-initial w-32>
-          <p className="box-decoration-slice bg-gradient-to-r from-indigo-600 to-pink-500 text-white px-2">Transactions</p>
+        <div>
+          <p className="box-decoration-slice bg-terra-dark-blue/75 text-white px-2">Transactions</p>
           <p>{txInfos.length}</p>
         </div>
       </div>
