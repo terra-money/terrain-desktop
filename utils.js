@@ -17,14 +17,14 @@ let isStarted = false;
 const blockWs = new WebSocketClient(LOCAL_WS);
 const txWs = new WebSocketClient(LOCAL_WS);
 
-async function validatePath(path) {
-  const ltFile = await fs.readFile(`${path}/docker-compose.yml`, 'utf8');
+async function validatePath(p) {
+  const ltFile = await fs.readFile(`${p}/docker-compose.yml`, 'utf8');
   const { services, version } = yaml.load(ltFile); // we also have easy access to version here
   const ltServices = Object.keys(services); // could handle this in a bunch of diff ways
   return ltServices.includes('terrad');
 }
 
-async function createWindow() {
+async function createWindow(params) {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -34,6 +34,7 @@ async function createWindow() {
       enableRemoteModule: true,
       preload: path.join(__dirname, 'preload.js'),
     },
+    ...params,
   });
   return win;
 }

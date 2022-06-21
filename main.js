@@ -9,12 +9,12 @@ async function init() {
   const win = await createWindow();
 
   const firstOpen = await settings.get('firstOpen');
-  console.log('firstOpen', firstOpen);
 
   if (typeof firstOpen === 'undefined') {
     win.hide();
-    const splashWin = await createWindow();
-    splashWin.loadURL(`file://${path.join(__dirname, 'onboard.html')}`);
+    const splashWin = await createWindow({ frame: false });
+    splashWin.webContents.openDevTools();
+    splashWin.loadURL(`file://${path.join(__dirname, 'dist/src/nested/index.html')}`);
     return;
   }
 
