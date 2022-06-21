@@ -1,5 +1,7 @@
 import { Tx } from '@terra-money/terra.js';
 import { readMsg } from '@terra-money/msg-reader';
+import { bech32 } from 'bech32';
+import { FINDER_URL, DOCS_SEARCH_URL } from '../constants';
 
 export function decodeTx(encodedTx: any) {
   return Tx.unpackAny({
@@ -13,10 +15,29 @@ export const parseTxMsg = (tx: Tx) => {
   return unpacked.body.messages[0] as any;
 };
 
-export function parseTxDescription(tx: Tx) {
+export const parseTxDescription = (tx: Tx) => {
   const txEncodedMsgDescription = parseTxMsg(tx);
   return readMsg(txEncodedMsgDescription);
+};
+
+function isValidTerraAddress(address: string) {
+  try {
+    const { prefix: decodedPrefix } = bech32.decode(address); // throw error if checksum is invalid
+    return decodedPrefix === 'terra';
+  } catch {
+    return false;
+  }
 }
+export const parseSearchUrl = (searchQuery: string) => {
+  if (Number(searchQuery)) {
+    return `${FINDER_URL}/blocks/${searchQuery}`;
+  } if (isValidTerraAddress(searchQuery)) {
+    return `${FINDER_URL}/address/${searchQuery}`;
+  } if (searchQuery.length === 64) {
+    return `${FINDER_URL}/tx/${searchQuery}`;
+  }
+  return `${DOCS_SEARCH_URL}q=${searchQuery}`;
+};
 
 export const MICRO = 1000000;
 export const microfy = (num: number) => num * MICRO as number;

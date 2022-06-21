@@ -7,6 +7,7 @@ import { useTerra, useGetBlocks } from './package/hooks';
 import {
   TransactionPage, LogsPage, AccountsPage, BlockPage, ContractsPage, EventsPage,
 } from './pages';
+import { parseSearchUrl } from './utils';
 
 const menu = [
   {
@@ -17,7 +18,7 @@ const menu = [
         <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
       </svg>
     ),
-    url: '',
+    url: '/',
   },
   {
     name: 'Blocks',
@@ -70,12 +71,23 @@ const menu = [
 function App() {
   const [open, setOpen] = useState(true);
   const [localTerraActive, setLocalTerraActive] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const { terra, getLocalTerraStatus } = useTerra();
   const { latestHeight } = useGetBlocks();
 
   useEffect(() => {
     setLocalTerraActive(getLocalTerraStatus());
   }, [latestHeight]);
+
+  const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
+
+  const handleSearch = (e: any) => {
+    if (e.key === 'Enter') {
+      const url = parseSearchUrl(searchQuery);
+      window.open(url, '_blank');
+    }
+  };
 
   const toggleLocalTerra = async () => {
     await window.ipcRenderer.send('LocalTerra', !localTerraActive);
@@ -94,7 +106,7 @@ function App() {
         </div>
         <div className={`flex items-center rounded-md mt-6 bg-light-white py-2 ${!open ? 'px-2.5' : 'px-4'}`}>
           <BsSearch className={`text-white text-lg block cursor-pointer ${open && 'mr-2 float-left'}`} />
-          <input type="search" placeholder="Search" className={`text-base bg-transparent w-full text-white focus:outline-none duration-300 ${!open && 'hidden'}`} />
+          <input onChange={handleSearchInput} onKeyDown={handleSearch} type="search" placeholder="Search" className={`text-base bg-transparent w-full text-white focus:outline-none duration-300 ${!open && 'hidden'}`} />
         </div>
         <ul className={`py-2 mt-2 ${open ? 'px-3' : 'px-2.5 mr-2'}`}>
           {menu.map((m) => (
@@ -153,12 +165,12 @@ function App() {
           {localTerraActive
             ? (
               <Routes>
-                <Route path="*" element={<AccountsPage />} />
                 <Route path="/blocks" element={<BlockPage />} />
                 <Route path="/transactions" element={<TransactionPage />} />
                 <Route path="/logs" element={<LogsPage />} />
                 <Route path="/contracts" element={<ContractsPage />} />
                 <Route path="/events" element={<EventsPage />} />
+                <Route path="*" element={<AccountsPage />} />
               </Routes>
             )
             : <Spinner />}
