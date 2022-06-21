@@ -14,7 +14,7 @@ async function init() {
     win.hide();
     const splashWin = await createWindow({ frame: false });
     splashWin.webContents.openDevTools();
-    splashWin.loadURL(`file://${path.join(__dirname, 'dist/src/nested/index.html')}`);
+    splashWin.loadURL(`file://${path.join(__dirname, 'dist/onboarding.html')}`);
     return;
   }
 
