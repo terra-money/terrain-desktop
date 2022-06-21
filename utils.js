@@ -1,5 +1,8 @@
 const settings = require('electron-settings');
-const { dialog, app, ipcMain } = require('electron');
+const {
+  dialog, app, ipcMain, BrowserWindow,
+} = require('electron');
+const path = require('path');
 const { spawn } = require('child_process');
 const { WebSocketClient } = require('@terra-money/terra.js');
 const { promises: fs } = require('fs');
@@ -19,6 +22,20 @@ async function validatePath(path) {
   const { services, version } = yaml.load(ltFile); // we also have easy access to version here
   const ltServices = Object.keys(services); // could handle this in a bunch of diff ways
   return ltServices.includes('terrad');
+}
+
+async function createWindow() {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      contextIsolation: false,
+      nodeIntegration: true,
+      enableRemoteModule: true,
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  });
+  return win;
 }
 
 async function getLocalTerraPath() {
@@ -89,6 +106,7 @@ async function stopLocalTerra(compose, win) {
 module.exports = {
   startLocalTerra,
   stopLocalTerra,
+  createWindow,
   blockWs,
   txWs,
 };
