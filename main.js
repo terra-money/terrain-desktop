@@ -12,7 +12,7 @@ async function init() {
 
   if (typeof firstOpen === 'undefined') {
     win.hide();
-    const splashWin = await createWindow({ frame: false });
+    const splashWin = await createWindow();
     splashWin.webContents.openDevTools();
     splashWin.loadURL(`file://${path.join(__dirname, 'dist/onboarding.html')}`);
     return;
