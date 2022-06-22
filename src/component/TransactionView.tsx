@@ -1,10 +1,14 @@
 import React from 'react';
+import { ipcRenderer } from 'electron';
 import { parseTxDescription, truncate } from '../utils';
 import { FINDER_URL } from '../constants';
 
 function TransactionItemView({ tx }: { tx: any }) {
   const txHref = `${FINDER_URL}/tx/${tx.txhash}`;
-
+  const sendNotification = async () => {
+    await ipcRenderer.send('Transacation', parseTxDescription(tx.tx));
+  };
+  sendNotification();
   return (
     <div className="w-full text-right flex">
       <a target="_blank" href={txHref} rel="noreferrer">

@@ -5,6 +5,7 @@ module.exports = {
   },
   extends: [
     'airbnb',
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -18,10 +19,10 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
-    "@typescript-eslint/no-unused-vars": ["error"],
+    '@typescript-eslint/no-unused-vars': ['error'],
     'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'react/jsx-props-no-spreading': 0,
-    'camelcase': 0,
+    camelcase: 0,
     'react/no-array-index-key': 0,
     'react/destructuring-assignment': 0,
     'consistent-return': 0,

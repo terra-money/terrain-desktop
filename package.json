@@ -32,18 +32,19 @@
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^4.0.3",
-    "wait-on": "^6.0.1"
+    "wait-on": "^6.0.1",
+
+    "electron-is-dev": "^2.0.0"
   },
   "devDependencies": {
     "@types/node": "^16.11.6",
-    "@types/react": "^17.0.0",
+    "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.1",
     "autoprefixer": "^10.4.7",
     "concurrently": "^6.5.1",
-    "electron-is-dev": "^2.0.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
