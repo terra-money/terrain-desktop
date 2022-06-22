@@ -1,20 +1,28 @@
 const path = require('path');
 const settings = require('electron-settings');
-const { app, shell } = require('electron');
+const { app, shell, ipcMain } = require('electron');
 const {
   startLocalTerra, stopLocalTerra, blockWs, txWs, createWindow,
 } = require('./utils');
 
 async function init() {
+  await settings.unset('firstOpen');
   const win = await createWindow();
+  const splashWin = await createWindow();
+
+  ipcMain.on('OnboardComplete', async () => {
+    // splashWin.close();
+    await settings.set('firstOpen', false);
+    win.show();
+  })
 
   const firstOpen = await settings.get('firstOpen');
-
   if (typeof firstOpen === 'undefined') {
     win.hide();
-    const splashWin = await createWindow();
     splashWin.webContents.openDevTools();
     splashWin.loadURL(`file://${path.join(__dirname, 'dist/onboarding.html')}`);
+    // listener set to true (like 'onboarding success) \
+    // and then splash screen should never be called again
     return;
   }
 
