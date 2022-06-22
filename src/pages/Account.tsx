@@ -7,7 +7,7 @@ export default function AccountsPage() {
   return (
     <ul className="w-full flex flex-col">
       {getTestAccounts().map((w) => (
-        <AccountView wallet={w} />
+        <AccountView wallet={w} key={w.key.accAddress} />
       ))}
     </ul>
   );

@@ -1,13 +1,14 @@
 import { Routes, Route } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
-import logo from './assets/terra-logo.svg';
+import { ipcRenderer } from 'electron';
 import { NavLink, Spinner } from './component';
 import { useTerra, useGetBlocks } from './package/hooks';
 import {
   TransactionPage, LogsPage, AccountsPage, BlockPage, ContractsPage, EventsPage,
 } from './pages';
 import { parseSearchUrl } from './utils';
+import logo from './assets/terra-logo.svg';
 
 const menu = [
   {
@@ -90,7 +91,7 @@ function App() {
   };
 
   const toggleLocalTerra = async () => {
-    await window.ipcRenderer.send('LocalTerra', !localTerraActive);
+    await ipcRenderer.send('LocalTerra', !localTerraActive);
     setLocalTerraActive(!localTerraActive); // could experiment with polling here
   };
 

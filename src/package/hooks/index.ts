@@ -1,6 +1,7 @@
 import { LocalTerra, Wallet } from '@terra-money/terra.js';
 import { useContext, useEffect, useState } from 'react';
 import { Downgraded } from '@hookstate/core';
+import { ipcRenderer } from 'electron';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
 import { parseTxMsg } from '../../utils';
@@ -25,9 +26,9 @@ export function useTerra() {
         const { from_address: add } = parseTxMsg(tx.TxResult);
         if (add === address) { cb(add); }
       };
-      window.ipcRenderer.on('Tx', listener);
+      ipcRenderer.on('Tx', listener);
       return () => {
-        window.ipcRenderer.removeListener('Tx', listener);
+        ipcRenderer.removeListener('Tx', listener);
       };
     },
   };
@@ -37,10 +38,10 @@ export function useTerra() {
     const listener = () => {
       setHook({ ...hook });
     };
-    window.ipcRenderer.on('NewBlock', listener);
+    ipcRenderer.on('NewBlock', listener);
 
     return () => {
-      window.ipcRenderer.removeListener('NewBlock', listener);
+      ipcRenderer.removeListener('NewBlock', listener);
     };
   }, []);
   return hook;
