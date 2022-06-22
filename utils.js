@@ -3,7 +3,7 @@ const {
   dialog, app, ipcMain, BrowserWindow,
 } = require('electron');
 const path = require('path');
-const { spawn } = require('child_process');
+const { spawn, exec } = require('child_process');
 const { WebSocketClient } = require('@terra-money/terra.js');
 const { promises: fs } = require('fs');
 const yaml = require('js-yaml');
@@ -58,43 +58,51 @@ async function getLocalTerraPath() {
 }
 
 async function startLocalTerra(win) {
-  const ltPath = await getLocalTerraPath();
-  const compose = spawn('docker-compose', ['up'], { cwd: ltPath });
+  try { 
+    const ltPath = await getLocalTerraPath();
+    const compose = spawn('docker-compose', ['up'], { cwd: ltPath });
+  
+    compose.stdout.on('data', (data) => {
+      win.webContents.send('NewLogs', data.toString());
+      if (!isStarted && data.includes('indexed block')) {
+        console.log('starting websocket');
+        isStarted = true;
+        blockWs.start();
+        txWs.start();
+        win.webContents.send('LocalTerra', true);
+      }
+    });
+  
+    compose.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+  
+    ipcMain.on('LocalTerra', (_, shouldBeActive) => {
+      if (shouldBeActive) {
+        startLocalTerra(win);
+      } else {
+        stopLocalTerra(compose, win);
+      }
+    });
+  
+    compose.on('close', () => {
+      win.webContents.send('LocalTerra', false);
+      if (isExiting) {
+        app.quit();
+      } else {
+        // dialog.showMessageBoxSync(LOCALTERRA_STOP_DIALOG);
+        isStarted = false;
+        // startLocalTerra();
+      }
+    });
+    return compose;
+  } catch (err) {
+    console.log('err', err)
+  }
+}
 
-  compose.stdout.on('data', (data) => {
-    win.webContents.send('NewLogs', data.toString());
-    if (!isStarted && data.includes('indexed block')) {
-      console.log('starting websocket');
-      isStarted = true;
-      blockWs.start();
-      txWs.start();
-      win.webContents.send('LocalTerra', true);
-    }
-  });
-
-  compose.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
-
-  ipcMain.on('LocalTerra', (_, shouldBeActive) => {
-    if (shouldBeActive) {
-      startLocalTerra(win);
-    } else {
-      stopLocalTerra(compose, win);
-    }
-  });
-
-  compose.on('close', () => {
-    win.webContents.send('LocalTerra', false);
-    if (isExiting) {
-      app.quit();
-    } else {
-      // dialog.showMessageBoxSync(LOCALTERRA_STOP_DIALOG);
-      isStarted = false;
-      // startLocalTerra();
-    }
-  });
-  return compose;
+async function installLocalTerra() {
+  exec('git clone')
 }
 
 async function stopLocalTerra(compose, win) {

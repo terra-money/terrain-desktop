@@ -2,55 +2,63 @@ const path = require('path');
 const settings = require('electron-settings');
 const { app, shell, ipcMain } = require('electron');
 const {
-  startLocalTerra, stopLocalTerra, blockWs, txWs, createWindow,
+  startLocalTerra, stopLocalTerra, blockWs, txWs, createWindow, installLocalTerra
 } = require('./utils');
 
-async function init() {
-  await settings.unset('firstOpen');
-  const win = await createWindow();
-  const splashWin = await createWindow();
 
-  ipcMain.on('OnboardComplete', async () => {
-    // splashWin.close();
+async function init() {
+  const appWin = await createWindow();
+  let splashWin
+
+  ipcMain.on('onboardComplete', async () => {
     await settings.set('firstOpen', false);
-    win.show();
+    splashWin && splashWin.close()
+    appWin.show()
+    init()
+  })
+
+  ipcMain.on('installLocalTerra', async () => {
+    await installLocalTerra()
   })
 
   const firstOpen = await settings.get('firstOpen');
+
   if (typeof firstOpen === 'undefined') {
-    win.hide();
+    appWin.hide();
+    splashWin = await createWindow({ frame: false });
     splashWin.webContents.openDevTools();
     splashWin.loadURL(`file://${path.join(__dirname, 'dist/onboarding.html')}`);
-    // listener set to true (like 'onboarding success) \
-    // and then splash screen should never be called again
     return;
   }
 
-  win.loadURL(`file://${path.join(__dirname, 'dist/index.html')}`);
+  appWin.loadURL(`file://${path.join(__dirname, 'dist/index.html')}`);
 
-  win.webContents.setWindowOpenHandler(({ url }) => {
+  appWin.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
   });
 
-  win.webContents.openDevTools();
+  appWin.webContents.openDevTools();
 
-  const compose = await startLocalTerra(win);
+  const compose = await startLocalTerra(appWin);
 
   txWs.subscribeTx({}, async ({ value }) => {
-    win.webContents.send('Tx', value);
+    appWin.webContents.send('Tx', value);
   });
 
   blockWs.subscribe('NewBlock', {}, ({ value }) => {
-    win.webContents.send('NewBlock', value);
+    appWin.webContents.send('NewBlock', value);
   });
 
   app.on('window-all-closed', () => {
     stopLocalTerra(compose);
   });
 }
-
+settings.unsetSync('firstOpen');
+settings.unsetSync('localTerraPath');
 app.whenReady().then(init);
+
+
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -58,5 +66,5 @@ app.whenReady().then(init);
 
 // Open the DevTools.
 //   if (isDev) {
-//     win.webContents.openDevTools({ mode: 'detach' });
+//     appWin.webContents.openDevTools({ mode: 'detach' });
 //   }

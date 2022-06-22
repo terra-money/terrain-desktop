@@ -3,16 +3,16 @@ import React, { useState } from 'react';
 function App() {
   const [isDockerInstalled, setIsDockerInstalled] = useState(false);
 
-  const handleOnChange = () => {
-    setIsDockerInstalled(!isDockerInstalled);
+  const handleOnChange = ({ target }) => {
+    setIsDockerInstalled(target.checked);
   };
 
   const handleLocalTerraInstalled = async () => {
-    await (window as any).ipcRenderer.send('OnboardComplete', true);
+    await (window as any).ipcRenderer.send('onboardComplete', true);
   }
 
-  const handleLocalTerraNotInstalled = () => {
-    console.log('local terra not installed clicked');
+  const handleLocalTerraNotInstalled = async () => {
+    await (window as any).ipcRenderer.send('installLocalTerra', true);
   }
 
   return (
@@ -24,12 +24,16 @@ function App() {
         <div className="flex-row text-white space-x-4">
           <label htmlFor="dockerInstalled">
             <input onChange={handleOnChange} id="dockerInstalled" type="checkbox" value="dockerInstalled" />
-            I have Docker Installed
+            I have Docker and Git installed
           </label>
         </div>
-        <button className={`${isDockerInstalled ? 'text-white' : 'hidden'} hover:underline`} type='button' onClick={handleLocalTerraInstalled}>I have LocalTerra Installed.</button>
-        <button className={`${isDockerInstalled ? 'text-white' : 'hidden'} hover:underline`} type='button' onClick={handleLocalTerraNotInstalled}>I do not have LocalTerra Installed.</button>
-
+        {isDockerInstalled && (
+          <>
+           <button className="text-white hover:underline" type='button' onClick={handleLocalTerraInstalled}>I already have LocalTerra installed</button>
+           <button className="text-white hover:underline" type='button' onClick={handleLocalTerraNotInstalled}>Install LocalTerra</button>
+          </>
+        )}
+       
       </div>
     </div>
   );
