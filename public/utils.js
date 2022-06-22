@@ -7,11 +7,12 @@ const { spawn } = require('child_process');
 const { WebSocketClient } = require('@terra-money/terra.js');
 const { promises: fs } = require('fs');
 const yaml = require('js-yaml');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 const {
   LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCAL_WS, LOCALTERRA_BAD_DIR_DIALOG,
 } = require('./constants');
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+
 
 const isExiting = false;
 let isStarted = false;
