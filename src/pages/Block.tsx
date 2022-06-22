@@ -6,7 +6,7 @@ export default function BlockPage() {
   const { blocks } = useGetBlocks();
   return (
     <ul className="w-full flex flex-col">
-      {blocks.map((b) => (<BlockView block={b} />))}
+      {blocks.map((b) => (<BlockView key={b.block_id?.hash} block={b} />))}
     </ul>
   );
 }
