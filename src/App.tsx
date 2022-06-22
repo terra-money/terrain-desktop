@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
-import logo from './assets/terraLogo.png';
+import logo from './assets/terra-logo.svg';
 import { NavLink, Spinner } from './component';
 import { useTerra, useGetBlocks } from './package/hooks';
 import {

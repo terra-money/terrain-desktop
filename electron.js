@@ -8,6 +8,7 @@ async function createWindow() {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
+    icon: path.join(__dirname, 'src/assets/terra-logo.png'),
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
