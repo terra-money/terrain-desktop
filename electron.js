@@ -13,12 +13,14 @@ async function init() {
   ipcMain.on('onboardComplete', async () => {
     await settings.set('firstOpen', false);
     splashWin && splashWin.close()
-    appWin.show()
     init()
   })
 
   ipcMain.on('installLocalTerra', async () => {
+    await settings.set('firstOpen', false);
+    splashWin && splashWin.close()
     await installLocalTerra()
+    init()
   })
 
   const firstOpen = await settings.get('firstOpen');
@@ -54,8 +56,8 @@ async function init() {
     stopLocalTerra(compose);
   });
 }
-settings.unsetSync('firstOpen');
-settings.unsetSync('localTerraPath');
+// settings.unsetSync('firstOpen');
+// settings.unsetSync('localTerraPath');
 app.whenReady().then(init);
 
 
