@@ -96,8 +96,8 @@ function App() {
   };
 
   return (
-    <div className="flex">
-      <div className={`bg-terra-dark-blue h-screen p-5 pt-8 ${open ? 'w-72' : 'w-20'} duration-300 relative`}>
+    <div className="flex w-screen h-screen">
+      <div className={`bg-terra-dark-blue h-full p-5 pt-8 ${open ? 'w-72' : 'w-20'} duration-300 relative`}>
         <BsArrowLeftShort className={`bg-white text-terra-dark-blue text-3xl rounded-full absolute -right-4 top-9 border border-terra-dark-blue cursor-pointer ${!open && 'rotate-180'}`} onClick={() => setOpen(!open)} />
         <div className="inline-flex items-center">
           <div className="w-10 aspect-square mr-2">
@@ -126,7 +126,7 @@ function App() {
         </ul>
       </div>
 
-      <div className="flex-auto bg-gray-background">
+      <div className="flex-auto bg-gray-background w-full h-screen">
 
         <header className="p-4 bg-white">
           <ul className="flex flex-row justify-between items-center font-medium">
@@ -162,7 +162,7 @@ function App() {
             </li>
           </ul>
         </header>
-        <main>
+        <main className="flex w-full h-full">
           {localTerraActive
             ? (
               <Routes>
