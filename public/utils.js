@@ -1,7 +1,8 @@
 const settings = require('electron-settings');
 const { dialog, app, ipcMain } = require('electron');
 const { spawn } = require('child_process');
-const { WebSocketClient } = require('@terra-money/terra.js');
+const { WebSocketClient, Tx } = require('@terra-money/terra.js');
+const { readMsg } = require('@terra-money/msg-reader');
 const { promises: fs } = require('fs');
 const yaml = require('js-yaml');
 const {
@@ -86,9 +87,41 @@ async function stopLocalTerra(compose, win) {
   compose.kill();
 }
 
+function decodeTx(encodedTx) {
+  return Tx.unpackAny({
+    value: Buffer.from(encodedTx, 'base64'),
+    typeUrl: '',
+  });
+}
+
+const parseTxMsg = (tx) => {
+  const unpacked = decodeTx(tx);
+  return unpacked.body.messages[0];
+};
+
+const parseTxDescription = (tx) => {
+  const txEncodedMsgDescription = parseTxMsg(tx);
+  return readMsg(txEncodedMsgDescription);
+};
+
+const transactionNotification = (tx) => {
+  const txMsg = parseTxDescription(tx);
+  const NOTIFICATION_TITLE = 'Transaction Occurred'
+  const NOTIFICATION_BODY = `${txMsg}`
+
+  function showNotification() {
+    new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
+  }
+  if (txMsg) {
+    showNotification();
+  };
+}
+
 module.exports = {
   startLocalTerra,
   stopLocalTerra,
+  parseTxDescription,
+  transactionNotification,
   blockWs,
   txWs,
 };

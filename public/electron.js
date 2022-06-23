@@ -5,9 +5,8 @@ const { BrowserWindow } = electron;
 
 const path = require('path');
 const isDev = require('electron-is-dev');
-const { ipcMain } = require('electron');
 const {
-    startLocalTerra, stopLocalTerra, blockWs, txWs,
+    startLocalTerra, stopLocalTerra, transactionNotification, blockWs, txWs,
 } = require('./utils');
 
 let mainWindow;
@@ -42,22 +41,12 @@ async function createWindow() {
 
     txWs.subscribeTx({}, async ({ value }) => {
         mainWindow.webContents.send('Tx', value);
+        // mainWindow.webContents.send('TxDescription', parseTxDescription);
+        transactionNotification(value);
     });
 
     blockWs.subscribe('NewBlock', {}, ({ value }) => {
         mainWindow.webContents.send('NewBlock', value);
-    });
-
-    ipcMain.on('Transacation', (_, txMsg) => {
-        const NOTIFICATION_TITLE = 'Transaction Occurred'
-        const NOTIFICATION_BODY = `${txMsg}`
-
-        function showNotification() {
-            new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
-        }
-        if (txMsg) {
-            showNotification();
-        }
     });
 
     app.on('window-all-closed', () => {
