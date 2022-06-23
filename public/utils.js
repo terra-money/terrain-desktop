@@ -1,16 +1,17 @@
 const settings = require('electron-settings');
-const { dialog, app, ipcMain } = require('electron');
+const { dialog, app, ipcMain, Notification } = require('electron');
 const { spawn } = require('child_process');
 const { WebSocketClient, Tx } = require('@terra-money/terra.js');
 const { readMsg } = require('@terra-money/msg-reader');
 const { promises: fs } = require('fs');
 const yaml = require('js-yaml');
 const {
-  LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCAL_WS, LOCALTERRA_BAD_DIR_DIALOG,
+  LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCAL_WS, LOCALTERRA_BAD_DIR_DIALOG, NOTIFICATION_ACCESS, NOTIFICATION_TITLE
 } = require('./constants');
 
 const isExiting = false;
 let isStarted = false;
+let notificationsGranted = false;
 
 const blockWs = new WebSocketClient(LOCAL_WS);
 const txWs = new WebSocketClient(LOCAL_WS);
@@ -44,7 +45,7 @@ async function startLocalTerra(win) {
   const ltPath = await getLocalTerraPath();
   const compose = spawn('docker-compose', ['up'], { cwd: ltPath });
 
-  compose.stdout.on('data', (data) => {
+  compose.stdout.on('data', async (data) => {
     win.webContents.send('NewLogs', data.toString());
     if (!isStarted && data.includes('indexed block')) {
       console.log('starting websocket');
@@ -52,6 +53,7 @@ async function startLocalTerra(win) {
       blockWs.start();
       txWs.start();
       win.webContents.send('LocalTerra', true);
+
     }
   });
 
@@ -105,16 +107,21 @@ const parseTxDescription = (tx) => {
 };
 
 const transactionNotification = (tx) => {
-  const txMsg = parseTxDescription(tx);
-  const NOTIFICATION_TITLE = 'Transaction Occurred'
-  const NOTIFICATION_BODY = `${txMsg}`
-
-  function showNotification() {
-    new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
+  if (!notificationsGranted) {
+    dialog.showMessageBox(NOTIFICATION_ACCESS);
+    new Notification().show();
+    notificationsGranted = true;
   }
-  if (txMsg) {
-    showNotification();
+
+  const txMsg = parseTxDescription(tx);
+  // const NOTIFICATION_TITLE = 'Transaction Occurred'
+  // const NOTIFICATION_BODY = `${txMsg}`
+  const notif = {
+    title: NOTIFICATION_TITLE,
+    body: `${txMsg}`,
   };
+  new Notification(notif).show();
+
 }
 
 module.exports = {

@@ -42,7 +42,7 @@ async function createWindow() {
     txWs.subscribeTx({}, async ({ value }) => {
         mainWindow.webContents.send('Tx', value);
         // mainWindow.webContents.send('TxDescription', parseTxDescription);
-        transactionNotification(value);
+        transactionNotification(value.TxResult.tx);
     });
 
     blockWs.subscribe('NewBlock', {}, ({ value }) => {
