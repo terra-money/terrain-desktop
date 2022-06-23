@@ -1,6 +1,5 @@
 import { BlockInfo } from '@terra-money/terra.js';
 import React from 'react';
-import { FINDER_URL } from '../constants';
 import { useGetTxFromHeight } from '../package';
 
 function BlockItemView({ block }: { block: BlockInfo }) {
@@ -9,7 +8,7 @@ function BlockItemView({ block }: { block: BlockInfo }) {
   const dateString = (new Date(time)).toDateString();
   let gasUsed: number = 0;
   txInfos.forEach(({ gas_used: gas }: { gas_used: number }) => { gasUsed += gas; });
-  const blockHref = `${FINDER_URL}/blocks/${height}`;
+  const blockHref = `${process.env.REACT_APP_FINDER_URL}/blocks/${height}`;
 
   return (
     <a href={blockHref} target="_blank" className="w-full text-right flex" rel="noreferrer">

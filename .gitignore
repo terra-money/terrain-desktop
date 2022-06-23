@@ -6,4 +6,8 @@ dist-ssr
 .vscode/launch.json
 appScratchCss.html
 src/index.css
+<<<<<<< HEAD
 yarn.lock
+=======
+.env
+>>>>>>> 184da34a6fe3389313d1089969c0f7df70073dfd

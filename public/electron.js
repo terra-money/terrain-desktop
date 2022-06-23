@@ -2,6 +2,7 @@ const electron = require('electron');
 
 const { app } = electron;
 const { BrowserWindow } = electron;
+require('dotenv').config()
 
 const path = require('path');
 const isDev = require('electron-is-dev');

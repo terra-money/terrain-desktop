@@ -6,14 +6,14 @@ const { readMsg } = require('@terra-money/msg-reader');
 const { promises: fs } = require('fs');
 const yaml = require('js-yaml');
 const {
-  LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCAL_WS, LOCALTERRA_BAD_DIR_DIALOG, NOTIFICATION_ACCESS, LOCAL_TERRA_START_NOTIFICATION, LOCAL_TERRA_HALTED_NOTIFICATION, TRANSACTION_NOTIFICATION
-} = require('./constants');
+  LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCALTERRA_BAD_DIR_DIALOG, LOCAL_TERRA_HALTED_NOTIFICATION, LOCAL_TERRA_START_NOTIFICATION, TRANSACTION_NOTIFICATION, NOTIFICATION_ACCESS
+} = require('./dialogs');
 
 const isExiting = false;
 let isStarted = false;
 
-const blockWs = new WebSocketClient(LOCAL_WS);
-const txWs = new WebSocketClient(LOCAL_WS);
+const blockWs = new WebSocketClient(process.env.LOCAL_TERRA_WS);
+const txWs = new WebSocketClient(process.env.LOCAL_TERRA_WS);
 
 async function validatePath(path) {
   const ltFile = await fs.readFile(`${path}/docker-compose.yml`, 'utf8');

@@ -1,9 +1,8 @@
 import React from 'react';
 import { parseTxDescription, truncate } from '../utils';
-import { FINDER_URL } from '../constants';
 
 function TransactionItemView({ tx }: { tx: any }) {
-  const txHref = `${FINDER_URL}/tx/${tx.txhash}`;
+  const txHref = `${process.env.REACT_APP_FINDER_URL}/tx/${tx.txhash}`;
 
   return (
     <div className="w-full text-right flex">

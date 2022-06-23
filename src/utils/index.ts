@@ -1,7 +1,6 @@
 import { Tx } from '@terra-money/terra.js';
 import { readMsg } from '@terra-money/msg-reader';
 import { bech32 } from 'bech32';
-import { FINDER_URL, DOCS_SEARCH_URL } from '../constants';
 
 export function decodeTx(encodedTx: any) {
   return Tx.unpackAny({
@@ -30,13 +29,13 @@ function isValidTerraAddress(address: string) {
 }
 export const parseSearchUrl = (searchQuery: string) => {
   if (Number(searchQuery)) {
-    return `${FINDER_URL}/blocks/${searchQuery}`;
+    return `${process.env.REACT_APP_FINDER_URL}/blocks/${searchQuery}`;
   } if (isValidTerraAddress(searchQuery)) {
-    return `${FINDER_URL}/address/${searchQuery}`;
+    return `${process.env.REACT_APP_FINDER_URL}/address/${searchQuery}`;
   } if (searchQuery.length === 64) {
-    return `${FINDER_URL}/tx/${searchQuery}`;
+    return `${process.env.REACT_APP_FINDER_URL}/tx/${searchQuery}`;
   }
-  return `${DOCS_SEARCH_URL}q=${searchQuery}`;
+  return `${process.env.REACT_APP_DOCS_URL}?q=${searchQuery}`;
 };
 
 export const MICRO = 1000000;
