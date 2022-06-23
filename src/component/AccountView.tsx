@@ -1,7 +1,6 @@
 import { TxInfo, Denom } from '@terra-money/terra.js';
 import React, { useEffect, useState } from 'react';
 import { useTerra } from '../package';
-import { FINDER_URL } from '../constants';
 import { demicrofy } from '../utils';
 import { KeyView } from '.';
 
@@ -33,7 +32,7 @@ function AccountView({ wallet } : { wallet : any }) {
   return (
     <div className="flex text-left justify-between px-4 py-2 border-b border-b-blue-900">
       {open && <KeyView mnemonic={mnemonic} handleClose={handleClose} />}
-      <a href={`${FINDER_URL}/address/${accAddress}`} target="_blank" rel="noreferrer">
+      <a href={`${process.env.REACT_APP_FINDER_URL}/address/${accAddress}`} target="_blank" rel="noreferrer">
         <div className="flex w-[570px]">
           <div>
             <p className="text-xs font-bold text-blue-600 uppercase">
