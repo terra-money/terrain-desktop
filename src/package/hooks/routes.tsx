@@ -59,7 +59,7 @@ const useNav = () => {
   const routes = [
     {
       name: 'Onboard',
-      path: '/onboard',
+      path: '/',
       element: <OnboardPage />,
     },
     // Add here routes that cannot be accessed directly from the menu entry

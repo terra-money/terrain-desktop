@@ -29,8 +29,8 @@ ipcRenderer.on('LocalTerra', ((_: any, status: boolean) => {
 }));
 
 ipcRenderer.on('FirstOpen', ((_: any, isFirstOpen: boolean) => {
+  console.log('isFirstOpen => ', isFirstOpen)
   if (isFirstOpen) {
-    console.log('isFirstOpen', isFirstOpen)
     const navigate = useNavigate();
     navigate("/onboard")
   }

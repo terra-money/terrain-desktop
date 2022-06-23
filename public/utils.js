@@ -56,13 +56,12 @@ async function getLocalTerraPath() {
     return ltPath;
   } catch (err) {
     await dialog.showMessageBox(LOCALTERRA_BAD_DIR_DIALOG);
-    startLocalTerra();
   }
 }
 
 async function startLocalTerra(win) {
   try { 
-    const ltPath = await getLocalTerraPath();
+    const ltPath = await getLocalTerraPath(win);
     const compose = spawn('docker-compose', ['up'], { cwd: ltPath });
   
     compose.stdout.on('data', (data) => {

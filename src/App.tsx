@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
-import { NavLink, Spinner } from './component';
+import { NavLink } from './component';
 import { useTerra, useGetBlocks } from './package/hooks';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
@@ -99,9 +99,7 @@ function App() {
           </ul>
         </header>
         <main>
-          {localTerraActive
-            ? <>{routes}</>
-            : <Spinner />}
+          <>{routes}</>
         </main>
       </div>
     </div>

@@ -30,8 +30,6 @@ async function init() {
     win.webContents.send('FirstOpen', true);
   }
 
-  const compose = await startLocalTerra(win);
-
   txWs.subscribeTx({}, async ({ value }) => {
     win.webContents.send('Tx', value);
   });
@@ -40,13 +38,15 @@ async function init() {
     win.webContents.send('NewBlock', value);
   });
 
-  ipcMain.on('OnboardComplete', async () => {
+  ipcMain.handle('SelectLocalTerraPath',async () => {
+    await startLocalTerra(win);
     await settings.set('firstOpen', false);
   })
 
-  ipcMain.on('installLocalTerra', async () => {
+  ipcMain.handle('InstallLocalTerra', async () => {
+    await installLocalTerra(win);
+    await startLocalTerra(win);
     await settings.set('firstOpen', false);
-    await installLocalTerra()
   })
 
   app.on('window-all-closed', () => {
