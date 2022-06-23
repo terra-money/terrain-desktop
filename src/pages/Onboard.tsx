@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 
-function App() {
+export default function Onboard() {
   const [isDockerInstalled, setIsDockerInstalled] = useState(false);
 
-  const handleOnChange = ({ target }) => {
-    setIsDockerInstalled(target.checked);
+  const handleOnChange = (e: any) => {
+    setIsDockerInstalled(e.target.checked);
   };
 
   const handleLocalTerraInstalled = async () => {
-    await (window as any).ipcRenderer.send('onboardComplete', true);
+    await (window as any).ipcRenderer.send('OnboardComplete', true);
   }
 
   const handleLocalTerraNotInstalled = async () => {
@@ -33,10 +33,7 @@ function App() {
            <button className="text-white hover:underline" type='button' onClick={handleLocalTerraNotInstalled}>Install LocalTerra</button>
           </>
         )}
-       
       </div>
     </div>
   );
 }
-
-export default App;

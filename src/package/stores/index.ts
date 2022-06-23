@@ -1,7 +1,9 @@
 import { createState } from '@hookstate/core';
 import { BlockInfo, TxInfo } from '@terra-money/terra.js';
 import { ipcRenderer } from 'electron';
+import { useNavigate } from "react-router-dom";
 import { IBlockState } from '../interface';
+
 
 export const blockState = createState<IBlockState>({ blocks: [], latestHeight: 0 });
 export const txState = createState<TxInfo[]>([]);
@@ -24,4 +26,12 @@ ipcRenderer.on('NewLogs', ((_: any, log: string) => {
 
 ipcRenderer.on('LocalTerra', ((_: any, status: boolean) => {
   localTerraState.set(status);
+}));
+
+ipcRenderer.on('FirstOpen', ((_: any, isFirstOpen: boolean) => {
+  if (isFirstOpen) {
+    console.log('isFirstOpen', isFirstOpen)
+    const navigate = useNavigate();
+    navigate("/onboard")
+  }
 }));

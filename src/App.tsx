@@ -5,7 +5,7 @@ import { NavLink, Spinner } from './component';
 import { useTerra, useGetBlocks } from './package/hooks';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
-import useNav from './routes';
+import useNav from './package/hooks/routes';
 
 function App() {
   const [open, setOpen] = useState(true);

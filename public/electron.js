@@ -8,59 +8,46 @@ const {
   startLocalTerra, stopLocalTerra, blockWs, txWs, createWindow, installLocalTerra
 } = require('./utils');
 
-let appWin
-let splashWin
-
 async function init() {
-  appWin = await createWindow();
-
-  ipcMain.on('onboardComplete', async () => {
-    await settings.set('firstOpen', false);
-    splashWin.close()
-    init()
-  })
-
-  ipcMain.on('installLocalTerra', async () => {
-    await settings.set('firstOpen', false);
-    splashWin.close()
-    await installLocalTerra()
-    init()
-  })
-
+  let win = await createWindow();
   const firstOpen = await settings.get('firstOpen');
 
-  if (typeof firstOpen === 'undefined') {
-    appWin.hide();
-    splashWin = await createWindow({ frame: false });
-    splashWin.webContents.openDevTools();
-    // splashWin.loadURL(`file://${path.join(__dirname, 'onboarding.html')}`);
-    splashWin.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/onboarding.html')}`);
-    return;
-  }
 
-  appWin.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
+
+  win.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
   if (isDev) {
-    appWin.webContents.openDevTools();
+    win.webContents.openDevTools();
   }
 
-  appWin.on('closed', () => { appWin = null });
+  win.on('closed', () => { win = null });
 
-  appWin.webContents.setWindowOpenHandler(({ url }) => {
+  win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
   });
 
-  appWin.webContents.openDevTools();
+  if (typeof firstOpen === 'undefined') {
+    win.webContents.send('FirstOpen', true);
+  }
 
-  const compose = await startLocalTerra(appWin);
+  const compose = await startLocalTerra(win);
 
   txWs.subscribeTx({}, async ({ value }) => {
-    appWin.webContents.send('Tx', value);
+    win.webContents.send('Tx', value);
   });
 
   blockWs.subscribe('NewBlock', {}, ({ value }) => {
-    appWin.webContents.send('NewBlock', value);
+    win.webContents.send('NewBlock', value);
   });
+
+  ipcMain.on('OnboardComplete', async () => {
+    await settings.set('firstOpen', false);
+  })
+
+  ipcMain.on('installLocalTerra', async () => {
+    await settings.set('firstOpen', false);
+    await installLocalTerra()
+  })
 
   app.on('window-all-closed', () => {
     stopLocalTerra(compose);
@@ -78,5 +65,5 @@ app.on('ready', init);
 
 // Open the DevTools.
 //   if (isDev) {
-//     appWin.webContents.openDevTools({ mode: 'detach' });
+//     win.webContents.openDevTools({ mode: 'detach' });
 //   }
