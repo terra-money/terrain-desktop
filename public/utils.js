@@ -114,11 +114,10 @@ const transactionNotification = (tx) => {
   }
 
   const txMsg = parseTxDescription(tx);
-  // const NOTIFICATION_TITLE = 'Transaction Occurred'
-  // const NOTIFICATION_BODY = `${txMsg}`
   const notif = {
     title: NOTIFICATION_TITLE,
     body: `${txMsg}`,
+    // TO-DO: add terrarium icon
   };
   new Notification(notif).show();
 
