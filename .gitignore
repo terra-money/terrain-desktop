@@ -6,3 +6,4 @@ dist-ssr
 .vscode/launch.json
 appScratchCss.html
 src/index.css
+.env

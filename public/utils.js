@@ -10,15 +10,15 @@ const yaml = require('js-yaml');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const {
-  LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCAL_WS, LOCALTERRA_BAD_DIR_DIALOG,
-} = require('./constants');
+  LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCALTERRA_BAD_DIR_DIALOG,
+} = require('./dialogs');
 
 
 const isExiting = false;
 let isStarted = false;
 
-const blockWs = new WebSocketClient(LOCAL_WS);
-const txWs = new WebSocketClient(LOCAL_WS);
+const blockWs = new WebSocketClient(process.env.LOCAL_TERRA_WS);
+const txWs = new WebSocketClient(process.env.LOCAL_TERRA_WS);
 
 async function validatePath(p) {
   const ltFile = await fs.readFile(`${p}/docker-compose.yml`, 'utf8');

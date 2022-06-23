@@ -2,6 +2,7 @@ const path = require('path');
 const settings = require('electron-settings');
 const { app, shell, ipcMain } = require('electron');
 const isDev = require('electron-is-dev')
+require('dotenv').config()
 
 const {
   startLocalTerra, stopLocalTerra, blockWs, txWs, createWindow, installLocalTerra
