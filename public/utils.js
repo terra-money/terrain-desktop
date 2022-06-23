@@ -6,12 +6,11 @@ const { readMsg } = require('@terra-money/msg-reader');
 const { promises: fs } = require('fs');
 const yaml = require('js-yaml');
 const {
-  LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCAL_WS, LOCALTERRA_BAD_DIR_DIALOG, NOTIFICATION_ACCESS, NOTIFICATION_TITLE
+  LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCAL_WS, LOCALTERRA_BAD_DIR_DIALOG, NOTIFICATION_ACCESS, LOCAL_TERRA_START_NOTIFICATION, LOCAL_TERRA_HALTED_NOTIFICATION, TRANSACTION_NOTIFICATION
 } = require('./constants');
 
 const isExiting = false;
 let isStarted = false;
-let notificationsGranted = false;
 
 const blockWs = new WebSocketClient(LOCAL_WS);
 const txWs = new WebSocketClient(LOCAL_WS);
@@ -43,6 +42,7 @@ async function getLocalTerraPath() {
 
 async function startLocalTerra(win) {
   const ltPath = await getLocalTerraPath();
+  grantNotificationAccess();
   const compose = spawn('docker-compose', ['up'], { cwd: ltPath });
 
   compose.stdout.on('data', async (data) => {
@@ -53,7 +53,7 @@ async function startLocalTerra(win) {
       blockWs.start();
       txWs.start();
       win.webContents.send('LocalTerra', true);
-
+      localTerraStartedNotification();
     }
   });
 
@@ -71,6 +71,7 @@ async function startLocalTerra(win) {
 
   compose.on('close', () => {
     win.webContents.send('LocalTerra', false);
+    localTerraHaltedNotification();
     if (isExiting) {
       app.quit();
     } else {
@@ -106,21 +107,39 @@ const parseTxDescription = (tx) => {
   return readMsg(txEncodedMsgDescription);
 };
 
-const transactionNotification = (tx) => {
+const grantNotificationAccess = async (notificationsGranted) => {
   if (!notificationsGranted) {
     dialog.showMessageBox(NOTIFICATION_ACCESS);
     new Notification().show();
-    notificationsGranted = true;
+    await settings.set('notificationsGranted', true);
   }
+}
+
+const transactionNotification = (tx) => {
 
   const txMsg = parseTxDescription(tx);
   const notif = {
-    title: NOTIFICATION_TITLE,
+    title: TRANSACTION_NOTIFICATION.message,
     body: `${txMsg}`,
     // TO-DO: add terrarium icon
   };
   new Notification(notif).show();
+}
 
+const localTerraStartedNotification = () => {
+  const notif = {
+    title: LOCAL_TERRA_START_NOTIFICATION.message,
+    // TO-DO: add terrarium icon
+  };
+  new Notification(notif).show();
+}
+
+const localTerraHaltedNotification = () => {
+  const notif = {
+    title: LOCAL_TERRA_HALTED_NOTIFICATION.message,
+    // TO-DO: add terrarium icon
+  };
+  new Notification(notif).show();
 }
 
 module.exports = {

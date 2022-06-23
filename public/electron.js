@@ -37,6 +37,8 @@ async function createWindow() {
 
     mainWindow.webContents.openDevTools();
 
+
+
     const compose = await startLocalTerra(mainWindow);
 
     txWs.subscribeTx({}, async ({ value }) => {
