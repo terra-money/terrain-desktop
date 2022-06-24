@@ -45,6 +45,10 @@ function startLocalTerra(localTerraPath) {
 
 async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
   localTerraProcess.stdout.on('data', (data) => {
+    if (browserWindow.isDestroyed()) {
+      return;
+    }
+
     browserWindow.webContents.send('NewLogs', data.toString());
 
     if (!isLocalTerraRunning && data.includes('indexed block')) {
@@ -62,17 +66,29 @@ async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
   });
 
   localTerraProcess.on('close', () => {
-    console.log('LocalTerra process closed');
+    if (browserWindow.isDestroyed()) {
+      return;
+    }
+
     isLocalTerraRunning = false;
+    browserWindow.webContents.send('LocalTerraRunning', false);
   });
 
   return localTerraProcess;
 }
 
 async function stopLocalTerra(localTerraProcess) {
-  txWs.destroy();
-  blockWs.destroy();
-  localTerraProcess.kill();
+  return new Promise(resolve => {
+    if (localTerraProcess.killed){
+      return resolve();
+    }
+
+    txWs.destroy();
+    blockWs.destroy();
+    localTerraProcess.once('close', resolve);
+    localTerraProcess.kill();  
+  });
+
 }
 
 module.exports = {

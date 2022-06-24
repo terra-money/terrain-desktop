@@ -9,7 +9,7 @@
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
     "electron": "electron .",
-    "electron-dev": "concurrently \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-dev": "concurrently -k \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "npm run build",
     "electron-pack": "build -mw",

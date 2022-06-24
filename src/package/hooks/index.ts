@@ -59,12 +59,12 @@ export const useGetTxs = () => {
 
 export const useLocalTerraPathConfigured = () => {
   const { localTerraPathConfigured } = useContext(ElectronContext);
-  return localTerraPathConfigured;
+  return localTerraPathConfigured.attach(Downgraded).get();
 }
 
 export const useLocalTerraStarted = () => {
   const { localTerraStarted } = useContext(ElectronContext);
-  return localTerraStarted;
+  return localTerraStarted.attach(Downgraded).get();
 }
 
 export function useGetTxFromHeight(height?: number) {

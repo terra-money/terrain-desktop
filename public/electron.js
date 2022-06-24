@@ -23,10 +23,10 @@ const {
 } = require('./dialogs');
 
 async function init() {
-  // store.clear()
-  let browserWindow = new BrowserWindow({
+  const browserWindow = new BrowserWindow({
     width: 1200,
     height: 720,
+    show: false,
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
@@ -43,14 +43,6 @@ async function init() {
   else {
     browserWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
   }
-
-  browserWindow.on('closed', () => {
-    browserWindow = null;
-
-    if (localTerraProcess) {
-      stopLocalTerra(localTerraProcess);
-    }
-  });
 
   browserWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
@@ -103,14 +95,14 @@ async function init() {
     }
     else {
       stopLocalTerra(localTerraProcess);
-      browserWindow.webContents.send('LocalTerraRunning', false);
     }
 
     return localTerraStatus;
   });
 
-  app.on('window-all-closed', () => {
-    stopLocalTerra(localTerraProcess);
+  app.on('window-all-closed', async () => {
+    await stopLocalTerra(localTerraProcess);
+    app.quit();
   });
 
   const localTerraPath = await store.get('localTerraPath');
@@ -119,6 +111,8 @@ async function init() {
     localTerraProcess = startLocalTerra(localTerraPath);
     await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
   }
+
+  browserWindow.show();
 }
 
 app.on('ready', init);

@@ -14,7 +14,7 @@ export default function Onboard() {
   const onSetLocalTerraPath = async () => {
     try {
       await ipcRenderer.invoke('SetLocalTerraPath');
-      navigate('/accounts');
+      navigate('/');
     }
     catch (e: any) {
       console.log(e);
@@ -25,7 +25,7 @@ export default function Onboard() {
   const onLocalTerraInstall = async () => {
     try {
       await ipcRenderer.invoke('InstallLocalTerra');
-      navigate('/accounts');
+      navigate('/');
     }
     catch (e: any) {
       console.log(e);

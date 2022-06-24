@@ -20,14 +20,11 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    const { value: pathIsConfigured } = isLocalTerraPathConfigured
-    const { value: localTerraIsRunning } = hasStartedLocalTerra
-    console.log('localTerraIsRunning', localTerraIsRunning)
-    console.log('pathIsConfigured', pathIsConfigured)
-    if (pathIsConfigured && localTerraIsRunning) navigate('/accounts');
-    else if (pathIsConfigured === null && localTerraIsRunning === null) navigate('/onboard')
-    else if (pathIsConfigured && !localTerraIsRunning) navigate('/');
-  }, [isLocalTerraPathConfigured.value, hasStartedLocalTerra.value]);
+    if (isLocalTerraPathConfigured && hasStartedLocalTerra) navigate('/accounts');
+    else if (!isLocalTerraPathConfigured) navigate('/onboard');
+    else if (hasStartedLocalTerra === null) navigate('/');
+
+  }, [isLocalTerraPathConfigured, hasStartedLocalTerra]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
 
@@ -39,7 +36,7 @@ function App() {
   };
 
   const toggleLocalTerra = async () => {
-    await ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra.value);
+    await ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra);
   };
 
   return (
@@ -88,7 +85,7 @@ function App() {
             </li>
             <li>
               <button type="button" onClick={toggleLocalTerra} className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground">
-                <BsCircleFill className={hasStartedLocalTerra.value ? 'text-is-connected-green' : 'text-not-connected-red'} />
+                <BsCircleFill className={hasStartedLocalTerra ? 'text-is-connected-green' : 'text-not-connected-red'} />
                 <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
               </button>
             </li>
