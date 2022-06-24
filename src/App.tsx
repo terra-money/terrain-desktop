@@ -9,8 +9,6 @@ import logo from './assets/terra-logo.svg';
 import useNav from './package/hooks/routes';
 
 function App() {
-  const [open, setOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
   const { element: routes, menu } = useNav();
   const navigate = useNavigate();
   const { terra } = useTerra();
@@ -18,12 +16,12 @@ function App() {
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
 
-  useEffect(() => {
-    console.log("App#isLocalTerraPathConfigured", isLocalTerraPathConfigured.value);
+  const [open, setOpen] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
+  useEffect(() => {
     if (isLocalTerraPathConfigured.value) navigate('/accounts');
     else navigate('/onboard');
-
   }, [isLocalTerraPathConfigured.value]);
 
   useEffect(() => {
@@ -78,18 +76,6 @@ function App() {
             <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
               <p className="text-center uppercase">Current Block</p>
               <p className="text-center text-terra-mid-blue">{latestHeight}</p>
-            </li>
-            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-              <p className="text-center uppercase">Gas Price</p>
-              <p className="text-center text-terra-mid-blue">20000000</p>
-            </li>
-            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-              <p className="text-center uppercase">Gas Limit</p>
-              <p className="text-center text-terra-mid-blue">0</p>
-            </li>
-            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-              <p className="text-center uppercase">Hardfork</p>
-              <p className="text-center text-terra-mid-blue">0</p>
             </li>
             <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
               <p className="text-center uppercase">Network ID</p>
