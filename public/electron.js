@@ -2,8 +2,8 @@ const path = require('path');
 const Store = require('electron-store');
 const { app, shell, ipcMain, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev')
-
 require('dotenv').config()
+
 const store = new Store();
 
 const {
@@ -17,9 +17,9 @@ const {
 } = require('./utils');
 
 const {
-  displayPathSelectionWindow,
-  displayWrongDirectoryDialog,
-  displayLocalTerraAlreadyExistsDialog
+  showPathSelectionDialog,
+  ShowWrongDirectoryDialog,
+  showLocalTerraAlreadyExistsDialog
 } = require('./dialogs');
 
 async function init() {
@@ -65,7 +65,7 @@ async function init() {
   });
 
   ipcMain.handle('SetLocalTerraPath', async () => {
-    const { filePaths } = await displayPathSelectionWindow();
+    const { filePaths } = await showPathSelectionDialog();
     const isValid = validateLocalTerraPath(filePaths[0]);
 
     if (isValid) {
@@ -74,7 +74,7 @@ async function init() {
       await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
     }
     else {
-      await displayWrongDirectoryDialog();
+      await ShowWrongDirectoryDialog();
       throw Error(`LocalTerra does not exist under the path '${localTerraPath}'`);
     }
   })
@@ -88,7 +88,7 @@ async function init() {
       await store.set('localTerraPath', localTerraPath);
     }
     catch (e) {
-      await displayLocalTerraAlreadyExistsDialog();
+      await showLocalTerraAlreadyExistsDialog();
       throw Error("LocalTerra already exists under the default path")
     }
   });

@@ -46,6 +46,8 @@ async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
     browserWindow.webContents.send('NewLogs', data.toString());
 
     if (!isLocalTerraRunning && data.includes('indexed block')) {
+      console.log('process.env.LOCAL_TERRA_WS', process.env.LOCAL_TERRA_WS)
+      
       console.log('starting websocket');
       blockWs.start();
       txWs.start();
