@@ -1,9 +1,32 @@
-const LOCALTERRA_PATH_DIALOG = { message: 'Select your LocalTerra directory.', type: 'info', properties: ['openDirectory'] };
-const LOCALTERRA_STOP_DIALOG = { message: 'LocalTerra stopped. Restarting...', title: 'Terrarium', type: 'warning' };
-const LOCALTERRA_BAD_DIR_DIALOG = { message: 'Please select a valid LocalTerra directory', title: 'Terrarium', type: 'warning' };
+const { dialog, app } = require('electron');
+
+async function showPathSelectionDialog() {
+  return dialog.showOpenDialog({
+    message: 'Select your LocalTerra directory.',
+    title: 'Terrarium',
+    type: 'info',
+    properties: ['openDirectory']
+  });
+}
+
+async function ShowWrongDirectoryDialog() {
+  return dialog.showMessageBox({
+    message: 'Please select a valid LocalTerra directory',
+    title: 'Terrarium',
+    type: 'warning'
+  });
+}
+
+async function showLocalTerraAlreadyExistsDialog() {
+  return dialog.showMessageBox({
+    message: `LocalTerra already exists in the default installation folder '${app.getPath('appData')}/LocalTerra'. Delete the exsisting LocalTerra directory to continue with the installation or select it to start Terrarium.`,
+    title: 'Terrarium',
+    type: 'warning'
+  });
+}
 
 module.exports = {
-  LOCALTERRA_BAD_DIR_DIALOG,
-  LOCALTERRA_STOP_DIALOG,
-  LOCALTERRA_PATH_DIALOG,
+  showPathSelectionDialog,
+  ShowWrongDirectoryDialog,
+  showLocalTerraAlreadyExistsDialog
 };

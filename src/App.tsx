@@ -1,24 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
-import { NavLink, Spinner } from './component';
-import { useTerra, useGetBlocks } from './package/hooks';
+import { useNavigate } from 'react-router-dom';
+import { NavLink } from './component';
+import { useTerra, useGetBlocks, useLocalTerraPathConfigured, useLocalTerraStarted} from './package/hooks';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
-import useNav from './routes';
+import useNav from './package/hooks/routes';
 
 function App() {
-  const [open, setOpen] = useState(true);
-  const [localTerraActive, setLocalTerraActive] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const { element: routes, menu } = useNav();
-
-  const { terra, getLocalTerraStatus } = useTerra();
+  const navigate = useNavigate();
+  const { terra } = useTerra();
   const { latestHeight } = useGetBlocks();
+  const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
+  const hasStartedLocalTerra = useLocalTerraStarted();
+
+  const [open, setOpen] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    setLocalTerraActive(getLocalTerraStatus());
-  }, [latestHeight]);
+    if (isLocalTerraPathConfigured && hasStartedLocalTerra) navigate('/accounts');
+    else if (!isLocalTerraPathConfigured) navigate('/onboard');
+    else if (hasStartedLocalTerra === null) navigate('/');
+
+  }, [isLocalTerraPathConfigured, hasStartedLocalTerra]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
 
@@ -30,8 +36,7 @@ function App() {
   };
 
   const toggleLocalTerra = async () => {
-    await ipcRenderer.send('LocalTerra', !localTerraActive);
-    setLocalTerraActive(!localTerraActive); // could experiment with polling here
+    await ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra);
   };
 
   return (
@@ -71,18 +76,6 @@ function App() {
               <p className="text-center text-terra-mid-blue">{latestHeight}</p>
             </li>
             <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-              <p className="text-center uppercase">Gas Price</p>
-              <p className="text-center text-terra-mid-blue">20000000</p>
-            </li>
-            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-              <p className="text-center uppercase">Gas Limit</p>
-              <p className="text-center text-terra-mid-blue">0</p>
-            </li>
-            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-              <p className="text-center uppercase">Hardfork</p>
-              <p className="text-center text-terra-mid-blue">0</p>
-            </li>
-            <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
               <p className="text-center uppercase">Network ID</p>
               <p className="text-center text-terra-mid-blue">{terra.config.chainID}</p>
             </li>
@@ -92,16 +85,14 @@ function App() {
             </li>
             <li>
               <button type="button" onClick={toggleLocalTerra} className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground">
-                <BsCircleFill className={localTerraActive ? 'text-is-connected-green' : 'text-not-connected-red'} />
+                <BsCircleFill className={hasStartedLocalTerra ? 'text-is-connected-green' : 'text-not-connected-red'} />
                 <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
               </button>
             </li>
           </ul>
         </header>
         <main>
-          {localTerraActive
-            ? <>{routes}</>
-            : <Spinner />}
+          <>{routes}</>
         </main>
       </div>
     </div>

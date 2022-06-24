@@ -5,5 +5,4 @@ export interface ITerraHook {
     getTestAccounts(): Wallet[]
     getBalance(address : string): Promise<Coins.Data>
     listenToAccountTx(address : string, cb : Function) : any
-    getLocalTerraStatus() : boolean
 }
