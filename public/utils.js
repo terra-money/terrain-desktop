@@ -1,94 +1,102 @@
-const settings = require('electron-settings');
-const { dialog, app, ipcMain } = require('electron');
+const { app } = require('electron');
+const path = require('path');
 const { spawn } = require('child_process');
 const { WebSocketClient } = require('@terra-money/terra.js');
-const { promises: fs } = require('fs');
+const fs = require('fs');
 const yaml = require('js-yaml');
-const {
-  LOCALTERRA_PATH_DIALOG, LOCALTERRA_STOP_DIALOG, LOCALTERRA_BAD_DIR_DIALOG,
-} = require('./dialogs');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
-const isExiting = false;
-let isStarted = false;
+const { LOCAL_TERRA_WS, LOCAL_TERRA_GIT } = process.env
 
-const blockWs = new WebSocketClient(process.env.LOCAL_TERRA_WS);
-const txWs = new WebSocketClient(process.env.LOCAL_TERRA_WS);
+const blockWs = new WebSocketClient(LOCAL_TERRA_WS);
+const txWs = new WebSocketClient(LOCAL_TERRA_WS);
 
-async function validatePath(path) {
-  const ltFile = await fs.readFile(`${path}/docker-compose.yml`, 'utf8');
-  const { services, version } = yaml.load(ltFile); // we also have easy access to version here
-  const ltServices = Object.keys(services); // could handle this in a bunch of diff ways
-  return ltServices.includes('terrad');
-}
+let isLocalTerraRunning = false;
 
-async function getLocalTerraPath() {
+function validateLocalTerraPath(url) {
   try {
-    let ltPath = await settings.get('localTerraPath');
-    if (!ltPath) {
-      const { filePaths } = await dialog.showOpenDialog(LOCALTERRA_PATH_DIALOG);
-      const isValid = await validatePath(filePaths[0]);
-      if (isValid) {
-        [ltPath] = filePaths;
-        settings.set('localTerraPath', ltPath);
-      }
-    }
-    return ltPath;
-  } catch (err) {
-    await dialog.showMessageBox(LOCALTERRA_BAD_DIR_DIALOG);
-    startLocalTerra();
+    const dockerComposePath = path.join(url, 'docker-compose.yml');
+    const dockerComposeYml = fs.readFileSync(dockerComposePath, 'utf8');
+    const { services } = yaml.load(dockerComposeYml); // All properties from docker-compose are available here
+    const ltServices = Object.keys(services);
+    return ltServices.includes('terrad');
+  }
+  catch (e) {
+    console.log(e);
+    return false;
   }
 }
 
-async function startLocalTerra(win) {
-  const ltPath = await getLocalTerraPath();
-  const compose = spawn('docker-compose', ['up'], { cwd: ltPath });
+async function downloadLocalTerra() {
+  const LOCAL_TERRA_PATH = path.join(app.getPath('appData'), "LocalTerra");
+  if (fs.existsSync(LOCAL_TERRA_PATH)) {
+    throw Error(`LocalTerra already exists under the path '${LOCAL_TERRA_PATH}'`);
+  }
+  else {
+    await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, { cwd: app.getPath('appData') })
+  }
+  return LOCAL_TERRA_PATH;
+}
 
-  compose.stdout.on('data', (data) => {
-    win.webContents.send('NewLogs', data.toString());
-    if (!isStarted && data.includes('indexed block')) {
+function startLocalTerra(localTerraPath) {
+  return spawn('docker-compose', ['up'], { cwd: localTerraPath });
+}
+
+async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
+  localTerraProcess.stdout.on('data', (data) => {
+    if (browserWindow.isDestroyed()) {
+      return;
+    }
+
+    browserWindow.webContents.send('NewLogs', data.toString());
+
+    if (!isLocalTerraRunning && data.includes('indexed block')) {
       console.log('starting websocket');
-      isStarted = true;
       blockWs.start();
       txWs.start();
-      win.webContents.send('LocalTerra', true);
+      isLocalTerraRunning = true;
+      browserWindow.webContents.send('LocalTerraRunning', true);
+      browserWindow.webContents.send('LocalTerraPath', true);
     }
   });
 
-  compose.stderr.on('data', (data) => {
+  localTerraProcess.stderr.on('data', (data) => {
     console.error(`stderr: ${data}`);
   });
 
-  ipcMain.on('LocalTerra', (_, shouldBeActive) => {
-    if (shouldBeActive) {
-      startLocalTerra(win);
-    } else {
-      stopLocalTerra(compose, win);
+  localTerraProcess.on('close', () => {
+    if (browserWindow.isDestroyed()) {
+      return;
     }
+
+    isLocalTerraRunning = false;
+    browserWindow.webContents.send('LocalTerraRunning', false);
   });
 
-  compose.on('close', () => {
-    win.webContents.send('LocalTerra', false);
-    if (isExiting) {
-      app.quit();
-    } else {
-      // dialog.showMessageBoxSync(LOCALTERRA_STOP_DIALOG);
-      isStarted = false;
-      // startLocalTerra();
-    }
-  });
-  return compose;
+  return localTerraProcess;
 }
 
-async function stopLocalTerra(compose, win) {
-  if (win) { win.webContents.send('LocalTerra', false); }
-  txWs.destroy();
-  blockWs.destroy();
-  compose.kill();
+async function stopLocalTerra(localTerraProcess) {
+  return new Promise(resolve => {
+    if (localTerraProcess.killed){
+      return resolve();
+    }
+
+    txWs.destroy();
+    blockWs.destroy();
+    localTerraProcess.once('close', resolve);
+    localTerraProcess.kill();  
+  });
+
 }
 
 module.exports = {
-  startLocalTerra,
-  stopLocalTerra,
-  blockWs,
   txWs,
+  blockWs,
+  stopLocalTerra,
+  startLocalTerra,
+  downloadLocalTerra,
+  validateLocalTerraPath,
+  subscribeToLocalTerraEvents,
 };

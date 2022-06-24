@@ -1,39 +1,41 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import {
-  TransactionPage,
+  TransactionsPage,
   LogsPage,
-  AccountsPage,
   BlockPage,
   ContractsPage,
   EventsPage,
-} from './pages';
-import { ReactComponent as AccountsIcon } from './assets/icons/menu/accounts.svg';
-import { ReactComponent as BlocksIcon } from './assets/icons/menu/blocks.svg';
-import { ReactComponent as TransactionsIcon } from './assets/icons/menu/transactions.svg';
-import { ReactComponent as ContractsIcon } from './assets/icons/menu/contracts.svg';
-import { ReactComponent as EventsIcon } from './assets/icons/menu/events.svg';
-import { ReactComponent as LogsIcon } from './assets/icons/menu/logs.svg';
+  OnboardPage,
+  AccountsPage,
+  LoadingPage
+} from '../../pages';
+import { ReactComponent as AccountsIcon } from '../../assets/icons/menu/accounts.svg';
+import { ReactComponent as BlocksIcon } from '../../assets/icons/menu/blocks.svg';
+import { ReactComponent as TransactionsIcon } from '../../assets/icons/menu/transactions.svg';
+import { ReactComponent as ContractsIcon } from '../../assets/icons/menu/contracts.svg';
+import { ReactComponent as EventsIcon } from '../../assets/icons/menu/events.svg';
+import { ReactComponent as LogsIcon } from '../../assets/icons/menu/logs.svg';
 
 const useNav = () => {
   const menu = [
     {
       name: 'Accounts',
       icon: <AccountsIcon />,
-      path: '/',
-      element: <BlockPage />,
+      path: '/accounts',
+      element: <AccountsPage />,
     },
     {
       name: 'Blocks',
       icon: <BlocksIcon />,
       path: '/blocks',
-      element: <TransactionPage />,
+      element: <BlockPage />,
     },
     {
       name: 'Transactions',
       icon: <TransactionsIcon />,
       path: '/transactions',
-      element: <LogsPage />,
+      element: <TransactionsPage />,
     },
     {
       name: 'Contracts',
@@ -51,11 +53,21 @@ const useNav = () => {
       name: 'Logs',
       icon: <LogsIcon />,
       path: '/logs',
-      element: <AccountsPage />,
+      element: <LogsPage />,
     },
   ];
 
   const routes = [
+    {
+      name: 'Onboard',
+      path: '/onboard',
+      element: <OnboardPage />,
+    },
+    {
+      name: 'Loading',
+      path: '/',
+      element: <LoadingPage />,
+    },
     // Add here routes that cannot be accessed directly from the menu entry
 
     // Menu entries
