@@ -52,10 +52,8 @@ async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
       blockWs.start();
       txWs.start();
       isLocalTerraRunning = true;
-      browserWindow.webContents.send('LocalTerraStatusChanged', {
-        isActive: true,
-        isPathConfigured: true
-      });
+      browserWindow.webContents.send('LocalTerraRunning', true);
+      browserWindow.webContents.send('LocalTerraPath', true);
     }
   });
 

@@ -3,34 +3,32 @@ import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import { NavLink } from './component';
-import { useTerra, useGetBlocks, useLocalTerraConfig} from './package/hooks';
+import { useTerra, useGetBlocks, useLocalTerraPathConfigured, useLocalTerraStarted} from './package/hooks';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
 import useNav from './package/hooks/routes';
 
 function App() {
-  const [isActiveLocalTerra, setActiveLocalTerra] = useState(true);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const { element: routes, menu } = useNav();
   const navigate = useNavigate();
   const { terra } = useTerra();
   const { latestHeight } = useGetBlocks();
-  const { isActive, isPathConfigured} = useLocalTerraConfig();
-  
-  useEffect(() => {
-    console.log("App#isPathConfigured", isPathConfigured);
+  const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
+  const hasStartedLocalTerra = useLocalTerraStarted();
 
-    if (isPathConfigured) navigate('/accounts');
+  useEffect(() => {
+    console.log("App#isLocalTerraPathConfigured", isLocalTerraPathConfigured.value);
+
+    if (isLocalTerraPathConfigured.value) navigate('/accounts');
     else navigate('/onboard');
 
-  }, [isPathConfigured]);
+  }, [isLocalTerraPathConfigured.value]);
 
   useEffect(() => {
-    console.log("App#isActive", isActive);
-
-    setActiveLocalTerra(!!isActive);
-  }, [isActive]);
+    console.log("App#localTerraStarted", hasStartedLocalTerra.value);
+  }, [hasStartedLocalTerra.value]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
 
@@ -42,17 +40,7 @@ function App() {
   };
 
   const toggleLocalTerra = async () => {
-    console.log("App#toggleLocalTerra",{
-      isPathConfigured,
-      isActive: !isActive
-    });
-
-    await ipcRenderer.invoke(
-      'UpdateLocalTerraConfig', {
-        isPathConfigured,
-        isActive: !isActive
-      }
-    );
+    await ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra.value);
   };
 
   return (
@@ -113,7 +101,7 @@ function App() {
             </li>
             <li>
               <button type="button" onClick={toggleLocalTerra} className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground">
-                <BsCircleFill className={isActiveLocalTerra ? 'text-is-connected-green' : 'text-not-connected-red'} />
+                <BsCircleFill className={hasStartedLocalTerra.value ? 'text-is-connected-green' : 'text-not-connected-red'} />
                 <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
               </button>
             </li>

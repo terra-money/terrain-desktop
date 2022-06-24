@@ -4,14 +4,17 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import { Provider } from './package';
+import {ElectronContextProvider} from './context/ElectronContextProvider';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
+    <ElectronContextProvider>
+      <Provider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
+    </ElectronContextProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
