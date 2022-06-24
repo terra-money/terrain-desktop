@@ -20,13 +20,14 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    if (isLocalTerraPathConfigured.value) navigate('/accounts');
-    else navigate('/onboard');
-  }, [isLocalTerraPathConfigured.value]);
-
-  useEffect(() => {
-    console.log("App#localTerraStarted", hasStartedLocalTerra.value);
-  }, [hasStartedLocalTerra.value]);
+    const { value: pathIsConfigured } = isLocalTerraPathConfigured
+    const { value: localTerraIsRunning } = hasStartedLocalTerra
+    console.log('localTerraIsRunning', localTerraIsRunning)
+    console.log('pathIsConfigured', pathIsConfigured)
+    if (pathIsConfigured && localTerraIsRunning) navigate('/accounts');
+    else if (pathIsConfigured === null && localTerraIsRunning === null) navigate('/onboard')
+    else if (pathIsConfigured && !localTerraIsRunning) navigate('/');
+  }, [isLocalTerraPathConfigured.value, hasStartedLocalTerra.value]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
 

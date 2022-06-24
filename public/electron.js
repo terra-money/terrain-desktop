@@ -23,6 +23,7 @@ const {
 } = require('./dialogs');
 
 async function init() {
+  // store.clear()
   let browserWindow = new BrowserWindow({
     width: 1200,
     height: 720,
@@ -114,9 +115,9 @@ async function init() {
 
   const localTerraPath = await store.get('localTerraPath');
   if (localTerraPath) {
+    browserWindow.webContents.send('LocalTerraPath', true);
     localTerraProcess = startLocalTerra(localTerraPath);
     await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
-    browserWindow.webContents.send('LocalTerraPath', true);
   }
 }
 

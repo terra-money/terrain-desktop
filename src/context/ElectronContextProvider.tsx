@@ -5,8 +5,8 @@ import React, { ReactElement } from "react";
 import { IBlockState } from "../package";
 
 type TypeElectronContext = {
-    localTerraPathConfigured: State<boolean>;
-    localTerraStarted: State<boolean>;
+    localTerraPathConfigured: State<boolean | null>;
+    localTerraStarted: State<boolean | null>;
     blockState: State<IBlockState>,
     txState: State<TxInfo[]>,
     logsState: State<string[]>,
@@ -18,8 +18,8 @@ export const ElectronContextProvider = ({children}: {children: ReactElement}) =>
     const blockState = createState<IBlockState>({ blocks: [], latestHeight: 0 });
     const txState = createState<TxInfo[]>([]);
     const logsState = createState<string[]>([]);
-    const localTerraPathConfigured = createState<boolean>(false);
-    const localTerraStarted = createState<boolean>(false);
+    const localTerraPathConfigured = createState<boolean | null>(null);
+    const localTerraStarted = createState<boolean | null>(null);
 
 
     ipcRenderer.on('NewBlock', ((_: any, block: BlockInfo) => {
@@ -37,12 +37,10 @@ export const ElectronContextProvider = ({children}: {children: ReactElement}) =>
     }));
 
     ipcRenderer.on('LocalTerraRunning', ((_: any, isLocalTerraRunning: boolean) => {
-        console.log('LocalTerraRunning', isLocalTerraRunning);
         localTerraStarted.set(isLocalTerraRunning);
     }));
 
     ipcRenderer.on('LocalTerraPath', ((_: any, isLocalTerraPathConfigured: boolean) => {
-        console.log('LocalTerraPath', isLocalTerraPathConfigured);
         localTerraPathConfigured.set(isLocalTerraPathConfigured);
     }));
 

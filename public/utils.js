@@ -7,8 +7,10 @@ const yaml = require('js-yaml');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-const blockWs = new WebSocketClient(process.env.LOCAL_TERRA_WS);
-const txWs = new WebSocketClient(process.env.LOCAL_TERRA_WS);
+const { LOCAL_TERRA_WS, LOCAL_TERRA_GIT } = process.env
+
+const blockWs = new WebSocketClient(LOCAL_TERRA_WS);
+const txWs = new WebSocketClient(LOCAL_TERRA_WS);
 
 let isLocalTerraRunning = false;
 
@@ -32,7 +34,7 @@ async function downloadLocalTerra() {
     throw Error(`LocalTerra already exists under the path '${LOCAL_TERRA_PATH}'`);
   }
   else {
-    await exec('git clone https://github.com/terra-money/LocalTerra.git --depth 1', { cwd: app.getPath('appData') })
+    await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, { cwd: app.getPath('appData') })
   }
   return LOCAL_TERRA_PATH;
 }
@@ -46,8 +48,6 @@ async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
     browserWindow.webContents.send('NewLogs', data.toString());
 
     if (!isLocalTerraRunning && data.includes('indexed block')) {
-      console.log('process.env.LOCAL_TERRA_WS', process.env.LOCAL_TERRA_WS)
-      
       console.log('starting websocket');
       blockWs.start();
       txWs.start();
