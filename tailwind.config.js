@@ -1,7 +1,7 @@
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    './public/index.html'
+    './src/**/*.{js,jsx,ts,tsx}',
+    './public/index.html',
   ],
   mode: 'jit',
   purge: ['./public/index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
@@ -26,4 +26,4 @@ module.exports = {
     extend: {},
   },
   plugins: [],
-}
+};

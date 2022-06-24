@@ -30,10 +30,10 @@ function AccountView({ wallet } : { wallet : any }) {
   }, [txInfos]);
 
   return (
-    <div className="flex text-left justify-between px-4 py-2 border-b border-blue-900">
+    <div className="flex text-left justify-between px-4 py-2 border-b border-b-blue-900">
       {open && <KeyView mnemonic={mnemonic} handleClose={handleClose} />}
       <a href={`${process.env.REACT_APP_FINDER_URL}/address/${accAddress}`} target="_blank" rel="noreferrer">
-        <div className="flex">
+        <div className="flex w-[570px]">
           <div>
             <p className="text-xs font-bold text-blue-600 uppercase">
               Address
