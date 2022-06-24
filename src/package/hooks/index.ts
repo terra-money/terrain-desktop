@@ -1,12 +1,11 @@
 import { LocalTerra, Wallet } from '@terra-money/terra.js';
 import { useContext, useEffect, useState } from 'react';
 import { Downgraded } from '@hookstate/core';
+import { ipcRenderer } from 'electron';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
 import { parseTxMsg } from '../../utils';
-import {
-  blockState, txState, logsState, localTerraState,
-} from '../stores';
+import ElectronContext from '../../context/ElectronContextProvider';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
@@ -19,15 +18,14 @@ export function useTerra() {
       const [coins] = (await terra.bank.balance(address));
       return coins.toData();
     },
-    getLocalTerraStatus: () => localTerraState.attach(Downgraded).get(),
     listenToAccountTx(address: string, cb: Function) {
       const listener = (_: any, tx: any) => {
         const { from_address: add } = parseTxMsg(tx.TxResult);
         if (add === address) { cb(add); }
       };
-      window.ipcRenderer.on('Tx', listener);
+      ipcRenderer.on('Tx', listener);
       return () => {
-        window.ipcRenderer.removeListener('Tx', listener);
+        ipcRenderer.removeListener('Tx', listener);
       };
     },
   };
@@ -37,28 +35,36 @@ export function useTerra() {
     const listener = () => {
       setHook({ ...hook });
     };
-    window.ipcRenderer.on('NewBlock', listener);
+    ipcRenderer.on('NewBlock', listener);
 
     return () => {
-      window.ipcRenderer.removeListener('NewBlock', listener);
+      ipcRenderer.removeListener('NewBlock', listener);
     };
   }, []);
   return hook;
 }
 
-export function useGetBlocks() {
-  const blocks = blockState.attach(Downgraded).get();
-  return blocks;
+export const useGetBlocks = () => {
+  const { blockState } = useContext(ElectronContext);
+  return blockState.attach(Downgraded).get();
+}
+export const useGetLogs = () => {
+  const { logsState } = useContext(ElectronContext);
+  return logsState.attach(Downgraded).get();
+}
+export const useGetTxs = () => {
+  const { txState } = useContext(ElectronContext);
+  return txState.attach(Downgraded).get();
 }
 
-export function useGetLogs() {
-  const logs = logsState.attach(Downgraded).get();
-  return logs;
+export const useLocalTerraPathConfigured = () => {
+  const { localTerraPathConfigured } = useContext(ElectronContext);
+  return localTerraPathConfigured.attach(Downgraded).get();
 }
 
-export function useGetTxs() {
-  const txs = txState.attach(Downgraded).get();
-  return txs;
+export const useLocalTerraStarted = () => {
+  const { localTerraStarted } = useContext(ElectronContext);
+  return localTerraStarted.attach(Downgraded).get();
 }
 
 export function useGetTxFromHeight(height?: number) {
