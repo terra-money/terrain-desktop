@@ -1,8 +1,10 @@
 const path = require('path');
-const settings = require('electron-settings');
+const Store = require('electron-store');
 const { app, shell, ipcMain, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev')
+
 require('dotenv').config()
+const store = new Store();
 
 const {
   startLocalTerra,
@@ -67,7 +69,7 @@ async function init() {
     const isValid = validateLocalTerraPath(filePaths[0]);
 
     if (isValid) {
-      await settings.set('localTerraPath', filePaths[0]);
+      await store.set('localTerraPath', filePaths[0]);
       localTerraProcess = startLocalTerra(filePaths[0]);
       await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
     }
@@ -83,7 +85,7 @@ async function init() {
       localTerraPath = await downloadLocalTerra();
       localTerraProcess = startLocalTerra(localTerraPath);
       await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
-      await settings.set('localTerraPath', localTerraPath);
+      await store.set('localTerraPath', localTerraPath);
     }
     catch (e) {
       await displayLocalTerraAlreadyExistsDialog();
@@ -91,18 +93,17 @@ async function init() {
     }
   });
 
-  ipcMain.handle('ChangeLocalTerraStatus', async (_, localTerraConfig) => {
-    const localTerraPath = await settings.get('localTerraPath');
+  ipcMain.handle('UpdateLocalTerraConfig', async (_, localTerraConfig) => {
+    const localTerraPath = await store.get('localTerraPath');
+    
     if (localTerraConfig.isActive) {
       localTerraProcess = startLocalTerra(localTerraPath);
       await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
     }
-    else stopLocalTerra(localTerraProcess);
-
-    browserWindow.webContents.send('LocalTerraStatusChanged', {
-      ...localTerraConfig,
-      isPathConfigured: true
-    });
+    else {
+      stopLocalTerra(localTerraProcess);
+      browserWindow.webContents.send('LocalTerraStatusChanged', localTerraConfig);
+    }
 
     return localTerraConfig;
   });
@@ -111,8 +112,7 @@ async function init() {
     stopLocalTerra(localTerraProcess);
   });
 
-  const localTerraPath = await settings.get('localTerraPath');
-  console.log("localTerraPath ----> ",localTerraPath)
+  const localTerraPath = await store.get('localTerraPath');
   if (localTerraPath) {
     localTerraProcess = startLocalTerra(localTerraPath);
     await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);

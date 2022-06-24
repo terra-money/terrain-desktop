@@ -49,7 +49,7 @@ export function useTerra() {
 export const useGetBlocks = () => blockState.attach(Downgraded).get();
 export const useGetLogs = () => logsState.attach(Downgraded).get();
 export const useGetTxs = () => txState.attach(Downgraded).get();
-export const useLocalTerraConfig = () => localTerraConfig.attach(Downgraded);
+export const useLocalTerraConfig = () => localTerraConfig.attach(Downgraded).get();
 
 export function useGetTxFromHeight(height?: number) {
   const terra = useContext(TerraContext) as LocalTerra;

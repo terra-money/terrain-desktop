@@ -25,5 +25,6 @@ ipcRenderer.on('NewLogs', ((_: any, log: string) => {
 }));
 
 ipcRenderer.on('LocalTerraStatusChanged', ((_: any, config: LocalTerraConfig) => {
+  console.log('LocalTerraStatusChanged', config);
   localTerraConfig.merge(config);
 }));

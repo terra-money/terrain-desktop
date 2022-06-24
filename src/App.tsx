@@ -9,24 +9,28 @@ import logo from './assets/terra-logo.svg';
 import useNav from './package/hooks/routes';
 
 function App() {
+  const [isActiveLocalTerra, setActiveLocalTerra] = useState(true);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [localTerraActive, setLocalTerraActive] = useState<boolean>();
   const { element: routes, menu } = useNav();
   const navigate = useNavigate();
   const { terra } = useTerra();
   const { latestHeight } = useGetBlocks();
-  const { isActive, isPathConfigured } = useLocalTerraConfig();
+  const { isActive, isPathConfigured} = useLocalTerraConfig();
+  
+  useEffect(() => {
+    console.log("App#isPathConfigured", isPathConfigured);
+
+    if (isPathConfigured) navigate('/accounts');
+    else navigate('/onboard');
+
+  }, [isPathConfigured]);
 
   useEffect(() => {
-    console.log("isPathConfigured", useLocalTerraConfig().get(), isActive.get(), isPathConfigured.get());
-    
-    if (isPathConfigured.get()) navigate('/accounts');
-    else navigate('/onboard');
-    
-    setLocalTerraActive(isActive.get());
-  },[isActive.get(), isPathConfigured.get()]);
+    console.log("App#isActive", isActive);
 
+    setActiveLocalTerra(!!isActive);
+  }, [isActive]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
 
@@ -38,11 +42,17 @@ function App() {
   };
 
   const toggleLocalTerra = async () => {
-    await ipcRenderer.invoke('ChangeLocalTerraStatus', {
-      ...useLocalTerraConfig().get(),
-      active: !localTerraActive
+    console.log("App#toggleLocalTerra",{
+      isPathConfigured,
+      isActive: !isActive
     });
-    setLocalTerraActive(!localTerraActive);
+
+    await ipcRenderer.invoke(
+      'UpdateLocalTerraConfig', {
+        isPathConfigured,
+        isActive: !isActive
+      }
+    );
   };
 
   return (
@@ -103,7 +113,7 @@ function App() {
             </li>
             <li>
               <button type="button" onClick={toggleLocalTerra} className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground">
-                <BsCircleFill className={localTerraActive ? 'text-is-connected-green' : 'text-not-connected-red'} />
+                <BsCircleFill className={isActiveLocalTerra ? 'text-is-connected-green' : 'text-not-connected-red'} />
                 <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
               </button>
             </li>
