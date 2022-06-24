@@ -93,19 +93,19 @@ async function init() {
     }
   });
 
-  ipcMain.handle('UpdateLocalTerraConfig', async (_, localTerraConfig) => {
+  ipcMain.handle('ToggleLocalTerraStatus', async (_, localTerraStatus) => {
     const localTerraPath = await store.get('localTerraPath');
     
-    if (localTerraConfig.isActive) {
+    if (localTerraStatus) {
       localTerraProcess = startLocalTerra(localTerraPath);
       await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
     }
     else {
       stopLocalTerra(localTerraProcess);
-      browserWindow.webContents.send('LocalTerraStatusChanged', localTerraConfig);
+      browserWindow.webContents.send('LocalTerraRunning', false);
     }
 
-    return localTerraConfig;
+    return localTerraStatus;
   });
 
   app.on('window-all-closed', () => {
@@ -116,6 +116,7 @@ async function init() {
   if (localTerraPath) {
     localTerraProcess = startLocalTerra(localTerraPath);
     await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+    browserWindow.webContents.send('LocalTerraPath', true);
   }
 }
 

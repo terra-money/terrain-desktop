@@ -5,9 +5,7 @@ import { ipcRenderer } from 'electron';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
 import { parseTxMsg } from '../../utils';
-import {
-  blockState, txState, logsState, localTerraConfig
-} from '../stores';
+import ElectronContext from '../../context/ElectronContextProvider';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
@@ -46,10 +44,28 @@ export function useTerra() {
   return hook;
 }
 
-export const useGetBlocks = () => blockState.attach(Downgraded).get();
-export const useGetLogs = () => logsState.attach(Downgraded).get();
-export const useGetTxs = () => txState.attach(Downgraded).get();
-export const useLocalTerraConfig = () => localTerraConfig.attach(Downgraded).get();
+export const useGetBlocks = () => {
+  const { blockState } = useContext(ElectronContext);
+  return blockState.attach(Downgraded).get();
+}
+export const useGetLogs = () => {
+  const { logsState } = useContext(ElectronContext);
+  return logsState.attach(Downgraded).get();
+}
+export const useGetTxs = () => {
+  const { txState } = useContext(ElectronContext);
+  return txState.attach(Downgraded).get();
+}
+
+export const useLocalTerraPathConfigured = () => {
+  const { localTerraPathConfigured } = useContext(ElectronContext);
+  return localTerraPathConfigured;
+}
+
+export const useLocalTerraStarted = () => {
+  const { localTerraStarted } = useContext(ElectronContext);
+  return localTerraStarted;
+}
 
 export function useGetTxFromHeight(height?: number) {
   const terra = useContext(TerraContext) as LocalTerra;
