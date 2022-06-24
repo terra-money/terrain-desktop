@@ -1,24 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
+import { useNavigate } from 'react-router-dom';
 import { NavLink } from './component';
-import { useTerra, useGetBlocks } from './package/hooks';
+import { useTerra, useGetBlocks, useLocalTerraConfig} from './package/hooks';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
 import useNav from './package/hooks/routes';
 
 function App() {
   const [open, setOpen] = useState(true);
-  const [localTerraActive, setLocalTerraActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [localTerraActive, setLocalTerraActive] = useState<boolean>();
   const { element: routes, menu } = useNav();
-
-  const { terra, getLocalTerraStatus } = useTerra();
+  const navigate = useNavigate();
+  const { terra } = useTerra();
   const { latestHeight } = useGetBlocks();
+  const { isActive, isPathConfigured } = useLocalTerraConfig();
 
   useEffect(() => {
-    setLocalTerraActive(getLocalTerraStatus());
-  }, [latestHeight]);
+    console.log("isPathConfigured", useLocalTerraConfig().get(), isActive.get(), isPathConfigured.get());
+    
+    if (isPathConfigured.get()) navigate('/accounts');
+    else navigate('/onboard');
+    
+    setLocalTerraActive(isActive.get());
+  },[isActive.get(), isPathConfigured.get()]);
+
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
 
@@ -30,8 +38,11 @@ function App() {
   };
 
   const toggleLocalTerra = async () => {
-    await ipcRenderer.send('LocalTerra', !localTerraActive);
-    setLocalTerraActive(!localTerraActive); // could experiment with polling here
+    await ipcRenderer.invoke('ChangeLocalTerraStatus', {
+      ...useLocalTerraConfig().get(),
+      active: !localTerraActive
+    });
+    setLocalTerraActive(!localTerraActive);
   };
 
   return (

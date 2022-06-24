@@ -1,13 +1,13 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import {
-  TransactionPage,
+  TransactionsPage,
   LogsPage,
-  AccountsPage,
   BlockPage,
   ContractsPage,
   EventsPage,
-  OnboardPage
+  OnboardPage,
+  AccountsPage
 } from '../../pages';
 import { ReactComponent as AccountsIcon } from '../../assets/icons/menu/accounts.svg';
 import { ReactComponent as BlocksIcon } from '../../assets/icons/menu/blocks.svg';
@@ -22,19 +22,19 @@ const useNav = () => {
       name: 'Accounts',
       icon: <AccountsIcon />,
       path: '/accounts',
-      element: <BlockPage />,
+      element: <AccountsPage />,
     },
     {
       name: 'Blocks',
       icon: <BlocksIcon />,
       path: '/blocks',
-      element: <TransactionPage />,
+      element: <BlockPage />,
     },
     {
       name: 'Transactions',
       icon: <TransactionsIcon />,
       path: '/transactions',
-      element: <LogsPage />,
+      element: <TransactionsPage />,
     },
     {
       name: 'Contracts',
@@ -52,14 +52,14 @@ const useNav = () => {
       name: 'Logs',
       icon: <LogsIcon />,
       path: '/logs',
-      element: <AccountsPage />,
+      element: <LogsPage />,
     },
   ];
 
   const routes = [
     {
       name: 'Onboard',
-      path: '/',
+      path: '/onboard',
       element: <OnboardPage />,
     },
     // Add here routes that cannot be accessed directly from the menu entry

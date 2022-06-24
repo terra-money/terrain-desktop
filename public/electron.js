@@ -1,69 +1,122 @@
 const path = require('path');
 const settings = require('electron-settings');
-const { app, shell, ipcMain } = require('electron');
+const { app, shell, ipcMain, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev')
 require('dotenv').config()
 
 const {
-  startLocalTerra, stopLocalTerra, blockWs, txWs, createWindow, installLocalTerra
+  startLocalTerra,
+  stopLocalTerra,
+  blockWs,
+  txWs,
+  downloadLocalTerra,
+  subscribeToLocalTerraEvents,
+  validateLocalTerraPath,
 } = require('./utils');
 
+const {
+  displayPathSelectionWindow,
+  displayWrongDirectoryDialog,
+  displayLocalTerraAlreadyExistsDialog
+} = require('./dialogs');
+
 async function init() {
-  let win = await createWindow();
-  const firstOpen = await settings.get('firstOpen');
+  let browserWindow = new BrowserWindow({
+    width: 1200,
+    height: 720,
+    webPreferences: {
+      contextIsolation: false,
+      nodeIntegration: true,
+      enableRemoteModule: true,
+      preload: path.join(__dirname, 'preload.js'),
+    }
+  });
+  let localTerraProcess;
 
-
-
-  win.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
   if (isDev) {
-    win.webContents.openDevTools();
+    browserWindow.loadURL('http://localhost:3000');
+    browserWindow.webContents.openDevTools();
+  }
+  else {
+    browserWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
   }
 
-  win.on('closed', () => { win = null });
+  browserWindow.on('closed', () => {
+    browserWindow = null;
 
-  win.webContents.setWindowOpenHandler(({ url }) => {
+    if (localTerraProcess) {
+      stopLocalTerra(localTerraProcess);
+    }
+  });
+
+  browserWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
   });
 
-  if (typeof firstOpen === 'undefined') {
-    win.webContents.send('FirstOpen', true);
-  }
-
   txWs.subscribeTx({}, async ({ value }) => {
-    win.webContents.send('Tx', value);
+    browserWindow.webContents.send('Tx', value);
   });
 
   blockWs.subscribe('NewBlock', {}, ({ value }) => {
-    win.webContents.send('NewBlock', value);
+    browserWindow.webContents.send('NewBlock', value);
   });
 
-  ipcMain.handle('SelectLocalTerraPath',async () => {
-    await startLocalTerra(win);
-    await settings.set('firstOpen', false);
+  ipcMain.handle('SetLocalTerraPath', async () => {
+    const { filePaths } = await displayPathSelectionWindow();
+    const isValid = validateLocalTerraPath(filePaths[0]);
+
+    if (isValid) {
+      await settings.set('localTerraPath', filePaths[0]);
+      localTerraProcess = startLocalTerra(filePaths[0]);
+      await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+    }
+    else {
+      await displayWrongDirectoryDialog();
+      throw Error(`LocalTerra does not exist under the path '${localTerraPath}'`);
+    }
   })
 
   ipcMain.handle('InstallLocalTerra', async () => {
-    await installLocalTerra(win);
-    await startLocalTerra(win);
-    await settings.set('firstOpen', false);
-  })
+    let localTerraPath;
+    try {
+      localTerraPath = await downloadLocalTerra();
+      localTerraProcess = startLocalTerra(localTerraPath);
+      await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+      await settings.set('localTerraPath', localTerraPath);
+    }
+    catch (e) {
+      await displayLocalTerraAlreadyExistsDialog();
+      throw Error("LocalTerra already exists under the default path")
+    }
+  });
+
+  ipcMain.handle('ChangeLocalTerraStatus', async (_, localTerraConfig) => {
+    const localTerraPath = await settings.get('localTerraPath');
+    if (localTerraConfig.isActive) {
+      localTerraProcess = startLocalTerra(localTerraPath);
+      await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+    }
+    else stopLocalTerra(localTerraProcess);
+
+    browserWindow.webContents.send('LocalTerraStatusChanged', {
+      ...localTerraConfig,
+      isPathConfigured: true
+    });
+
+    return localTerraConfig;
+  });
 
   app.on('window-all-closed', () => {
-    stopLocalTerra(compose);
+    stopLocalTerra(localTerraProcess);
   });
+
+  const localTerraPath = await settings.get('localTerraPath');
+  console.log("localTerraPath ----> ",localTerraPath)
+  if (localTerraPath) {
+    localTerraProcess = startLocalTerra(localTerraPath);
+    await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+  }
 }
 
-settings.unsetSync('firstOpen');
-settings.unsetSync('localTerraPath');
 app.on('ready', init);
-
-
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-
-// Open the DevTools.
-//   if (isDev) {
-//     win.webContents.openDevTools({ mode: 'detach' });
-//   }

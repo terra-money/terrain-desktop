@@ -4,29 +4,41 @@ import { useNavigate } from 'react-router-dom';
 import { ReactComponent as TerraLogo } from '../assets/terra-logo.svg';
 
 export default function Onboard() {
-  const navigate = useNavigate();
   const [isDockerInstalled, setIsDockerInstalled] = useState(false);
+  const navigate = useNavigate();
 
   const handleOnChange = (e: any) => {
     setIsDockerInstalled(e.target.checked);
   };
 
-  const handleSelectLocalTerraPath = async () => {
-    await ipcRenderer.invoke('SelectLocalTerraPath');
-    navigate("/accounts");
+  const onSetLocalTerraPath = async () => {
+    try {
+      await ipcRenderer.invoke('SetLocalTerraPath');
+      navigate('/accounts');
+    }
+    catch (e: any) {
+      console.log(e);
+      // TODO: Display error message on interface (incorrect path)
+    }
   }
 
-  const handleLocalTerraNotInstalled = async () => {
-    await ipcRenderer.invoke('InstallLocalTerra');
-    navigate("/accounts");
+  const onLocalTerraInstall = async () => {
+    try {
+      await ipcRenderer.invoke('InstallLocalTerra');
+      navigate('/accounts');
+    }
+    catch (e: any) {
+      console.log(e);
+      // TODO: Display error message on interface
+    }
   }
 
   return (
     <div className="flex items-center justify-center bg-terra-dark-blue h-screen"
-      style={{"position": "fixed", "top": "0", "right": "0", "bottom": "0", "left": "0", "zIndex": "10000"}}>
+      style={{ "position": "fixed", "top": "0", "right": "0", "bottom": "0", "left": "0", "zIndex": "10000" }}>
       <div className="flex flex-col items-center block space-x-4">
         <div className="block h-40 w-40 mb-4">
-          <TerraLogo/>
+          <TerraLogo />
         </div>
         <div className="flex-row text-white space-x-4">
           <label htmlFor="dockerInstalled">
@@ -36,8 +48,8 @@ export default function Onboard() {
         </div>
         {isDockerInstalled && (
           <>
-           <button className="text-white hover:underline" type='button' onClick={handleSelectLocalTerraPath}>I already have LocalTerra installed</button>
-           <button className="text-white hover:underline" type='button' onClick={handleLocalTerraNotInstalled}>Install LocalTerra</button>
+            <button className="text-white hover:underline" type='button' onClick={onSetLocalTerraPath}>I already have LocalTerra installed</button>
+            <button className="text-white hover:underline" type='button' onClick={onLocalTerraInstall}>Install LocalTerra</button>
           </>
         )}
       </div>

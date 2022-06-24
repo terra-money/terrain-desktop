@@ -1,14 +1,14 @@
 import { createState } from '@hookstate/core';
 import { BlockInfo, TxInfo } from '@terra-money/terra.js';
 import { ipcRenderer } from 'electron';
-import { useNavigate } from "react-router-dom";
 import { IBlockState } from '../interface';
-
+import { LocalTerraConfig } from '../models/LocalTerraConfig';
 
 export const blockState = createState<IBlockState>({ blocks: [], latestHeight: 0 });
 export const txState = createState<TxInfo[]>([]);
 export const logsState = createState<string[]>([]);
-export const localTerraState = createState<boolean>(false);
+export const localTerraConfig = createState<LocalTerraConfig>({});
+export const isOnboardState = createState<boolean>(false);
 
 ipcRenderer.on('NewBlock', ((_: any, block: BlockInfo) => {
   const bHeight = Number(block.block.header.height);
@@ -24,14 +24,6 @@ ipcRenderer.on('NewLogs', ((_: any, log: string) => {
   logsState.merge([log]);
 }));
 
-ipcRenderer.on('LocalTerra', ((_: any, status: boolean) => {
-  localTerraState.set(status);
-}));
-
-ipcRenderer.on('FirstOpen', ((_: any, isFirstOpen: boolean) => {
-  console.log('isFirstOpen => ', isFirstOpen)
-  if (isFirstOpen) {
-    const navigate = useNavigate();
-    navigate("/onboard")
-  }
+ipcRenderer.on('LocalTerraStatusChanged', ((_: any, config: LocalTerraConfig) => {
+  localTerraConfig.merge(config);
 }));

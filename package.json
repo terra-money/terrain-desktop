@@ -25,16 +25,17 @@
     "dotenv": "^16.0.1",
     "electron": "^15.5.7",
     "electron-builder": "^23.1.0",
+    "electron-is-dev": "^2.0.0",
     "electron-reload": "^2.0.0-alpha.1",
     "electron-settings": "^4.0.2",
+    "electron-store": "^8.0.2",
     "js-yaml": "^4.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^4.0.3",
-    "wait-on": "^6.0.1",
-    "electron-is-dev": "^2.0.0"
+    "wait-on": "^6.0.1"
   },
   "devDependencies": {
     "@types/node": "^16.11.6",
