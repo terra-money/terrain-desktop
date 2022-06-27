@@ -19,7 +19,7 @@ type TypeElectronContext = {
 
 const ElectronContext = React.createContext<TypeElectronContext>(null as any);
 
-export const ElectronContextProvider = ({children}: {children: ReactElement}) => {
+export const ElectronContextProvider = ({ children } : { children: ReactElement }) => {
     const blockState = useState(createState<IBlockState>({ blocks: [], latestHeight: 0 }));
     const txState = useState(createState<TerrariumTx[]>([]));
     const logsState = useState(createState<string[]>([]));

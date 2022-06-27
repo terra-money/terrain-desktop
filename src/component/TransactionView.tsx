@@ -2,7 +2,7 @@ import React from 'react';
 import { truncate } from '../utils';
 
 function TransactionItemView({ tx }: { tx: any }) {
-  const {txhash, result, height } = tx.TxResult
+  const { txhash, result, height } = tx.TxResult
   const txHref = `${process.env.REACT_APP_FINDER_URL}/tx/${tx.txhash}`;
 
   return (

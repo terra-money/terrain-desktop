@@ -1,8 +1,4 @@
-const Store = require('electron-store');
-
 const { dialog, app, Notification } = require('electron');
-
-const store = new Store();
 
 // DIALOGS
 
@@ -31,45 +27,23 @@ async function showLocalTerraAlreadyExistsDialog() {
   });
 }
 
- async function showNotifAccessDialog() {
-  dialog.showMessageBox({ 
-    message: 'Terrarium would like to send you notifications. Please grant access if you wish to receive them.', 
-    title: 'Terrarium', 
-    type: 'info' 
-  });
-  new Notification().show();
-  await store.set('notifsGranted', true);
-}
-
 // NOTIFICATIONS
 
 function showTxOccuredNotif(body) {
-  console.log('showTxOccuredNotif', body)
-  new Notification({
-    title: 'Transaction Occurred',
-    body
-  }).show();
+  new Notification({ title: 'Transaction Occurred', body }).show();
 }
 
-
 function showLocalTerraStopNotif() {
-  new Notification({
-    title: 'LocalTerra has stopped...',
-  }).show();
+  new Notification({ title: 'LocalTerra has stopped...' }).show();
 }
 
 function showLocalTerraStartNotif() {
   new Notification({ title: 'LocalTerra has started...' }).show();
 }
 
-function showGrantNotificationDia() {
-  new Notification({ title: 'LocalTerra has started...' }).show();
-}
 module.exports = {
   showPathSelectionDialog,
-  showGrantNotificationDia,
   showLocalTerraStartNotif,
-  showNotifAccessDialog,
   showLocalTerraStopNotif,
   showTxOccuredNotif,
   showWrongDirectoryDialog,
