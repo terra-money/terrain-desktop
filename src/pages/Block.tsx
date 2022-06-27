@@ -5,9 +5,10 @@ import { useGetBlocks } from '../package/hooks';
 
 export default function BlockPage() {
   const { blocks } = useGetBlocks();
+
   return (
     <ScrollToBottom className="w-full flex flex-col">
-      {blocks.map((b) => (<BlockView key={b.block_id?.hash} block={b} />))}
+      {blocks.map((block, index) => (<BlockView key={index} block={block} />))}
     </ScrollToBottom>
   );
 }
