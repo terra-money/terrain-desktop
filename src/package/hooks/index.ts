@@ -19,7 +19,7 @@ export function useTerra() {
     },
     listenToAccountTx(address: string, cb: Function) {
       const listener = (_: any, tx: any) => {
-        const { from_address: add } = tx.decription;
+        const { from_address: add } = tx.msg;
         if (add === address) { cb(add); }
       };
       ipcRenderer.on('Tx', listener);

@@ -14,12 +14,12 @@ const {
   blockWs,
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
-  parseTxDescription
+  parseTxDescriptionAndMsg,
 } = require('./utils');
 
 const {
   showPathSelectionDialog,
-  ShowWrongDirectoryDialog,
+  showWrongDirectoryDialog,
   showLocalTerraAlreadyExistsDialog,
   showTxOccuredNotif,
   showNotifAccessDialog
@@ -55,14 +55,13 @@ async function init() {
   });
 
   txWs.subscribeTx({}, async ({ value }) => {
-    const description = parseTxDescription(value.TxResult.tx);
-    win.webContents.send('Tx', { description, ...value });
+    const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
+    win.webContents.send('Tx', { description, msg, ...value });
     showTxOccuredNotif(description)
   });
 
-  blockWs.subscribe('Tx', {}, ({ value }) => {
-    console.log(value);
-    win.webContents.send('Tx', value);
+  blockWs.subscribe('NewBlock', {}, ({ value }) => {
+    win.webContents.send('NewBlock', value);
   });
 
   ipcMain.handle('SetLocalTerraPath', async () => {
@@ -74,11 +73,10 @@ async function init() {
     if (isValid) {
       await store.set('localTerraPath', filePaths[0]);
       localTerraProcess = startLocalTerra(filePaths[0]);
-      console.log('localTerraProcess', localTerraProcess)
       await subscribeToLocalTerraEvents(localTerraProcess, win);
     }
     else {
-      await ShowWrongDirectoryDialog();
+      await showWrongDirectoryDialog();
       throw Error(`LocalTerra does not exist under the path '${localTerraPath}'`);
     }
   })

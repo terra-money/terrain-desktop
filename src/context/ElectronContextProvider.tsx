@@ -4,11 +4,16 @@ import { BlockInfo, TxResult } from "@terra-money/terra.js";
 import React, { ReactElement, useEffect } from "react";
 import { IBlockState } from "../package";
 
+interface TerrariumTx extends TxResult {
+    description: string;
+    msg: any;
+ }
+
 type TypeElectronContext = {
     localTerraPathConfigured: State<boolean>;
     localTerraStarted: State<boolean | null>;
     blockState: State<IBlockState>,
-    txState: State<TxResult[]>,
+    txState: State<TerrariumTx[]>,
     logsState: State<string[]>,
 }
 
@@ -16,7 +21,7 @@ const ElectronContext = React.createContext<TypeElectronContext>(null as any);
 
 export const ElectronContextProvider = ({children}: {children: ReactElement}) => {
     const blockState = useState(createState<IBlockState>({ blocks: [], latestHeight: 0 }));
-    const txState = useState(createState<TxResult[]>([]));
+    const txState = useState(createState<TerrariumTx[]>([]));
     const logsState = useState(createState<string[]>([]));
     const localTerraPathConfigured = useState(createState<boolean>(!!window.store.get('localTerraPath')));
     const localTerraStarted = useState(createState<boolean | null>(null));
@@ -29,8 +34,8 @@ export const ElectronContextProvider = ({children}: {children: ReactElement}) =>
             blockState.blocks.merge([{ ...block }]);
         }));
     
-        ipcRenderer.on('Tx', (_: any, tx: any) => {
-            txState.merge([{ ...tx.TxResult }]);
+        ipcRenderer.on('Tx', (_: any, tx: TerrariumTx) => {
+            txState.merge([{...tx}]);
         });
     
         ipcRenderer.on('NewLogs', ((_: any, log: string) => {

@@ -15,7 +15,7 @@ async function showPathSelectionDialog() {
   });
 }
 
-async function ShowWrongDirectoryDialog() {
+async function showWrongDirectoryDialog() {
   return dialog.showMessageBox({
     message: 'Please select a valid LocalTerra directory',
     title: 'Terrarium',
@@ -44,7 +44,8 @@ async function showLocalTerraAlreadyExistsDialog() {
 // NOTIFICATIONS
 
 function showTxOccuredNotif(body) {
-  return new Notification({
+  console.log('showTxOccuredNotif', body)
+  new Notification({
     title: 'Transaction Occurred',
     body
   }).show();
@@ -52,21 +53,17 @@ function showTxOccuredNotif(body) {
 
 
 function showLocalTerraStopNotif() {
-  return new Notification({
+  new Notification({
     title: 'LocalTerra has stopped...',
   }).show();
 }
 
 function showLocalTerraStartNotif() {
-  return new Notification({
-    title: 'LocalTerra has started...',
-  }).show();
+  new Notification({ title: 'LocalTerra has started...' }).show();
 }
 
 function showGrantNotificationDia() {
-  return new Notification({
-    title: 'LocalTerra has started...',
-  }).show();
+  new Notification({ title: 'LocalTerra has started...' }).show();
 }
 module.exports = {
   showPathSelectionDialog,
@@ -75,6 +72,6 @@ module.exports = {
   showNotifAccessDialog,
   showLocalTerraStopNotif,
   showTxOccuredNotif,
-  ShowWrongDirectoryDialog,
+  showWrongDirectoryDialog,
   showLocalTerraAlreadyExistsDialog
 };

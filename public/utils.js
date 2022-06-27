@@ -100,18 +100,20 @@ const parseTxMsg = (tx) => {
   return unpacked.body.messages[0];
 };
 
-const parseTxDescription = (tx) => {
-  const txEncodedMsgDescription = parseTxMsg(tx);
-  return readMsg(txEncodedMsgDescription);
+const parseTxDescriptionAndMsg = (tx) => {
+  const msg = parseTxMsg(tx);
+  const description = readMsg(msg);
+  return { msg: msg.toData(), description };
 };
 
 module.exports = {
   txWs,
   stopLocalTerra,
-  parseTxDescription,
+  parseTxDescriptionAndMsg,
   startLocalTerra,
   downloadLocalTerra,
   blockWs,
+  parseTxMsg,
   validateLocalTerraPath,
   subscribeToLocalTerraEvents,
 };
