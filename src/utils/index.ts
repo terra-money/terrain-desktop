@@ -1,12 +1,4 @@
-import { Tx } from '@terra-money/terra.js';
 import { bech32 } from 'bech32';
-
-export function decodeTx(encodedTx: any) {
-  return Tx.unpackAny({
-    value: Buffer.from(encodedTx, 'base64'),
-    typeUrl: '',
-  });
-}
 
 function isValidTerraAddress(address: string) {
   try {
