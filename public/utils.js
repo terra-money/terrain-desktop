@@ -9,8 +9,8 @@ const exec = util.promisify(require('child_process').exec);
 
 const { LOCAL_TERRA_WS, LOCAL_TERRA_GIT } = process.env
 
-const blockWs = new WebSocketClient(LOCAL_TERRA_WS);
-const txWs = new WebSocketClient(LOCAL_TERRA_WS);
+const localTerraTxWS = new WebSocketClient(LOCAL_TERRA_WS);
+const localTerraNewBlockWS = new WebSocketClient(LOCAL_TERRA_WS);
 
 let isLocalTerraRunning = false;
 
@@ -53,8 +53,8 @@ async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
 
     if (!isLocalTerraRunning && data.includes('indexed block')) {
       console.log('starting websocket');
-      blockWs.start();
-      txWs.start();
+      localTerraTxWS.start();
+      localTerraNewBlockWS.start();
       isLocalTerraRunning = true;
       browserWindow.webContents.send('LocalTerraRunning', true);
       browserWindow.webContents.send('LocalTerraPath', true);
@@ -82,9 +82,8 @@ async function stopLocalTerra(localTerraProcess) {
     if (localTerraProcess.killed){
       return resolve();
     }
-
-    txWs.destroy();
-    blockWs.destroy();
+    localTerraTxWS.destroy();
+    localTerraNewBlockWS.destroy();
     localTerraProcess.once('close', resolve);
     localTerraProcess.kill();  
   });
@@ -92,11 +91,11 @@ async function stopLocalTerra(localTerraProcess) {
 }
 
 module.exports = {
-  txWs,
-  blockWs,
+  localTerraTxWS,
   stopLocalTerra,
   startLocalTerra,
   downloadLocalTerra,
+  localTerraNewBlockWS,
   validateLocalTerraPath,
   subscribeToLocalTerraEvents,
 };
