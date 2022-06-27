@@ -7,10 +7,10 @@ export default function LogsPage() {
   const logs = useGetLogs();
 
   return (
-      <Virtuoso className="flex flex-col bg-white w-full"
-        followOutput
-        initialTopMostItemIndex={logs.length}
-        data={logs}
-        itemContent={(index, log) => <LogView key={index} log={log} />} />
+    <Virtuoso className="flex flex-col w-full"
+      followOutput
+      initialTopMostItemIndex={logs.length}
+      data={logs}
+      itemContent={(index, log) => <LogView key={index} log={log} />} />
   );
 } 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Virtuoso } from 'react-virtuoso'
 import { TransactionView } from '../component';
 import { useGetTxs } from '../package';
 
@@ -7,10 +8,12 @@ export default function TransactionsPage() {
   if (txs.length === 0) {
     return <h1>There are no transactions yet.</h1>;
   }
-  
+
   return (
-    <ul className="max-w-full flex flex-col">
-      {txs.map((tx, index) => (<TransactionView key={index} tx={tx} />))}
-    </ul>
+    <Virtuoso className="flex flex-col w-full"
+      followOutput
+      initialTopMostItemIndex={txs.length}
+      data={txs}
+      itemContent={(index, tx) => (<TransactionView key={index} tx={tx} />)} />
   );
 }
