@@ -20,7 +20,7 @@ const {
   showPathSelectionDialog,
   ShowWrongDirectoryDialog,
   showLocalTerraAlreadyExistsDialog
-} = require('./dialogs');
+} = require('./messages');
 
 async function init() {
   const browserWindow = new BrowserWindow({

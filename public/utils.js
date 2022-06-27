@@ -5,6 +5,7 @@ const { WebSocketClient } = require('@terra-money/terra.js');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
+const { showLocalTerraStartNotif, showLocalTerraStopNotif, showNotifAccessDialog } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
 
 const { LOCAL_TERRA_WS, LOCAL_TERRA_GIT } = process.env
@@ -21,8 +22,7 @@ function validateLocalTerraPath(url) {
     const { services } = yaml.load(dockerComposeYml); // All properties from docker-compose are available here
     const ltServices = Object.keys(services);
     return ltServices.includes('terrad');
-  }
-  catch (e) {
+  } catch (e) {
     console.log(e);
     return false;
   }
@@ -39,7 +39,8 @@ async function downloadLocalTerra() {
   return LOCAL_TERRA_PATH;
 }
 
-function startLocalTerra(localTerraPath) {
+async function startLocalTerra(localTerraPath) {
+  await showNotifAccessDialog()
   return spawn('docker-compose', ['up'], { cwd: localTerraPath });
 }
 
@@ -58,6 +59,7 @@ async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
       isLocalTerraRunning = true;
       browserWindow.webContents.send('LocalTerraRunning', true);
       browserWindow.webContents.send('LocalTerraPath', true);
+      showLocalTerraStartNotif()
     }
   });
 
@@ -69,6 +71,7 @@ async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
     if (browserWindow.isDestroyed()) {
       return;
     }
+
 
     isLocalTerraRunning = false;
     browserWindow.webContents.send('LocalTerraRunning', false);
@@ -86,7 +89,8 @@ async function stopLocalTerra(localTerraProcess) {
     txWs.destroy();
     blockWs.destroy();
     localTerraProcess.once('close', resolve);
-    localTerraProcess.kill();  
+    localTerraProcess.kill();
+    showLocalTerraStopNotif()
   });
 
 }
