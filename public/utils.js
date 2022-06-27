@@ -8,8 +8,7 @@ const util = require('util');
 const { Tx } =require('@terra-money/terra.js');
 
 const { readMsg } = require('@terra-money/msg-reader');
-
-const { showLocalTerraStartNotif, showLocalTerraStopNotif, showNotifAccessDialog } = require('./messages');
+const { showLocalTerraStartNotif, showLocalTerraStopNotif } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
 
 const { LOCAL_TERRA_WS, LOCAL_TERRA_GIT } = process.env
@@ -36,20 +35,17 @@ async function downloadLocalTerra() {
   const LOCAL_TERRA_PATH = path.join(app.getPath('appData'), "LocalTerra");
   if (fs.existsSync(LOCAL_TERRA_PATH)) {
     throw Error(`LocalTerra already exists under the path '${LOCAL_TERRA_PATH}'`);
-  }
-  else {
+  } else {
     await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, { cwd: app.getPath('appData') })
   }
   return LOCAL_TERRA_PATH;
 }
 
-async function startLocalTerra(localTerraPath) {
-  showNotifAccessDialog()
+function startLocalTerra(localTerraPath) {
   return spawn('docker-compose', ['up'], { cwd: localTerraPath });
 }
 
 async function subscribeToLocalTerraEvents(localTerraProcess, win) {
-  console.log('localTerraProcess', localTerraProcess)
   localTerraProcess.stdout.on('data', (data) => {
     if (win.isDestroyed()) return
 

@@ -21,7 +21,8 @@ const {
   showPathSelectionDialog,
   ShowWrongDirectoryDialog,
   showLocalTerraAlreadyExistsDialog,
-  showTxOccuredNotif
+  showTxOccuredNotif,
+  showNotifAccessDialog
 } = require('./messages');
 
 async function init() {
@@ -67,6 +68,8 @@ async function init() {
   ipcMain.handle('SetLocalTerraPath', async () => {
     const { filePaths } = await showPathSelectionDialog();
     const isValid = validateLocalTerraPath(filePaths[0]);
+    const notifsGranted = await store.get('notifsGranted');
+    if (!notifsGranted) { showNotifAccessDialog() }
 
     if (isValid) {
       await store.set('localTerraPath', filePaths[0]);

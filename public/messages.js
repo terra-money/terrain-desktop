@@ -38,7 +38,7 @@ async function showLocalTerraAlreadyExistsDialog() {
     type: 'info' 
   });
   new Notification().show();
-  await store.set('notificationsGranted', true);
+  await store.set('notifsGranted', true);
 }
 
 // NOTIFICATIONS
