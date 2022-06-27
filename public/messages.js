@@ -1,10 +1,9 @@
 const Store = require('electron-store');
 
 const { dialog, app, Notification } = require('electron');
-const { parseTxDescription } = require('../src/utils');
+const { parseTxDescription } = require('./utils');
 
 const store = new Store();
-
 
 // DIALOGS
 

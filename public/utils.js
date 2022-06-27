@@ -5,6 +5,10 @@ const { WebSocketClient } = require('@terra-money/terra.js');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
+const { Tx } =require('@terra-money/terra.js');
+
+const { readMsg } = require('@terra-money/msg-reader');
+
 const { showLocalTerraStartNotif, showLocalTerraStopNotif, showNotifAccessDialog } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
 
@@ -23,7 +27,7 @@ function validateLocalTerraPath(url) {
     const ltServices = Object.keys(services);
     return ltServices.includes('terrad');
   } catch (e) {
-    console.log(e);
+    console.log('Error validating path', e);
     return false;
   }
 }
@@ -46,9 +50,7 @@ async function startLocalTerra(localTerraPath) {
 
 async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
   localTerraProcess.stdout.on('data', (data) => {
-    if (browserWindow.isDestroyed()) {
-      return;
-    }
+    if (browserWindow.isDestroyed()) return
 
     browserWindow.webContents.send('NewLogs', data.toString());
 
@@ -68,11 +70,7 @@ async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
   });
 
   localTerraProcess.on('close', () => {
-    if (browserWindow.isDestroyed()) {
-      return;
-    }
-
-
+    if (browserWindow.isDestroyed()) return
     isLocalTerraRunning = false;
     browserWindow.webContents.send('LocalTerraRunning', false);
   });
@@ -82,7 +80,7 @@ async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
 
 async function stopLocalTerra(localTerraProcess) {
   return new Promise(resolve => {
-    if (localTerraProcess.killed){
+    if (localTerraProcess.killed) {
       return resolve();
     }
 
@@ -92,13 +90,30 @@ async function stopLocalTerra(localTerraProcess) {
     localTerraProcess.kill();
     showLocalTerraStopNotif()
   });
-
 }
+
+function decodeTx(encodedTx) {
+  return Tx.unpackAny({
+    value: Buffer.from(encodedTx, 'base64'),
+    typeUrl: '',
+  });
+}
+
+const parseTxMsg = (tx) => {
+  const unpacked = decodeTx(tx);
+  return unpacked.body.messages[0];
+};
+
+const parseTxDescription = (tx) => {
+  const txEncodedMsgDescription = parseTxMsg(tx);
+  return readMsg(txEncodedMsgDescription);
+};
 
 module.exports = {
   txWs,
   blockWs,
   stopLocalTerra,
+  parseTxDescription,
   startLocalTerra,
   downloadLocalTerra,
   validateLocalTerraPath,

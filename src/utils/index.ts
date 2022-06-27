@@ -1,5 +1,4 @@
 import { Tx } from '@terra-money/terra.js';
-import { readMsg } from '@terra-money/msg-reader';
 import { bech32 } from 'bech32';
 
 export function decodeTx(encodedTx: any) {
@@ -8,16 +7,6 @@ export function decodeTx(encodedTx: any) {
     typeUrl: '',
   });
 }
-
-export const parseTxMsg = (tx: Tx) => {
-  const unpacked = decodeTx(tx);
-  return unpacked.body.messages[0] as any;
-};
-
-export const parseTxDescription = (tx: Tx) => {
-  const txEncodedMsgDescription = parseTxMsg(tx);
-  return readMsg(txEncodedMsgDescription);
-};
 
 function isValidTerraAddress(address: string) {
   try {

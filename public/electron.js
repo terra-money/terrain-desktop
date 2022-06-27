@@ -19,7 +19,8 @@ const {
 const {
   showPathSelectionDialog,
   ShowWrongDirectoryDialog,
-  showLocalTerraAlreadyExistsDialog
+  showLocalTerraAlreadyExistsDialog,
+  showTxOccuredNotif
 } = require('./messages');
 
 async function init() {
@@ -53,6 +54,7 @@ async function init() {
 
   txWs.subscribeTx({}, async ({ value }) => {
     browserWindow.webContents.send('Tx', value);
+    showTxOccuredNotif(value.TxResult.tx)
   });
 
   blockWs.subscribe('NewBlock', {}, ({ value }) => {
@@ -98,7 +100,6 @@ async function init() {
     else {
       stopLocalTerra(localTerraProcess);
     }
-
     return localTerraStatus;
   });
 
