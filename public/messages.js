@@ -1,4 +1,6 @@
-const { dialog, app } = require('electron');
+const { dialog, app, Notification } = require('electron');
+
+// DIALOGS
 
 async function showPathSelectionDialog() {
   return dialog.showOpenDialog({
@@ -9,7 +11,7 @@ async function showPathSelectionDialog() {
   });
 }
 
-async function ShowWrongDirectoryDialog() {
+async function showWrongDirectoryDialog() {
   return dialog.showMessageBox({
     message: 'Please select a valid LocalTerra directory',
     title: 'Terrarium',
@@ -25,8 +27,25 @@ async function showLocalTerraAlreadyExistsDialog() {
   });
 }
 
+// NOTIFICATIONS
+
+function showTxOccuredNotif(body) {
+  new Notification({ title: 'Transaction Occurred', body }).show();
+}
+
+function showLocalTerraStopNotif() {
+  new Notification({ title: 'LocalTerra has stopped...' }).show();
+}
+
+function showLocalTerraStartNotif() {
+  new Notification({ title: 'LocalTerra has started...' }).show();
+}
+
 module.exports = {
   showPathSelectionDialog,
-  ShowWrongDirectoryDialog,
+  showLocalTerraStartNotif,
+  showLocalTerraStopNotif,
+  showTxOccuredNotif,
+  showWrongDirectoryDialog,
   showLocalTerraAlreadyExistsDialog
 };

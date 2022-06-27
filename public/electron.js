@@ -7,23 +7,26 @@ require('dotenv').config()
 const store = new Store();
 
 const {
-  localTerraTxWS,
+  txWs,
   stopLocalTerra,
   startLocalTerra,
   downloadLocalTerra,
-  localTerraNewBlockWS,
+  blockWs,
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
+  parseTxDescriptionAndMsg,
 } = require('./utils');
 
 const {
   showPathSelectionDialog,
-  ShowWrongDirectoryDialog,
-  showLocalTerraAlreadyExistsDialog
-} = require('./dialogs');
+  showWrongDirectoryDialog,
+  showLocalTerraAlreadyExistsDialog,
+  showTxOccuredNotif,
+  showNotifAccessDialog
+} = require('./messages');
 
 async function init() {
-  const browserWindow = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 1200,
     height: 720,
     minWidth: 690,
@@ -39,25 +42,26 @@ async function init() {
   let localTerraProcess;
 
   if (isDev) {
-    browserWindow.loadURL('http://localhost:3000');
-    browserWindow.webContents.openDevTools();
+    win.loadURL('http://localhost:3000');
+    win.webContents.openDevTools();
   }
   else {
-    browserWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
+    win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
   }
 
-  browserWindow.webContents.setWindowOpenHandler(({ url }) => {
+  win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
   });
 
-  localTerraTxWS.subscribe('NewBlock', {}, ({ value }) => {
-    browserWindow.webContents.send('NewBlock', value);
+  txWs.subscribeTx({}, async ({ value }) => {
+    const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
+    win.webContents.send('Tx', { description, msg, ...value });
+    showTxOccuredNotif(description)
   });
 
-  localTerraNewBlockWS.subscribe('Tx', {}, ({ value }) => {
-    console.log(value);
-    browserWindow.webContents.send('Tx', value);
+  blockWs.subscribe('NewBlock', {}, ({ value }) => {
+    win.webContents.send('NewBlock', value);
   });
 
   ipcMain.handle('SetLocalTerraPath', async () => {
@@ -67,10 +71,10 @@ async function init() {
     if (isValid) {
       await store.set('localTerraPath', filePaths[0]);
       localTerraProcess = startLocalTerra(filePaths[0]);
-      await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+      await subscribeToLocalTerraEvents(localTerraProcess, win);
     }
     else {
-      await ShowWrongDirectoryDialog();
+      await showWrongDirectoryDialog();
       throw Error(`LocalTerra does not exist under the path '${localTerraPath}'`);
     }
   })
@@ -80,7 +84,7 @@ async function init() {
     try {
       localTerraPath = await downloadLocalTerra();
       localTerraProcess = startLocalTerra(localTerraPath);
-      await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+      await subscribeToLocalTerraEvents(localTerraProcess, win);
       await store.set('localTerraPath', localTerraPath);
     }
     catch (e) {
@@ -94,12 +98,11 @@ async function init() {
     
     if (localTerraStatus) {
       localTerraProcess = startLocalTerra(localTerraPath);
-      await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+      await subscribeToLocalTerraEvents(localTerraProcess, win);
     }
     else {
       stopLocalTerra(localTerraProcess);
     }
-
     return localTerraStatus;
   });
 
@@ -110,12 +113,12 @@ async function init() {
 
   const localTerraPath = await store.get('localTerraPath');
   if (localTerraPath) {
-    browserWindow.webContents.send('LocalTerraPath', true);
+    win.webContents.send('LocalTerraPath', true);
     localTerraProcess = startLocalTerra(localTerraPath);
-    await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+    await subscribeToLocalTerraEvents(localTerraProcess, win);
   }
 
-  browserWindow.show();
+  win.show();
 }
 
 app.on('ready', init);

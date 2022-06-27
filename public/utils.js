@@ -5,12 +5,16 @@ const { WebSocketClient } = require('@terra-money/terra.js');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
+const { Tx } =require('@terra-money/terra.js');
+
+const { readMsg } = require('@terra-money/msg-reader');
+const { showLocalTerraStartNotif, showLocalTerraStopNotif } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
 
 const { LOCAL_TERRA_WS, LOCAL_TERRA_GIT } = process.env
 
-const localTerraTxWS = new WebSocketClient(LOCAL_TERRA_WS);
-const localTerraNewBlockWS = new WebSocketClient(LOCAL_TERRA_WS);
+const txWs = new WebSocketClient(LOCAL_TERRA_WS);
+const blockWs = new WebSocketClient(LOCAL_TERRA_WS);
 
 let isLocalTerraRunning = false;
 
@@ -21,9 +25,8 @@ function validateLocalTerraPath(url) {
     const { services } = yaml.load(dockerComposeYml); // All properties from docker-compose are available here
     const ltServices = Object.keys(services);
     return ltServices.includes('terrad');
-  }
-  catch (e) {
-    console.log(e);
+  } catch (e) {
+    console.log('Error validating path', e);
     return false;
   }
 }
@@ -32,8 +35,7 @@ async function downloadLocalTerra() {
   const LOCAL_TERRA_PATH = path.join(app.getPath('appData'), "LocalTerra");
   if (fs.existsSync(LOCAL_TERRA_PATH)) {
     throw Error(`LocalTerra already exists under the path '${LOCAL_TERRA_PATH}'`);
-  }
-  else {
+  } else {
     await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, { cwd: app.getPath('appData') })
   }
   return LOCAL_TERRA_PATH;
@@ -43,21 +45,20 @@ function startLocalTerra(localTerraPath) {
   return spawn('docker-compose', ['up'], { cwd: localTerraPath });
 }
 
-async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
+async function subscribeToLocalTerraEvents(localTerraProcess, win) {
   localTerraProcess.stdout.on('data', (data) => {
-    if (browserWindow.isDestroyed()) {
-      return;
-    }
+    if (win.isDestroyed()) return
 
-    browserWindow.webContents.send('NewLogs', data.toString());
+    win.webContents.send('NewLogs', data.toString());
 
     if (!isLocalTerraRunning && data.includes('indexed block')) {
       console.log('starting websocket');
-      localTerraTxWS.start();
-      localTerraNewBlockWS.start();
+      txWs.start();
+      blockWs.start();
       isLocalTerraRunning = true;
-      browserWindow.webContents.send('LocalTerraRunning', true);
-      browserWindow.webContents.send('LocalTerraPath', true);
+      win.webContents.send('LocalTerraRunning', true);
+      win.webContents.send('LocalTerraPath', true);
+      showLocalTerraStartNotif()
     }
   });
 
@@ -66,12 +67,9 @@ async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
   });
 
   localTerraProcess.on('close', () => {
-    if (browserWindow.isDestroyed()) {
-      return;
-    }
-
+    if (win.isDestroyed()) return
     isLocalTerraRunning = false;
-    browserWindow.webContents.send('LocalTerraRunning', false);
+    win.webContents.send('LocalTerraRunning', false);
   });
 
   return localTerraProcess;
@@ -79,23 +77,43 @@ async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
 
 async function stopLocalTerra(localTerraProcess) {
   return new Promise(resolve => {
-    if (localTerraProcess.killed){
+    if (localTerraProcess.killed) {
       return resolve();
     }
-    localTerraTxWS.destroy();
-    localTerraNewBlockWS.destroy();
+    txWs.destroy();
+    blockWs.destroy();
     localTerraProcess.once('close', resolve);
-    localTerraProcess.kill();  
+    localTerraProcess.kill();
+    showLocalTerraStopNotif()
   });
-
 }
 
+function decodeTx(encodedTx) {
+  return Tx.unpackAny({
+    value: Buffer.from(encodedTx, 'base64'),
+    typeUrl: '',
+  });
+}
+
+const parseTxMsg = (tx) => {
+  const unpacked = decodeTx(tx);
+  return unpacked.body.messages[0];
+};
+
+const parseTxDescriptionAndMsg = (tx) => {
+  const msg = parseTxMsg(tx);
+  const description = readMsg(msg);
+  return { msg: msg.toData(), description };
+};
+
 module.exports = {
-  localTerraTxWS,
+  txWs,
   stopLocalTerra,
+  parseTxDescriptionAndMsg,
   startLocalTerra,
   downloadLocalTerra,
-  localTerraNewBlockWS,
+  blockWs,
+  parseTxMsg,
   validateLocalTerraPath,
   subscribeToLocalTerraEvents,
 };

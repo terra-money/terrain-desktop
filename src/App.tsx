@@ -40,7 +40,7 @@ function App() {
   };
 
   return (
-    <body className="flex flex-col w-screen h-screen">
+    <div className="flex flex-col w-screen h-screen">
       <div className="flex">
         <div className={`bg-terra-dark-blue h-full p-5 pt-8 ${open ? 'w-72' : 'w-20'} w-min duration-300 relative`}>
           <BsArrowLeftShort className={`bg-white text-terra-dark-blue text-3xl rounded-full absolute -right-4 top-9 border border-terra-dark-blue cursor-pointer ${!open && 'rotate-180'}`} onClick={() => setOpen(!open)} />
@@ -77,18 +77,6 @@ function App() {
                 <p className="text-center text-terra-mid-blue">{latestHeight}</p>
               </li>
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                <p className="text-center uppercase">Gas Price</p>
-                <p className="text-center text-terra-mid-blue">20000000</p>
-              </li>
-              <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                <p className="text-center uppercase">Gas Limit</p>
-                <p className="text-center text-terra-mid-blue">0</p>
-              </li>
-              <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                <p className="text-center uppercase">Hardfork</p>
-                <p className="text-center text-terra-mid-blue">0</p>
-              </li>
-              <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-center uppercase">Network ID</p>
                 <p className="text-center text-terra-mid-blue">{terra.config.chainID}</p>
               </li>
@@ -109,7 +97,7 @@ function App() {
           </main>
         </div>
       </div>
-    </body>
+    </div>
   );
 }
 
