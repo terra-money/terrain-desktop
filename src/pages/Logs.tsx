@@ -8,7 +8,8 @@ export default function LogsPage() {
 
   return (
       <Virtuoso className="flex flex-col bg-white w-full"
-        initialScrollTop={logs.length * 6400}
+        followOutput
+        initialTopMostItemIndex={logs.length}
         data={logs}
         itemContent={(index, log) => <LogView key={index} log={log} />} />
   );
