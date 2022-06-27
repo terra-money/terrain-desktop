@@ -4,7 +4,6 @@ import { Downgraded } from '@hookstate/core';
 import { ipcRenderer } from 'electron';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook } from '../interface/ITerraHook';
-import { parseTxMsg } from '../../utils';
 import ElectronContext from '../../context/ElectronContextProvider';
 
 export function useTerra() {
@@ -20,7 +19,7 @@ export function useTerra() {
     },
     listenToAccountTx(address: string, cb: Function) {
       const listener = (_: any, tx: any) => {
-        const { from_address: add } = parseTxMsg(tx.TxResult);
+        const { from_address: add } = tx.decription;
         if (add === address) { cb(add); }
       };
       ipcRenderer.on('Tx', listener);

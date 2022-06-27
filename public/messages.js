@@ -1,7 +1,6 @@
 const Store = require('electron-store');
 
 const { dialog, app, Notification } = require('electron');
-const { parseTxDescription } = require('./utils');
 
 const store = new Store();
 
@@ -32,7 +31,7 @@ async function showLocalTerraAlreadyExistsDialog() {
   });
 }
 
-async function showNotifAccessDialog() {
+ async function showNotifAccessDialog() {
   dialog.showMessageBox({ 
     message: 'Terrarium would like to send you notifications. Please grant access if you wish to receive them.', 
     title: 'Terrarium', 
@@ -44,11 +43,10 @@ async function showNotifAccessDialog() {
 
 // NOTIFICATIONS
 
-function showTxOccuredNotif(tx) {
-  const txMsg = parseTxDescription(tx);
+function showTxOccuredNotif(body) {
   return new Notification({
     title: 'Transaction Occurred',
-    body: txMsg.toString()
+    body
   }).show();
 }
 

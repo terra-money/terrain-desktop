@@ -1,5 +1,5 @@
 import React from 'react';
-import { parseTxDescription, truncate } from '../utils';
+import { truncate } from '../utils';
 
 function TransactionItemView({ tx }: { tx: any }) {
   const txHref = `${process.env.REACT_APP_FINDER_URL}/tx/${tx.txhash}`;
@@ -19,7 +19,7 @@ function TransactionItemView({ tx }: { tx: any }) {
         </div>
         <div>
           <p>Description</p>
-          <p>{parseTxDescription(tx.tx)}</p>
+          <p>{tx.description}</p>
         </div>
         <div>
           <p>Gas Used</p>

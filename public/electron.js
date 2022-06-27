@@ -14,6 +14,7 @@ const {
   blockWs,
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
+  parseTxDescription
 } = require('./utils');
 
 const {
@@ -24,7 +25,7 @@ const {
 } = require('./messages');
 
 async function init() {
-  const browserWindow = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 1200,
     height: 720,
     minWidth: 690,
@@ -40,26 +41,27 @@ async function init() {
   let localTerraProcess;
 
   if (isDev) {
-    browserWindow.loadURL('http://localhost:3000');
-    browserWindow.webContents.openDevTools();
+    win.loadURL('http://localhost:3000');
+    win.webContents.openDevTools();
   }
   else {
-    browserWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
+    win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
   }
 
-  browserWindow.webContents.setWindowOpenHandler(({ url }) => {
+  win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
   });
 
   txWs.subscribeTx({}, async ({ value }) => {
-    browserWindow.webContents.send('Tx', value);
-    showTxOccuredNotif(value.TxResult.tx)
+    const description = parseTxDescription(value.TxResult.tx);
+    win.webContents.send('Tx', { description, ...value });
+    showTxOccuredNotif(description)
   });
 
   blockWs.subscribe('Tx', {}, ({ value }) => {
     console.log(value);
-    browserWindow.webContents.send('Tx', value);
+    win.webContents.send('Tx', value);
   });
 
   ipcMain.handle('SetLocalTerraPath', async () => {
@@ -69,7 +71,8 @@ async function init() {
     if (isValid) {
       await store.set('localTerraPath', filePaths[0]);
       localTerraProcess = startLocalTerra(filePaths[0]);
-      await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+      console.log('localTerraProcess', localTerraProcess)
+      await subscribeToLocalTerraEvents(localTerraProcess, win);
     }
     else {
       await ShowWrongDirectoryDialog();
@@ -82,7 +85,7 @@ async function init() {
     try {
       localTerraPath = await downloadLocalTerra();
       localTerraProcess = startLocalTerra(localTerraPath);
-      await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+      await subscribeToLocalTerraEvents(localTerraProcess, win);
       await store.set('localTerraPath', localTerraPath);
     }
     catch (e) {
@@ -96,7 +99,7 @@ async function init() {
     
     if (localTerraStatus) {
       localTerraProcess = startLocalTerra(localTerraPath);
-      await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+      await subscribeToLocalTerraEvents(localTerraProcess, win);
     }
     else {
       stopLocalTerra(localTerraProcess);
@@ -111,12 +114,12 @@ async function init() {
 
   const localTerraPath = await store.get('localTerraPath');
   if (localTerraPath) {
-    browserWindow.webContents.send('LocalTerraPath', true);
+    win.webContents.send('LocalTerraPath', true);
     localTerraProcess = startLocalTerra(localTerraPath);
-    await subscribeToLocalTerraEvents(localTerraProcess, browserWindow);
+    await subscribeToLocalTerraEvents(localTerraProcess, win);
   }
 
-  browserWindow.show();
+  win.show();
 }
 
 app.on('ready', init);

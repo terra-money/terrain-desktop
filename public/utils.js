@@ -44,23 +44,24 @@ async function downloadLocalTerra() {
 }
 
 async function startLocalTerra(localTerraPath) {
-  await showNotifAccessDialog()
+  showNotifAccessDialog()
   return spawn('docker-compose', ['up'], { cwd: localTerraPath });
 }
 
-async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
+async function subscribeToLocalTerraEvents(localTerraProcess, win) {
+  console.log('localTerraProcess', localTerraProcess)
   localTerraProcess.stdout.on('data', (data) => {
-    if (browserWindow.isDestroyed()) return
+    if (win.isDestroyed()) return
 
-    browserWindow.webContents.send('NewLogs', data.toString());
+    win.webContents.send('NewLogs', data.toString());
 
     if (!isLocalTerraRunning && data.includes('indexed block')) {
       console.log('starting websocket');
       txWs.start();
       blockWs.start();
       isLocalTerraRunning = true;
-      browserWindow.webContents.send('LocalTerraRunning', true);
-      browserWindow.webContents.send('LocalTerraPath', true);
+      win.webContents.send('LocalTerraRunning', true);
+      win.webContents.send('LocalTerraPath', true);
       showLocalTerraStartNotif()
     }
   });
@@ -70,9 +71,9 @@ async function subscribeToLocalTerraEvents(localTerraProcess, browserWindow) {
   });
 
   localTerraProcess.on('close', () => {
-    if (browserWindow.isDestroyed()) return
+    if (win.isDestroyed()) return
     isLocalTerraRunning = false;
-    browserWindow.webContents.send('LocalTerraRunning', false);
+    win.webContents.send('LocalTerraRunning', false);
   });
 
   return localTerraProcess;
