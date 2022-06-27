@@ -105,7 +105,7 @@ function App() {
             </ul>
           </header>
           <main className="flex w-full h-[calc(100vh-72px)] overflow-auto">
-            <>{routes}</>
+            {routes}
           </main>
         </div>
       </div>

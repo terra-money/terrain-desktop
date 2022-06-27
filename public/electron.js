@@ -7,11 +7,11 @@ require('dotenv').config()
 const store = new Store();
 
 const {
-  startLocalTerra,
-  stopLocalTerra,
-  blockWs,
   txWs,
+  stopLocalTerra,
+  startLocalTerra,
   downloadLocalTerra,
+  blockWs,
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
 } = require('./utils');
@@ -57,8 +57,9 @@ async function init() {
     showTxOccuredNotif(value.TxResult.tx)
   });
 
-  blockWs.subscribe('NewBlock', {}, ({ value }) => {
-    browserWindow.webContents.send('NewBlock', value);
+  blockWs.subscribe('Tx', {}, ({ value }) => {
+    console.log(value);
+    browserWindow.webContents.send('Tx', value);
   });
 
   ipcMain.handle('SetLocalTerraPath', async () => {

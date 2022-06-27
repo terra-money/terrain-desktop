@@ -1,12 +1,8 @@
 # Terrarium
-An experimental UI desktop tool
 
-## Usage
+Terra 2.0, UI tool to perform local development using with [LocalTerra](https://github.com/terra-money/LocalTerra/) as blockchain. 
 
-1. Clone this repo
 
-2. `npm i`
+## Local Development
 
-3. Start your Localterra first, to opens its ports for UI to connect
-
-4. `npm run electron`
+To use this tool locally after cloning the repo use as an example the `.example.env` file to create your own file named `.env` and afterwords start the local development environment with `npm run electron-dev`.

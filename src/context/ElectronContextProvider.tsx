@@ -1,6 +1,6 @@
 import { createState, State, useState } from "@hookstate/core";
 import { ipcRenderer } from 'electron';
-import { BlockInfo, TxInfo } from "@terra-money/terra.js";
+import { BlockInfo, TxResult } from "@terra-money/terra.js";
 import React, { ReactElement, useEffect } from "react";
 import { IBlockState } from "../package";
 
@@ -8,7 +8,7 @@ type TypeElectronContext = {
     localTerraPathConfigured: State<boolean>;
     localTerraStarted: State<boolean | null>;
     blockState: State<IBlockState>,
-    txState: State<TxInfo[]>,
+    txState: State<TxResult[]>,
     logsState: State<string[]>,
 }
 
@@ -16,7 +16,7 @@ const ElectronContext = React.createContext<TypeElectronContext>(null as any);
 
 export const ElectronContextProvider = ({children}: {children: ReactElement}) => {
     const blockState = useState(createState<IBlockState>({ blocks: [], latestHeight: 0 }));
-    const txState = useState(createState<TxInfo[]>([]));
+    const txState = useState(createState<TxResult[]>([]));
     const logsState = useState(createState<string[]>([]));
     const localTerraPathConfigured = useState(createState<boolean>(!!window.store.get('localTerraPath')));
     const localTerraStarted = useState(createState<boolean | null>(null));
