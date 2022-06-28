@@ -53,7 +53,7 @@ export const useGetLogs = () => {
 }
 export const useGetTxs = () => {
   const { txState } = useContext(ElectronContext);
-  return txState.attach(Downgraded).get();
+  return txState.attach(Downgraded);
 }
 
 export const useLocalTerraPathConfigured = () => {
