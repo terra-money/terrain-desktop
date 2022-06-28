@@ -22,7 +22,6 @@ const {
   showWrongDirectoryDialog,
   showLocalTerraAlreadyExistsDialog,
   showTxOccuredNotif,
-  showNotifAccessDialog
 } = require('./messages');
 
 async function init() {

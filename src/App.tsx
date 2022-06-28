@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
@@ -21,14 +21,13 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    if (isLocalTerraPathConfigured && hasStartedLocalTerra) navigate('/accounts');
-    else if (!isLocalTerraPathConfigured) navigate('/onboard');
-  }, [isLocalTerraPathConfigured, hasStartedLocalTerra]);
+    if (!isLocalTerraPathConfigured) navigate('/onboard');
+  }, [isLocalTerraPathConfigured]);
 
   useEffect(() => {
     if (latestHeight) setIsLoading(false)
-    if (hasStartedLocalTerra === null) setIsLoading(true);
-  }, [isLocalTerraPathConfigured, hasStartedLocalTerra, latestHeight]);
+    else if (hasStartedLocalTerra === null && !latestHeight) setIsLoading(true);
+  }, [hasStartedLocalTerra, latestHeight]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
 
@@ -109,4 +108,4 @@ function App() {
   );
 }
 
-export default App;
+export default memo(App);

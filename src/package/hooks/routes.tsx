@@ -21,7 +21,7 @@ const useNav = () => {
     {
       name: 'Accounts',
       icon: <AccountsIcon />,
-      path: '/accounts',
+      path: '/',
       element: <AccountsPage />,
     },
     {

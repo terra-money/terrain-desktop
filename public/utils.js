@@ -50,9 +50,7 @@ async function subscribeToLocalTerraEvents(localTerraProcess, win) {
     if (win.isDestroyed()) return
 
     win.webContents.send('NewLogs', data.toString());
-
     if (!isLocalTerraRunning && data.includes('indexed block')) {
-      console.log('starting websocket');
       txWs.start();
       blockWs.start();
       isLocalTerraRunning = true;
