@@ -34,11 +34,11 @@ function showTxOccuredNotif(body) {
 }
 
 function showLocalTerraStopNotif() {
-  new Notification({ title: 'LocalTerra has stopped...' }).show();
+  new Notification({ title: 'LocalTerra has stopped...', silent: true }).show();
 }
 
 function showLocalTerraStartNotif() {
-  new Notification({ title: 'LocalTerra has started...' }).show();
+  new Notification({ title: 'LocalTerra has started...', silent: true }).show();
 }
 
 module.exports = {
