@@ -4,15 +4,15 @@
   "homepage": "./",
   "main": "public/electron.js",
   "scripts": {
-    "start": "npm run watch:css && react-app-rewired start",
-    "build": "npm run build:css && react-app-rewired build",
+    "start": "BROWSER=none react-app-rewired start",
+    "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "electron-dev": "concurrently -k \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-dev": "concurrently -k \"npm run watch:css\" \"npm run start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "npm run build",
     "electron-pack": "build -mw",
-    "build:css": "postcss public/styles.css -o src/index.css",
-    "watch:css": "postcss public/styles.css -o src/index.css"
+    "build:css": "tailwind -i public/styles.css -o src/index.css --minify",
+    "watch:css": "TAILWIND_MODE=watch tailwind -i public/styles.css -o src/index.css --watch"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
