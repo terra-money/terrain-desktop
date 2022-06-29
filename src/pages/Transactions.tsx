@@ -1,6 +1,6 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
-import Transaction from '../component/Transactions/Transaction';
+import Transaction from '../component/Transaction';
 import { useGetTxs } from '../package';
 
 const TABLE_HEADER = [{

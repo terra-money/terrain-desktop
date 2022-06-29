@@ -1,9 +1,9 @@
 import { Collapse, Divider } from '@mui/material';
 import React from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { TerrariumTx } from '../../models/TerrariumTx';
-import { ReactComponent as ExternalLinkIcon } from '../../assets/icons/external-link.svg';
-import TransactionEventInfo from './TransactionEventInfo';
+import { TerrariumTx } from '../models/TerrariumTx';
+import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
+import EventInfo from './EventInfo';
 
 type TransactionType = {
   data: TerrariumTx,
@@ -51,7 +51,7 @@ function Transaction(props: TransactionType) {
 
       <li>
         <Collapse in={open} timeout="auto" unmountOnExit className='px-16 py-8'>
-          <TransactionEventInfo events={result.events} />
+          <EventInfo events={result.events} />
         </Collapse>
       </li>
       <Divider />

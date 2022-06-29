@@ -1,13 +1,13 @@
 import { Divider, List, ListItem } from '@mui/material';
 import React from 'react';
-import { TxEvents, TxUtils } from '../../models/TerrariumTx';
+import { EventUtils, Event} from '../models/Event';
 
-type TransactionEventInfoType = {
-  events: TxEvents[]
+type EventInfoType = {
+  events: Event[]
 }
 
-function TransactionEventInfo(props: TransactionEventInfoType) {
-  const events = TxUtils.parseEventsAttributes(props.events);
+function EventInfo(props: EventInfoType) {
+  const events = EventUtils.parseEventsAttributes(props.events);
 
   return (
     <>
@@ -34,4 +34,4 @@ function TransactionEventInfo(props: TransactionEventInfoType) {
   );
 }
 
-export default React.memo(TransactionEventInfo);
+export default React.memo(EventInfo);
