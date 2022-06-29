@@ -45,7 +45,7 @@ export function useTerra() {
 
 export const useGetBlocks = () => {
   const { blockState } = useContext(ElectronContext);
-  return blockState.attach(Downgraded).get();
+  return blockState.attach(Downgraded);
 }
 export const useGetLogs = () => {
   const { logsState } = useContext(ElectronContext);

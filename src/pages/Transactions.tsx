@@ -3,12 +3,12 @@ import { Virtuoso } from 'react-virtuoso';
 import Transaction from '../component/Transaction';
 import { useGetTxs } from '../package';
 
-const TABLE_HEADER = [{
+const TRANSACTIONS_HEADER = [{
   title: "Hash",
   className: "w-40 p-4"
 },{
   title: "Type",
-  className: "w-80 p-4"
+  className: "w-90 p-4"
 },  {
   title: "Block",
   className: "p-4"
@@ -36,8 +36,8 @@ export default function TransactionsPage() {
   return (
     <div className='flex flex-col w-full'>
       <div className='bg-gray-background flex justify-between'>
-        {TABLE_HEADER.map((data, index) => (
-          <div key={index} className={data.className}>{data.title}</div>
+        {TRANSACTIONS_HEADER.map((header, index) => (
+          <div key={index} className={header.className}>{header.title}</div>
         ))}
       </div>
       <div className='bg-white' style={{flexGrow: 1}}>

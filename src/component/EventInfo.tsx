@@ -3,15 +3,18 @@ import React from 'react';
 import { EventUtils, Event} from '../models/Event';
 
 type EventInfoType = {
-  events: Event[]
+  events: Event[],
+  title: string
 }
 
 function EventInfo(props: EventInfoType) {
   const events = EventUtils.parseEventsAttributes(props.events);
 
+  console.log(props);
+
   return (
     <>
-      <h3>Events</h3>
+      <h3>{props.title}</h3>
       <List>
         {events.map((event, index) => (
             <ListItem className='overflow-auto' style={{alignItems: 'start'}} key={index}>

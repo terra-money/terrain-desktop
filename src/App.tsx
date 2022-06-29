@@ -12,7 +12,8 @@ function App() {
   const { element: routes, menu } = useNav();
   const navigate = useNavigate();
   const { terra } = useTerra();
-  const { latestHeight } = useGetBlocks();
+  const { get } = useGetBlocks();
+  const { latestHeight } = get();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
 
