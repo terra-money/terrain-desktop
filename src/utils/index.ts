@@ -23,11 +23,3 @@ export const MICRO = 1000000;
 export const microfy = (num: number) => num * MICRO as number;
 export const demicrofy = (num: number) => num / MICRO as number;
 
-export function truncate(
-  text: string = '',
-  [h, t]: [number, number] = [6, 6],
-): string {
-  const head = text.slice(0, h);
-  const tail = text.slice(-1 * t, text.length);
-  return text.length > h + t ? [head, tail].join('...') : text;
-}
