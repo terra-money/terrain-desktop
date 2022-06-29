@@ -2,11 +2,11 @@ import { Divider, List, ListItem } from '@mui/material';
 import React from 'react';
 import { TxEvents, TxUtils } from '../../models/TerrariumTx';
 
-type TransactionTableCollapsibleRowType = {
+type TransactionEventInfoType = {
   events: TxEvents[]
 }
 
-function TransactionTableCollapsibleRow(props: TransactionTableCollapsibleRowType) {
+function TransactionEventInfo(props: TransactionEventInfoType) {
   const events = TxUtils.parseEventsAttributes(props.events);
 
   return (
@@ -15,8 +15,8 @@ function TransactionTableCollapsibleRow(props: TransactionTableCollapsibleRowTyp
       <List>
         {events.map((event, index) => (
             <ListItem className='overflow-auto' style={{alignItems: 'start'}} key={index}>
-              <div className='text-blue-800' style={{minWidth: "160px"}}>
-                <h4>{index}) {event.type}</h4>
+              <div className='text-blue-800 w-40'>
+                <h4>[{index}] {event.type}</h4>
               </div>
               <div>
                 {event.attributes.map((attribute, _index) => (
@@ -34,4 +34,4 @@ function TransactionTableCollapsibleRow(props: TransactionTableCollapsibleRowTyp
   );
 }
 
-export default React.memo(TransactionTableCollapsibleRow);
+export default React.memo(TransactionEventInfo);

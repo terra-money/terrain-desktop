@@ -1,37 +1,28 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
-import React, { useEffect } from 'react';
-import { TableVirtuoso } from 'react-virtuoso'
-import TransactionTableRow from '../component/Transactions/TransactionTableRow';
+import React from 'react';
+import { Virtuoso } from 'react-virtuoso';
+import Transaction from '../component/Transactions/Transaction';
 import { useGetTxs } from '../package';
 
 const TABLE_HEADER = [{
-  title: "Type",
-  className: ""
-},{
   title: "Hash",
-  className: ""
-}, {
+  className: "w-40 p-4"
+},{
+  title: "Type",
+  className: "w-80 p-4"
+},  {
   title: "Block",
-  className: ""
+  className: "p-4"
 }, {
-  title: "Requested gas",
-  className: ""
-}, {
-  title: "Used gas",
-  className: ""
-}, {
+  title: "Gas Requested / Used ",
+  className: "p-4"
+},{
   title: "",
-  className: ""
+  className: "m-8"
 }];
 
 export default function TransactionsPage() {
-  const {get, set} = useGetTxs();
-  let txs = get();
-
-  useEffect(()=>{
-    txs = get();
-    console.log(txs);
-  },[get]);
+  const { get, set } = useGetTxs();
+  const txs = get();
 
   if (txs.length === 0) {
     return <h1>There are no transactions yet.</h1>;
@@ -43,22 +34,18 @@ export default function TransactionsPage() {
   };
 
   return (
-    <TableVirtuoso className="flex flex-col w-full"
-      followOutput
-      initialTopMostItemIndex={txs.length}
-      data={txs}
-      components={{
-        Scroller: React.forwardRef((props, ref) => <TableContainer component={Paper} {...props} ref={ref} />),
-        Table: props => <Table className='w-full' {...props}/>,
-        TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
-      }}
-      fixedHeaderContent={() => (
-          <TableRow className='bg-gray-background'>
-            {TABLE_HEADER.map((data, index) => (
-              <TableCell key={index} className={data.className}>{data.title}</TableCell>
-            ))}
-          </TableRow>
-      )}
-      itemContent={(index, data) => <TransactionTableRow onToggleEventDetails={toggleEventDetails} data={data} key={index} index={index}/>} />
+    <div className='flex flex-col w-full'>
+      <div className='bg-gray-background flex justify-between'>
+        {TABLE_HEADER.map((data, index) => (
+          <div key={index} className={data.className}>{data.title}</div>
+        ))}
+      </div>
+      <div className='bg-white' style={{flexGrow: 1}}>
+        <Virtuoso followOutput
+          className="flex flex-col w-full"
+          data={txs}
+          itemContent={(index, data) => <Transaction onToggleEventDetails={toggleEventDetails} data={data} key={index} index={index} />} />
+      </div>
+    </div>
   );
 }
