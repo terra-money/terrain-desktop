@@ -1,8 +1,17 @@
 import React from 'react';
-import Ansi from 'ansi-to-react';
+
+const Convert = require('ansi-to-html');
+const createDOMPurify = require('dompurify');
+
+const convert = new Convert();
+const DOMPurify = createDOMPurify(window);
 
 function LogItemView({ log }: { log: any }) {
-  return <Ansi className="break-words whitespace-pre-line">{log}</Ansi>;
+  return <pre
+  className="break-words whitespace-pre-line"
+  dangerouslySetInnerHTML={{
+    __html: DOMPurify.sanitize(convert.toHtml(log))
+  }}/>;
 }
 
 export default React.memo(LogItemView);

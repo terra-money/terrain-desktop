@@ -1,18 +1,14 @@
 import { createState, State, useState } from "@hookstate/core";
 import { ipcRenderer } from 'electron';
-import { BlockInfo, TxResult } from "@terra-money/terra.js";
 import React, { ReactElement, useEffect } from "react";
-import { IBlockState } from "../package";
+import { TerrariumTx } from "../models/TerrariumTx";
+import { TerrariumBlockInfo, TerrariumBlocks } from "../package";
 
-interface TerrariumTx extends TxResult {
-    description: string;
-    msg: any;
- }
 
 type TypeElectronContext = {
     localTerraPathConfigured: State<boolean>;
     localTerraStarted: State<boolean | null>;
-    blockState: State<IBlockState>,
+    blockState: State<TerrariumBlocks>,
     txState: State<TerrariumTx[]>,
     logsState: State<string[]>,
 }
@@ -20,7 +16,7 @@ type TypeElectronContext = {
 const ElectronContext = React.createContext<TypeElectronContext>(null as any);
 
 export const ElectronContextProvider = ({ children } : { children: ReactElement }) => {
-    const blockState = useState(createState<IBlockState>({ blocks: [], latestHeight: 0 }));
+    const blockState = useState(createState<TerrariumBlocks>({ blocks: [], latestHeight: 0 }));
     const txState = useState(createState<TerrariumTx[]>([]));
     const logsState = useState(createState<string[]>([]));
     const localTerraPathConfigured = useState(createState<boolean>(!!window.store.get('localTerraPath')));
@@ -28,7 +24,7 @@ export const ElectronContextProvider = ({ children } : { children: ReactElement 
 
 
     useEffect(() => {
-        ipcRenderer.on('NewBlock', ((_: any, block: BlockInfo) => {
+        ipcRenderer.on('NewBlock', ((_: any, block: TerrariumBlockInfo) => {
             const bHeight = Number(block.block.header.height);
             blockState.latestHeight.set(bHeight);
             blockState.blocks.merge([{ ...block }]);
