@@ -111,10 +111,10 @@ async function init() {
     return localTerraStatus;
   });
 
-  ipcMain.handle('OpenSmartContract', async () => {
-    const result = await showSmartContractDialog();
-    const smartContractPath = result.filePaths[0];
-    const contracts = getSmartContractRefs(smartContractPath);
+  ipcMain.handle('ImportContractRefs', async () => {
+    const { filePaths } = await showSmartContractDialog();
+    const [ projectDir ] = filePaths;
+    const contracts = getSmartContractRefs(projectDir);
     return contracts;
   })
 
@@ -129,7 +129,6 @@ async function init() {
     localTerraProcess = startLocalTerra(localTerraPath);
     await subscribeToLocalTerraEvents(localTerraProcess, win);
   }
-
   win.show();
 }
 

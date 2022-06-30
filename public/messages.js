@@ -13,7 +13,7 @@ async function showPathSelectionDialog() {
 
 async function showSmartContractDialog() {
   return dialog.showOpenDialog({
-    message: 'Select your smart contract directory.',
+    message: 'Select your project directory. It must contain a refs.terrain.json file.',
     title: 'Terrarium',
     type: 'info',
     properties: ['openDirectory']
