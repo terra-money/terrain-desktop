@@ -11,6 +11,15 @@ async function showPathSelectionDialog() {
   });
 }
 
+async function showSmartContractDialog() {
+  return dialog.showOpenDialog({
+    message: 'Select your smart contract directory.',
+    title: 'Terrarium',
+    type: 'info',
+    properties: ['openDirectory']
+  });
+}
+
 async function showWrongDirectoryDialog() {
   return dialog.showMessageBox({
     message: 'Please select a valid LocalTerra directory',
@@ -47,5 +56,6 @@ module.exports = {
   showLocalTerraStopNotif,
   showTxOccuredNotif,
   showWrongDirectoryDialog,
+  showSmartContractDialog,
   showLocalTerraAlreadyExistsDialog
 };

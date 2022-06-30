@@ -8,6 +8,7 @@ function isValidTerraAddress(address: string) {
     return false;
   }
 }
+
 export const parseSearchUrl = (searchQuery: string) => {
   if (Number(searchQuery)) {
     return `${process.env.REACT_APP_FINDER_URL}/blocks/${searchQuery}`;

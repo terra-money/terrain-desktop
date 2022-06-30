@@ -5,7 +5,7 @@ const { WebSocketClient } = require('@terra-money/terra.js');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
-const { Tx } =require('@terra-money/terra.js');
+const { Tx } = require('@terra-money/terra.js');
 
 const { readMsg } = require('@terra-money/msg-reader');
 const { showLocalTerraStartNotif, showLocalTerraStopNotif } = require('./messages');
@@ -43,6 +43,27 @@ async function downloadLocalTerra() {
 
 function startLocalTerra(localTerraPath) {
   return spawn('docker-compose', ['up'], { cwd: localTerraPath });
+}
+
+function getSmartContractRefs(smartContractPath) {
+  const smartContractPathLog = path.join(smartContractPath, 'refs.terrain.json');
+  const data = fs.readFileSync(smartContractPathLog, 'utf-8');
+  const parsedContract = JSON.parse(data);
+  const contracts = [];
+
+
+  Object.keys(parsedContract.localterra).forEach(key => {
+    const contractPieces = smartContractPath.split("/");
+    const contractName = contractPieces[contractPieces.length - 1]
+    const smartContract = new SmartContract(
+      contractName,
+      smartContractPath,
+      parsedContract.localterra[key].codeId,
+      parsedContract.localterra[key].contractAddresses.default);
+    contracts.push(smartContract);
+  });
+
+  return contracts;
 }
 
 async function subscribeToLocalTerraEvents(localTerraProcess, win) {
@@ -106,6 +127,21 @@ const parseTxDescriptionAndMsg = (tx) => {
   return { msg: msg.toData(), description };
 };
 
+class SmartContract {
+
+  constructor(contractName, contractPath, codeId, contractAddress) {
+    this.contractName = contractName;
+    this.contractPath = contractPath;
+    this.codeId = codeId;
+    this.contractAddress = contractAddress;
+  }
+
+  show() {
+    console.log(this.contractPath, this.codeId, this.contractAddress);
+  }
+}
+
+
 module.exports = {
   txWs,
   stopLocalTerra,
@@ -115,5 +151,6 @@ module.exports = {
   blockWs,
   parseTxMsg,
   validateLocalTerraPath,
+  getSmartContractRefs,
   subscribeToLocalTerraEvents,
 };

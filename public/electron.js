@@ -3,6 +3,7 @@ const Store = require('electron-store');
 const { app, shell, ipcMain, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev')
 require('dotenv').config()
+
 const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = process.env
 
 
@@ -17,6 +18,7 @@ const {
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
   parseTxDescriptionAndMsg,
+  getSmartContractRefs,
 } = require('./utils');
 
 const {
@@ -24,7 +26,8 @@ const {
   showWrongDirectoryDialog,
   showLocalTerraAlreadyExistsDialog,
   showTxOccuredNotif,
-  showNotifAccessDialog
+  showNotifAccessDialog,
+  showSmartContractDialog
 } = require('./messages');
 
 async function init() {
@@ -98,7 +101,7 @@ async function init() {
 
   ipcMain.handle('ToggleLocalTerraStatus', async (_, localTerraStatus) => {
     const localTerraPath = await store.get('localTerraPath');
-    
+
     if (localTerraStatus) {
       localTerraProcess = startLocalTerra(localTerraPath);
       await subscribeToLocalTerraEvents(localTerraProcess, win);
@@ -108,6 +111,13 @@ async function init() {
     }
     return localTerraStatus;
   });
+
+  ipcMain.handle('openSmartContract', async () => {
+    const result = await showSmartContractDialog();
+    const smartContractPath = result.filePaths[0];
+    const contracts = getSmartContractRefs(smartContractPath);
+    return contracts;
+  })
 
   app.on('window-all-closed', async () => {
     await stopLocalTerra(localTerraProcess);
