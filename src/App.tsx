@@ -12,11 +12,10 @@ function App() {
   const { element: routes, menu } = useNav();
   const navigate = useNavigate();
   const { terra } = useTerra();
-  const { get } = useGetBlocks();
-  const { latestHeight } = get();
-
+  const { latestHeight } = useGetBlocks();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
+  
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -94,7 +93,8 @@ function App() {
                   <BsCircleFill className={ 
                     isLoading ? 'animate-bounce text-is-loading-grey' 
                     : hasStartedLocalTerra ? 'text-is-connected-green' 
-                    : 'text-not-connected-red'} />
+                    : 'text-not-connected-red'} 
+                  />
                   <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
                 </button>
               </li>
