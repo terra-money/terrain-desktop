@@ -8,7 +8,6 @@ import {
   EventsPage,
   OnboardPage,
   AccountsPage,
-  LoadingPage
 } from '../../pages';
 import { ReactComponent as AccountsIcon } from '../../assets/icons/menu/accounts.svg';
 import { ReactComponent as BlocksIcon } from '../../assets/icons/menu/blocks.svg';
@@ -22,7 +21,7 @@ const useNav = () => {
     {
       name: 'Accounts',
       icon: <AccountsIcon />,
-      path: '/accounts',
+      path: '/',
       element: <AccountsPage />,
     },
     {
@@ -62,11 +61,6 @@ const useNav = () => {
       name: 'Onboard',
       path: '/onboard',
       element: <OnboardPage />,
-    },
-    {
-      name: 'Loading',
-      path: '/',
-      element: <LoadingPage />,
     },
     // Add here routes that cannot be accessed directly from the menu entry
 
