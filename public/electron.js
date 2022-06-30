@@ -111,7 +111,7 @@ async function init() {
     return localTerraStatus;
   });
 
-  ipcMain.handle('openSmartContract', async () => {
+  ipcMain.handle('OpenSmartContract', async () => {
     const result = await showSmartContractDialog();
     const smartContractPath = result.filePaths[0];
     const contracts = getSmartContractRefs(smartContractPath);

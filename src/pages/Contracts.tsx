@@ -23,7 +23,7 @@ export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
 
   async function handleOnClick() {
-    const res = await ipcRenderer.invoke('openSmartContract');
+    const res = await ipcRenderer.invoke('OpenSmartContract');
     setContracts(res);
   };
 
