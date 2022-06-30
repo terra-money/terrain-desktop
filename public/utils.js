@@ -45,24 +45,18 @@ function startLocalTerra(localTerraPath) {
   return spawn('docker-compose', ['up'], { cwd: localTerraPath });
 }
 
-function getSmartContractRefs(smartContractPath) {
-  const smartContractPathLog = path.join(smartContractPath, 'refs.terrain.json');
-  const data = fs.readFileSync(smartContractPathLog, 'utf-8');
-  const parsedContract = JSON.parse(data);
-  const contracts = [];
-
-
-  Object.keys(parsedContract.localterra).forEach(key => {
-    const contractPieces = smartContractPath.split("/");
-    const contractName = contractPieces[contractPieces.length - 1]
-    const smartContract = new SmartContract(
-      contractName,
-      smartContractPath,
-      parsedContract.localterra[key].codeId,
-      parsedContract.localterra[key].contractAddresses.default);
-    contracts.push(smartContract);
-  });
-
+function getSmartContractRefs(projectDir) {
+  const refsPath = path.join(projectDir, 'refs.terrain.json');
+  const refsData = fs.readFileSync(refsPath, 'utf-8');
+  const { localterra } = JSON.parse(refsData);
+  const contracts = Object.keys(localterra).map((name) =>
+    ({
+      name,
+      path: projectDir,
+      address: localterra[name].contractAddresses.default,
+      codeId: localterra[name].codeId,
+    })
+  ); 
   return contracts;
 }
 
@@ -124,21 +118,6 @@ const parseTxDescriptionAndMsg = (tx) => {
   const description = readMsg(msg);
   return { msg: msg.toData(), description };
 };
-
-class SmartContract {
-
-  constructor(contractName, contractPath, codeId, contractAddress) {
-    this.contractName = contractName;
-    this.contractPath = contractPath;
-    this.codeId = codeId;
-    this.contractAddress = contractAddress;
-  }
-
-  show() {
-    console.log(this.contractPath, this.codeId, this.contractAddress);
-  }
-}
-
 
 module.exports = {
   txWs,

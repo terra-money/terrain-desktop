@@ -22,16 +22,14 @@ const CONTRACTS_HEADER = [{
 export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
 
-  async function handleOnClick() {
-    const res = await ipcRenderer.invoke('OpenSmartContract');
+  async function handleRefsImport() {
+    const res = await ipcRenderer.invoke('ImportContractRefs');
     setContracts(res);
   };
 
-
   return (
-    <>
       <div className='flex flex-col w-full '>
-        <button type='button' onClick={handleOnClick} className='h-10 my-3 mx-2 px-5 rounded-lg text-white bg-terra-dark-blue inset-y-0 right-0'>Add Contract</button>
+        <button type='button' onClick={handleRefsImport} className='h-10 my-3 mx-2 px-5 rounded-lg text-white bg-terra-dark-blue inset-y-0 right-0'>Add Contract</button>
         <div className='bg-gray-background flex justify-between'>
           {CONTRACTS_HEADER.map((header, index) => (
             <div key={index} className={header.className}>{header.title}</div>
@@ -42,8 +40,6 @@ export default function ContractsPage() {
           className="flex flex-col w-full"
           data={contracts}
           itemContent={(index, data) => <ContractView data={data} key={index} />} />
-
       </div>
-    </>
   );
 }
