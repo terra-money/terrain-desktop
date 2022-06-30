@@ -26,7 +26,6 @@ const {
   showWrongDirectoryDialog,
   showLocalTerraAlreadyExistsDialog,
   showTxOccuredNotif,
-  showNotifAccessDialog,
   showSmartContractDialog
 } = require('./messages');
 
