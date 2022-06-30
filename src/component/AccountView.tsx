@@ -1,7 +1,7 @@
 import { TxInfo, Denom } from '@terra-money/terra.js';
 import React, { useEffect, useState } from 'react';
 import { useTerra } from '../package';
-import { demicrofy } from '../utils';
+import { demicrofy, nFormatter } from '../utils';
 import { KeyView } from '.';
 
 function AccountView({ wallet } : { wallet : any }) {
@@ -47,7 +47,7 @@ function AccountView({ wallet } : { wallet : any }) {
           <p className="text-xs font-bold text-blue-600 uppercase">
             Luna
           </p>
-          <p className="text-xl text-blue-900">{balance}</p>
+          <p className="text-xl text-blue-900">{nFormatter(balance)}</p>
         </div>
         <div>
           <p className="text-xs font-bold text-blue-600 uppercase">

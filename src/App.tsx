@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import { NavLink } from './component';
-import { useTerra, useGetBlocks, useLocalTerraPathConfigured, useLocalTerraStarted} from './package/hooks';
+import { useTerra, useGetBlocks, useLocalTerraPathConfigured, useLocalTerraStarted } from './package/hooks';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
 import useNav from './package/hooks/routes';
@@ -14,18 +14,21 @@ function App() {
   const { terra } = useTerra();
   const { get } = useGetBlocks();
   const { latestHeight } = get();
+
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
-
+  const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    if (isLocalTerraPathConfigured && hasStartedLocalTerra) navigate('/accounts');
-    else if (!isLocalTerraPathConfigured) navigate('/onboard');
-    else if (hasStartedLocalTerra === null) navigate('/');
+    if (!isLocalTerraPathConfigured) navigate('/onboard');
+  }, [isLocalTerraPathConfigured]);
 
-  }, [isLocalTerraPathConfigured, hasStartedLocalTerra]);
+  useEffect(() => {
+    if (latestHeight) setIsLoading(false)
+    else if (hasStartedLocalTerra === null && !latestHeight) setIsLoading(true);
+  }, [hasStartedLocalTerra, latestHeight]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
 
@@ -37,6 +40,7 @@ function App() {
   };
 
   const toggleLocalTerra = async () => {
+    setIsLoading(true)
     await ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra);
   };
 
@@ -87,7 +91,10 @@ function App() {
               </li>
               <li>
                 <button type="button" onClick={toggleLocalTerra} className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground">
-                  <BsCircleFill className={hasStartedLocalTerra ? 'text-is-connected-green' : 'text-not-connected-red'} />
+                  <BsCircleFill className={ 
+                    isLoading ? 'animate-bounce text-is-loading-grey' 
+                    : hasStartedLocalTerra ? 'text-is-connected-green' 
+                    : 'text-not-connected-red'} />
                   <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
                 </button>
               </li>
@@ -102,4 +109,4 @@ function App() {
   );
 }
 
-export default App;
+export default memo(App);
