@@ -15,7 +15,7 @@
     "build:css": "tailwind -i public/styles.css -o src/index.css --minify",
     "watch:css": "TAILWIND_MODE=watch tailwind -i public/styles.css -o src/index.css --watch",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "npm run build:css && npm run build && electron-forge make"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
@@ -40,10 +40,10 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-virtuoso": "^2.14.0",
-    "wait-on": "^6.0.1",
-    "electron": "^15.5.7"
+    "wait-on": "^6.0.1"
   },
   "devDependencies": {
+    "electron": "^15.5.7",
     "@electron-forge/cli": "^6.0.0-beta.64",
     "@electron-forge/maker-deb": "^6.0.0-beta.64",
     "@electron-forge/maker-rpm": "^6.0.0-beta.64",

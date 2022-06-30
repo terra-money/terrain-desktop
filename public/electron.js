@@ -2,18 +2,17 @@ const path = require('path');
 const Store = require('electron-store');
 const { app, shell, ipcMain, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev')
-require('dotenv').config()
-const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = process.env
 
+const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = process.env
 
 const store = new Store();
 
 const {
   txWs,
+  blockWs,
   stopLocalTerra,
   startLocalTerra,
   downloadLocalTerra,
-  blockWs,
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
   parseTxDescriptionAndMsg,
@@ -27,13 +26,12 @@ const {
 } = require('./messages');
 
 async function init() {
-
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
     minWidth: 690,
     minHeight: 460,
-    show: false,
+    show: true,
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
@@ -43,11 +41,14 @@ async function init() {
   });
   let localTerraProcess;
 
+   console.log('INDEX =>' ,`file://${path.join(__dirname, '../build/index.html')}`);
+
   if (isDev) {
     win.loadURL('http://localhost:3000');
     win.webContents.openDevTools();
   }
   else {
+    // win.loadFile(path.join(__dirname, 'index.html'));
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
   }
 
@@ -120,7 +121,12 @@ async function init() {
     await subscribeToLocalTerraEvents(localTerraProcess, win);
   }
 
+  app.on('ready-to-show', () => {
+    win.show();
+    win.focus()
+  })
   win.show();
+  win.focus()
 }
 
 app.on('ready', init);

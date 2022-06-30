@@ -11,7 +11,7 @@ const { readMsg } = require('@terra-money/msg-reader');
 const { showLocalTerraStartNotif, showLocalTerraStopNotif } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
 
-const { LOCAL_TERRA_WS, LOCAL_TERRA_GIT } = process.env
+const { LOCAL_TERRA_GIT, LOCAL_TERRA_WS } = require('./constants');
 
 const txWs = new WebSocketClient(LOCAL_TERRA_WS);
 const blockWs = new WebSocketClient(LOCAL_TERRA_WS);

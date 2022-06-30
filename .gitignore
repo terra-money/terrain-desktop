@@ -4,7 +4,7 @@ dist
 dist-ssr
 *.local
 .vscode/launch.json
-appScratchCss.html
 src/index.css
 .env
 out
+build
