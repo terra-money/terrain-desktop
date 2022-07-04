@@ -36,6 +36,14 @@ async function showLocalTerraAlreadyExistsDialog() {
   });
 }
 
+async function noTerrainRefsError() {
+  return dialog.showMessageBox({
+    message: 'Error with reading contract. Ensure refs.terrain.json exists before trying again.',
+    title: 'Terrarium',
+    type: 'error'
+  });
+}
+
 // NOTIFICATIONS
 
 function showTxOccuredNotif(body) {
@@ -57,5 +65,6 @@ module.exports = {
   showTxOccuredNotif,
   showWrongDirectoryDialog,
   showSmartContractDialog,
-  showLocalTerraAlreadyExistsDialog
+  showLocalTerraAlreadyExistsDialog,
+  noTerrainRefsError
 };

@@ -9,7 +9,7 @@ const { Tx } = require('@terra-money/terra.js');
 const Store = require('electron-store');
 
 const { readMsg } = require('@terra-money/msg-reader');
-const { showLocalTerraStartNotif, showLocalTerraStopNotif } = require('./messages');
+const { showLocalTerraStartNotif, showLocalTerraStopNotif, noTerrainRefsError } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
 
 const { LOCAL_TERRA_WS, LOCAL_TERRA_GIT } = process.env
@@ -58,7 +58,15 @@ function startLocalTerra(localTerraPath) {
 
 function getSmartContractRefs(projectDir) {
   const refsPath = path.join(projectDir, 'refs.terrain.json');
-  validateTerraSmartContract(refsPath);
+  if (validateTerraSmartContract(refsPath)) {
+    smartContractFromRefs(projectDir, refsPath);
+  } else {
+    noTerrainRefsError();
+  }
+
+}
+
+function smartContractFromRefs(projectDir, refsPath) {
   const refsData = fs.readFileSync(refsPath, 'utf-8');
   const { localterra } = JSON.parse(refsData);
   const contracts = Object.keys(localterra).map((name) =>
@@ -149,10 +157,12 @@ class ContractStore extends Store {
   }
 
   addContract(contractsArray) {
-    contractsArray.map(contract => {
-      this.contracts = [...this.contracts, contract];
-      return this.saveContracts()
-    })
+    if (contractsArray != null) {
+      contractsArray.map(contract => {
+        this.contracts = [...this.contracts, contract];
+        return this.saveContracts()
+      })
+    }
   }
 
   deleteContract(contract) {
