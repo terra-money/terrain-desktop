@@ -6,6 +6,7 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
 const { Tx } = require('@terra-money/terra.js');
+const Store = require('electron-store');
 
 const { readMsg } = require('@terra-money/msg-reader');
 const { showLocalTerraStartNotif, showLocalTerraStopNotif } = require('./messages');
@@ -31,6 +32,16 @@ function validateLocalTerraPath(url) {
   }
 }
 
+function validateTerraSmartContract(url) {
+  try {
+    const refsPath = path.join(url, 'refs.terrain.json');
+    return fs.existsSync(refsPath);
+  } catch (e) {
+    console.log('Error with reading contract. Ensure refs.terrain.json exists before trying again. ', e);
+    return false;
+  }
+}
+
 async function downloadLocalTerra() {
   const LOCAL_TERRA_PATH = path.join(app.getPath('appData'), "LocalTerra");
   if (fs.existsSync(LOCAL_TERRA_PATH)) {
@@ -47,16 +58,17 @@ function startLocalTerra(localTerraPath) {
 
 function getSmartContractRefs(projectDir) {
   const refsPath = path.join(projectDir, 'refs.terrain.json');
+  validateTerraSmartContract(refsPath);
   const refsData = fs.readFileSync(refsPath, 'utf-8');
   const { localterra } = JSON.parse(refsData);
   const contracts = Object.keys(localterra).map((name) =>
-    ({
-      name,
-      path: projectDir,
-      address: localterra[name].contractAddresses.default,
-      codeId: localterra[name].codeId,
-    })
-  ); 
+  ({
+    name,
+    path: projectDir,
+    address: localterra[name].contractAddresses.default,
+    codeId: localterra[name].codeId,
+  })
+  );
   return contracts;
 }
 
@@ -119,6 +131,41 @@ const parseTxDescriptionAndMsg = (tx) => {
   return { msg: msg.toData(), description };
 };
 
+class ContractStore extends Store {
+  constructor(settings) {
+    super(settings)
+
+    this.contracts = this.get('contracts') || []
+  }
+
+  saveContracts() {
+    this.set('contracts', this.contracts)
+    return this
+  }
+
+  getContracts() {
+    this.contracts = this.get('contracts') || []
+    return this
+  }
+
+  addContract(contractsArray) {
+    contractsArray.map(contract => {
+      this.contracts = [...this.contracts, contract];
+      return this.saveContracts()
+    })
+  }
+
+  deleteContract(contract) {
+    this.contracts = this.contracts.filter(t => t !== contract)
+    return this.saveContracts()
+  }
+
+  deleteAllContracts() {
+    this.contracts = [];
+    return this.saveContracts;
+  }
+}
+
 module.exports = {
   txWs,
   stopLocalTerra,
@@ -130,4 +177,5 @@ module.exports = {
   validateLocalTerraPath,
   getSmartContractRefs,
   subscribeToLocalTerraEvents,
+  ContractStore
 };

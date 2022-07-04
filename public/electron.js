@@ -19,7 +19,10 @@ const {
   validateLocalTerraPath,
   parseTxDescriptionAndMsg,
   getSmartContractRefs,
+  ContractStore,
 } = require('./utils');
+
+const contractStore = new ContractStore({ name: 'Imported Contracts' });
 
 const {
   showPathSelectionDialog,
@@ -111,11 +114,17 @@ async function init() {
     return localTerraStatus;
   });
 
+  ipcMain.handle('AllContracts', async () => {
+    const allContracts = await contractStore.contracts;
+    return allContracts;
+  })
+
   ipcMain.handle('ImportContractRefs', async () => {
     const { filePaths } = await showSmartContractDialog();
-    const [ projectDir ] = filePaths;
-    const contracts = getSmartContractRefs(projectDir);
-    return contracts;
+    const [projectDir] = filePaths;
+    const contractRefs = getSmartContractRefs(projectDir);
+    await contractStore.addContract(contractRefs);
+    return contractStore.contracts;
   })
 
   app.on('window-all-closed', async () => {
