@@ -32,9 +32,8 @@ function validateLocalTerraPath(url) {
   }
 }
 
-function validateTerraSmartContract(url) {
+function validateTerraSmartContract(refsPath) {
   try {
-    const refsPath = path.join(url, 'refs.terrain.json');
     return fs.existsSync(refsPath);
   } catch (e) {
     console.log('Error with reading contract. Ensure refs.terrain.json exists before trying again. ', e);
@@ -59,15 +58,13 @@ function startLocalTerra(localTerraPath) {
 function getSmartContractRefs(projectDir) {
   const refsPath = path.join(projectDir, 'refs.terrain.json');
   if (validateTerraSmartContract(refsPath)) {
-    smartContractFromRefs(projectDir, refsPath);
-  } else {
-    noTerrainRefsError();
+    return smartContractFromRefs(projectDir, refsPath);
   }
-
+  noTerrainRefsError();
 }
 
 function smartContractFromRefs(projectDir, refsPath) {
-  const refsData = fs.readFileSync(refsPath, 'utf-8');
+  const refsData = fs.readFileSync(refsPath, 'utf8');
   const { localterra } = JSON.parse(refsData);
   const contracts = Object.keys(localterra).map((name) =>
   ({
@@ -153,6 +150,7 @@ class ContractStore extends Store {
 
   getContracts() {
     this.contracts = this.get('contracts') || []
+    this.checkIfContractExists(this.contracts);
     return this
   }
 
@@ -174,7 +172,19 @@ class ContractStore extends Store {
     this.contracts = [];
     return this.saveContracts;
   }
+
+  checkIfContractExists(contractsArray) {
+    contractsArray.map(contract => {
+      if (!fs.existsSync(contract.path)) {
+        this.deleteContract(contract);
+      }
+      return true;
+    })
+  }
+
 }
+
+
 
 module.exports = {
   txWs,

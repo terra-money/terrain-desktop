@@ -115,8 +115,8 @@ async function init() {
   });
 
   ipcMain.handle('AllContracts', async () => {
-    const allContracts = await contractStore.contracts;
-    return allContracts;
+    contractStore.checkIfContractExists(contractStore.contracts);
+    return contractStore.contracts;
   })
 
   ipcMain.handle('ImportContractRefs', async () => {
