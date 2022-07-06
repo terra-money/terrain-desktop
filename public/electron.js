@@ -114,9 +114,8 @@ async function init() {
     return localTerraStatus;
   });
 
-  ipcMain.handle('AllContracts', async () => {
-    const allContracts = await contractStore.contracts;
-    return allContracts;
+  ipcMain.handle('AllContracts', () => {
+    return contractStore.contracts;
   })
 
   ipcMain.handle('ImportContractRefs', async () => {
