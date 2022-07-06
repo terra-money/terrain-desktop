@@ -37,7 +37,7 @@ export const ElectronContextProvider = ({ children } : { children: ReactElement 
         });
     
         ipcRenderer.on('NewLogs', (async (_: any, log: string) => {
-            if (logsState.length >= MAX_LOG_LENGTH) logsState.set(prev => prev.slice(1).concat(log))
+            if (logsState.length >= MAX_LOG_LENGTH) logsState.set(p => p.slice(1).concat(log))
             else logsState.merge([log])
         }));
     

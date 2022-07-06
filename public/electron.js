@@ -3,6 +3,7 @@ const Store = require('electron-store');
 const { app, shell, ipcMain, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev')
 require('dotenv').config()
+
 const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = process.env
 
 
@@ -27,7 +28,6 @@ const {
 } = require('./messages');
 
 async function init() {
-
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,

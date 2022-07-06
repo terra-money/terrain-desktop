@@ -7,3 +7,5 @@ dist-ssr
 appScratchCss.html
 src/index.css
 .env
+build
+out
