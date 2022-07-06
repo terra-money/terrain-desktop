@@ -12,7 +12,7 @@ root.render(
   <React.StrictMode>
     <ElectronContextProvider>
       <Provider>
-        <BrowserRouter basename='/'>
+        <BrowserRouter>
           <App />
         </BrowserRouter>
       </Provider>

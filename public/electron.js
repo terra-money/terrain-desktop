@@ -31,7 +31,7 @@ async function init() {
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
     minWidth: 690,
     minHeight: 460,
-    show: true,
+    show: false,
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
