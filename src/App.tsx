@@ -79,7 +79,7 @@ function App() {
             <ul className="flex flex-row justify-between items-center font-medium">
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-center uppercase">Current Block</p>
-                <p className="text-center text-terra-mid-blue">{latestHeight || 0}</p>
+                <p className="text-center text-terra-mid-blue">{latestHeight}</p>
               </li>
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-center uppercase">Network ID</p>
