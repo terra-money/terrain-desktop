@@ -4,7 +4,7 @@
   "homepage": "./",
   "main": "public/electron.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "BROWSER=none react-app-rewired start",
     "forge-start": "electron-forge start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
@@ -28,7 +28,6 @@
     "ansi-to-html": "^0.7.2",
     "bech32": "^2.0.0",
     "dompurify": "^2.3.8",
-    "dotenv": "^16.0.1",
     "electron-is-dev": "^2.0.0",
     "electron-reload": "^2.0.0-alpha.1",
     "electron-squirrel-startup": "^1.0.0",
@@ -43,7 +42,6 @@
     "wait-on": "^6.0.1"
   },
   "devDependencies": {
-    "electron": "^15.5.7",
     "@electron-forge/cli": "^6.0.0-beta.64",
     "@electron-forge/maker-deb": "^6.0.0-beta.64",
     "@electron-forge/maker-rpm": "^6.0.0-beta.64",
@@ -53,6 +51,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^18.0.1",
     "concurrently": "^6.5.1",
+    "electron": "^15.5.7",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",

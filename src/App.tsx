@@ -3,7 +3,7 @@ import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import { NavLink } from './component';
-import { useTerra, useGetBlocks, useLocalTerraPathConfigured, useLocalTerraStarted } from './package/hooks';
+import { useTerra, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted } from './package/hooks';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
 import useNav from './package/hooks/routes';
@@ -12,7 +12,7 @@ function App() {
   const { element: routes, menu } = useNav();
   const navigate = useNavigate();
   const { terra } = useTerra();
-  const { latestHeight } = useGetBlocks();
+  const latestHeight = useGetLatestHeight();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
   
@@ -78,7 +78,7 @@ function App() {
             <ul className="flex flex-row justify-between items-center font-medium">
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-center uppercase">Current Block</p>
-                <p className="text-center text-terra-mid-blue">{latestHeight}</p>
+                <p className="text-center text-terra-mid-blue">{latestHeight || 0}</p>
               </li>
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-center uppercase">Network ID</p>

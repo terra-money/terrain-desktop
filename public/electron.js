@@ -3,7 +3,7 @@ const Store = require('electron-store');
 const { app, shell, ipcMain, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev')
 
-const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = process.env
+const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = require('./constants');
 
 const store = new Store();
 
@@ -41,14 +41,11 @@ async function init() {
   });
   let localTerraProcess;
 
-   console.log('INDEX =>' ,`file://${path.join(__dirname, '../build/index.html')}`);
-
   if (isDev) {
     win.loadURL('http://localhost:3000');
     win.webContents.openDevTools();
   }
   else {
-    // win.loadFile(path.join(__dirname, 'index.html'));
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
   }
 
@@ -125,8 +122,6 @@ async function init() {
     win.show();
     win.focus()
   })
-  win.show();
-  win.focus()
 }
 
 app.on('ready', init);
