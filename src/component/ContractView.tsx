@@ -9,7 +9,7 @@ function ContractView(props: ContractData) {
     return (
         <ul className='divide-y divide-solid bg-white rounded-2xl m-2'>
             <li className='flex justify-between items-center'>
-                <div className='bg-blue-200 p-4 w-40 text-white rounded-l-2xl'>
+                <div className='bg-blue-200 p-4 py-8 rounded-tl-lg rounded-bl-lg text-white'>
                     <a className="flex items-center	text-blue-800" target="_blank" href={contractHref} rel="noreferrer">
                         <div className='mr-2'>{name}</div>
                         <ExternalLinkIcon />
