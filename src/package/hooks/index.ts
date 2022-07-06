@@ -47,10 +47,12 @@ export const useGetBlocks = () => {
   const { blockState } = useContext(ElectronContext);
   return blockState.attach(Downgraded);
 }
+
 export const useGetLogs = () => {
   const { logsState } = useContext(ElectronContext);
   return logsState.attach(Downgraded).get();
 }
+
 export const useGetTxs = () => {
   const { txState } = useContext(ElectronContext);
   return txState.attach(Downgraded);
