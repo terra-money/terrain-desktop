@@ -2,21 +2,20 @@ const Store = require('electron-store');
 const fs = require('fs');
 
 class TerrariumStore extends Store {
-    constructor(settings) {
-        super(settings)
-
+    constructor() {
+        super();
         this.contracts = this.get('contracts') || []
     }
 
-    saveContracts() {
-        this.set('contracts', this.contracts)
-        return this
+    async saveContracts() {
+        await this.set('contracts', this.contracts)
+        return this.contracts
     }
 
-    getContracts() {
-        this.contracts = this.get('contracts') || []
+    async getContracts() {
+        this.contracts = await this.get('contracts')
         this.checkIfContractExists(this.contracts);
-        return this
+        return this.contracts
     }
 
     addContract(contractsArray) {
@@ -33,9 +32,9 @@ class TerrariumStore extends Store {
         return this.saveContracts()
     }
 
-    deleteAllContracts() {
+    async deleteAllContracts() {
         this.contracts = [];
-        return this.saveContracts;
+        await this.saveContracts();
     }
 
     checkIfContractExists(contractsArray) {

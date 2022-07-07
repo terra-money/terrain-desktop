@@ -123,7 +123,7 @@ async function init() {
     if (filePaths.length === 0) {
       return terrariumStore.contracts;
     }
-    const [projectDir] = filePaths;
+    const [ projectDir ] = filePaths;
     const contractRefs = getSmartContractRefs(projectDir);
     const { contracts } = await terrariumStore.addContract(contractRefs);
     return contracts;
@@ -141,11 +141,8 @@ async function init() {
     await subscribeToLocalTerraEvents(localTerraProcess, win);
   }
 
-  app.on('ready-to-show', () => {
-    win.show();
-    win.focus()
-  })
-
+  win.show();
+  win.focus()
 }
 
 app.on('ready', init);
