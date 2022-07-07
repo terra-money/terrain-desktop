@@ -1,12 +1,10 @@
 const path = require('path');
 const Store = require('electron-store');
 const { app, shell, ipcMain, BrowserWindow } = require('electron');
-const isDev = require('electron-is-dev')
+const isDev = require('electron-is-dev');
 const { TerrariumStore } = require('./store');
-require('dotenv').config()
 
-const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = process.env
-
+const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = require('./constants');
 
 const store = new Store();
 
@@ -14,10 +12,10 @@ const terrariumStore = new TerrariumStore({ name: 'Imported Contracts' });
 
 const {
   txWs,
+  blockWs,
   stopLocalTerra,
   startLocalTerra,
   downloadLocalTerra,
-  blockWs,
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
   parseTxDescriptionAndMsg,
@@ -34,7 +32,6 @@ const {
 } = require('./messages');
 
 async function init() {
-
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
@@ -143,7 +140,12 @@ async function init() {
     localTerraProcess = startLocalTerra(localTerraPath);
     await subscribeToLocalTerraEvents(localTerraProcess, win);
   }
-  win.show();
+
+  app.on('ready-to-show', () => {
+    win.show();
+    win.focus()
+  })
+
 }
 
 app.on('ready', init);

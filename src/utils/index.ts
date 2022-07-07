@@ -1,4 +1,5 @@
 import { bech32 } from 'bech32';
+import { REACT_APP_FINDER_URL, REACT_APP_DOCS_URL } from '../constants';
 
 function isValidTerraAddress(address: string) {
   try {
@@ -11,13 +12,13 @@ function isValidTerraAddress(address: string) {
 
 export const parseSearchUrl = (searchQuery: string) => {
   if (Number(searchQuery)) {
-    return `${process.env.REACT_APP_FINDER_URL}/blocks/${searchQuery}`;
+    return `${REACT_APP_FINDER_URL}/blocks/${searchQuery}`;
   } if (isValidTerraAddress(searchQuery)) {
-    return `${process.env.REACT_APP_FINDER_URL}/address/${searchQuery}`;
+    return `${REACT_APP_FINDER_URL}/address/${searchQuery}`;
   } if (searchQuery.length === 64) {
-    return `${process.env.REACT_APP_FINDER_URL}/tx/${searchQuery}`;
+    return `${REACT_APP_FINDER_URL}/tx/${searchQuery}`;
   }
-  return `${process.env.REACT_APP_DOCS_URL}?q=${searchQuery}`;
+  return `${REACT_APP_DOCS_URL}?q=${searchQuery}`;
 };
 
 export const MICRO = 1000000;

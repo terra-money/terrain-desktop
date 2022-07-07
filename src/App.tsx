@@ -3,7 +3,7 @@ import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import { NavLink } from './component';
-import { useTerra, useGetBlocks, useLocalTerraPathConfigured, useLocalTerraStarted } from './package/hooks';
+import { useTerra, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted } from './package/hooks';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
 import useNav from './package/hooks/routes';
@@ -12,17 +12,17 @@ function App() {
   const { element: routes, menu } = useNav();
   const navigate = useNavigate();
   const { terra } = useTerra();
-  const { get } = useGetBlocks();
-  const { latestHeight } = get();
-
+  const latestHeight = useGetLatestHeight();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
+  
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (!isLocalTerraPathConfigured) navigate('/onboard');
+    else navigate('/')
   }, [isLocalTerraPathConfigured]);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ function App() {
   return (
     <div className="flex flex-col w-screen h-screen">
       <div className="flex">
-        <div className={`bg-terra-dark-blue h-full p-5 pt-8 ${open ? 'w-72' : 'w-20'} w-min duration-300 relative`}>
+        <div className={`bg-terra-dark-blue h-full p-5 pt-8 ${open ? 'w-72' : 'w-20'} duration-300 relative`}>
           <BsArrowLeftShort className={`bg-white text-terra-dark-blue text-3xl rounded-full absolute -right-4 top-9 border border-terra-dark-blue cursor-pointer ${!open && 'rotate-180'}`} onClick={() => setOpen(!open)} />
           <div className="inline-flex items-center">
             <div className="w-10 aspect-square mr-2">
@@ -94,7 +94,8 @@ function App() {
                   <BsCircleFill className={ 
                     isLoading ? 'animate-bounce text-is-loading-grey' 
                     : hasStartedLocalTerra ? 'text-is-connected-green' 
-                    : 'text-not-connected-red'} />
+                    : 'text-not-connected-red'} 
+                  />
                   <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
                 </button>
               </li>

@@ -1,12 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import { Provider } from './package';
-import {ElectronContextProvider} from './context/ElectronContextProvider';
+import { ElectronContextProvider } from './context/ElectronContextProvider';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root') as HTMLElement);
+
+root.render(
   <React.StrictMode>
     <ElectronContextProvider>
       <Provider>
@@ -15,6 +17,5 @@ ReactDOM.render(
         </BrowserRouter>
       </Provider>
     </ElectronContextProvider>
-  </React.StrictMode>,
-  document.getElementById('root'),
+  </React.StrictMode>
 );
