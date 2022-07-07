@@ -2,19 +2,17 @@ const path = require('path');
 const Store = require('electron-store');
 const { app, shell, ipcMain, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev')
-require('dotenv').config()
 
-const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = process.env
-
+const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = require('./constants');
 
 const store = new Store();
 
 const {
   txWs,
+  blockWs,
   stopLocalTerra,
   startLocalTerra,
   downloadLocalTerra,
-  blockWs,
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
   parseTxDescriptionAndMsg,
@@ -137,7 +135,12 @@ async function init() {
     localTerraProcess = startLocalTerra(localTerraPath);
     await subscribeToLocalTerraEvents(localTerraProcess, win);
   }
-  win.show();
+
+  app.on('ready-to-show', () => {
+    win.show();
+    win.focus()
+  })
+
 }
 
 app.on('ready', init);

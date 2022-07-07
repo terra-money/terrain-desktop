@@ -5,6 +5,7 @@
   "main": "public/electron.js",
   "scripts": {
     "start": "BROWSER=none react-app-rewired start",
+    "forge-start": "electron-forge start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "electron-dev": "concurrently -k \"npm run watch:css\" \"npm run start\" \"wait-on http://localhost:3000 && electron .\"",
@@ -12,7 +13,9 @@
     "preelectron-pack": "npm run build",
     "electron-pack": "build -mw",
     "build:css": "tailwind -i public/styles.css -o src/index.css --minify",
-    "watch:css": "TAILWIND_MODE=watch tailwind -i public/styles.css -o src/index.css --watch"
+    "watch:css": "TAILWIND_MODE=watch tailwind -i public/styles.css -o src/index.css --watch",
+    "package": "electron-forge package",
+    "make": "npm run build:css && npm run build && electron-forge make"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
@@ -25,11 +28,9 @@
     "ansi-to-html": "^0.7.2",
     "bech32": "^2.0.0",
     "dompurify": "^2.3.8",
-    "dotenv": "^16.0.1",
-    "electron": "^15.5.7",
-    "electron-builder": "^23.1.0",
     "electron-is-dev": "^2.0.0",
     "electron-reload": "^2.0.0-alpha.1",
+    "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.2",
     "js-yaml": "^4.1.0",
     "react": "^18.2.0",
@@ -41,10 +42,16 @@
     "wait-on": "^6.0.1"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.64",
+    "@electron-forge/maker-deb": "^6.0.0-beta.64",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.64",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.64",
+    "@electron-forge/maker-zip": "^6.0.0-beta.64",
     "@types/node": "^16.11.6",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^18.0.1",
     "concurrently": "^6.5.1",
+    "electron": "^15.5.7",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",
@@ -75,5 +82,35 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "./src/assets/icons/icon.icns",
+        "name": "Terrarium"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "terrarium"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   }
 }
