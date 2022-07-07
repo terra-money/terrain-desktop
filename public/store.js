@@ -5,49 +5,52 @@ class TerrariumStore extends Store {
     constructor() {
         super();
         this.contracts = this.get('contracts') || []
+        this.localTerraPath = this.get('localTerraPath')
     }
 
-    async saveContracts() {
-        await this.set('contracts', this.contracts)
+    async setLocalTerraPath(path) {
+        return this.set('localTerraPath', path);
+    }
+
+    async getLocalTerraPath() {
+        return this.get('localTerraPath');
+    }
+
+    setContracts() {
+        this.set('contracts', this.contracts)
         return this.contracts
     }
 
     async getContracts() {
-        this.contracts = await this.get('contracts')
-        this.checkIfContractExists(this.contracts);
+        this.contracts = await this.get('contracts') || []
+        this.checkIfContractsExists(this.contracts);
         return this.contracts
     }
 
-    addContract(contractsArray) {
-        if (contractsArray != null) {
-            contractsArray.map(contract => {
-                this.contracts = [...this.contracts, contract];
-                return this.saveContracts()
-            })
+    importContracts(contracts) {
+        if (contracts) {
+            this.contracts = [...this.contracts, ...contracts]
+            return this.setContracts()
         }
     }
 
-    deleteContract(contract) {
-        this.contracts = this.contracts.filter(t => t !== contract)
-        return this.saveContracts()
+    async deleteContract(contract) {
+        this.contracts = this.contracts.filter(name => name !== contract)
+        this.setContracts()
     }
 
     async deleteAllContracts() {
         this.contracts = [];
-        await this.saveContracts();
+        this.setContracts();
     }
 
-    checkIfContractExists(contractsArray) {
-        contractsArray.map(contract => {
+    checkIfContractsExists(contracts) {
+        contracts.forEach(contract => {
             if (!fs.existsSync(contract.path)) {
                 this.deleteContract(contract);
             }
-            return true;
         })
     }
-
 }
 
-module.exports = {
-    TerrariumStore
-}
+module.exports = { TerrariumStore }
