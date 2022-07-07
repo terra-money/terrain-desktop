@@ -28,7 +28,7 @@ export default function ContractsPage() {
   };
 
   async function importAllContracts() {
-    const allContracts = await ipcRenderer.invoke('AllContracts');
+    const allContracts = await ipcRenderer.invoke('ImportContracts');
     setContracts(allContracts);
   };
 

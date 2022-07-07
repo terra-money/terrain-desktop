@@ -2,12 +2,15 @@ const path = require('path');
 const Store = require('electron-store');
 const { app, shell, ipcMain, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev')
+const { TerrariumStore } = require('./store');
 require('dotenv').config()
 
 const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = process.env
 
 
 const store = new Store();
+
+const terrariumStore = new TerrariumStore({ name: 'Imported Contracts' });
 
 const {
   txWs,
@@ -18,11 +21,9 @@ const {
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
   parseTxDescriptionAndMsg,
-  getSmartContractRefs,
-  ContractStore,
+  getSmartContractRefs
 } = require('./utils');
 
-const contractStore = new ContractStore({ name: 'Imported Contracts' });
 
 const {
   showPathSelectionDialog,
@@ -114,17 +115,21 @@ async function init() {
     return localTerraStatus;
   });
 
-  ipcMain.handle('AllContracts', async () => {
-    contractStore.checkIfContractExists(contractStore.contracts);
-    return contractStore.contracts;
+  ipcMain.handle('ImportContracts', async () => {
+    terrariumStore.checkIfContractExists(terrariumStore.contracts);
+    return terrariumStore.contracts;
   })
 
   ipcMain.handle('ImportContractRefs', async () => {
     const { filePaths } = await showSmartContractDialog();
+
+    if (filePaths.length === 0) {
+      return terrariumStore.contracts;
+    }
     const [projectDir] = filePaths;
     const contractRefs = getSmartContractRefs(projectDir);
-    await contractStore.addContract(contractRefs);
-    return contractStore.contracts;
+    const { contracts } = await terrariumStore.addContract(contractRefs);
+    return contracts;
   })
 
   app.on('window-all-closed', async () => {
