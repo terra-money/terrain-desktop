@@ -5,6 +5,5 @@ dist-ssr
 *.local
 .vscode/launch.json
 src/index.css
-.env
-out
 build
+out

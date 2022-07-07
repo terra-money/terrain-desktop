@@ -53,10 +53,12 @@ export const useGetLatestHeight = () => {
   const { latestHeight } = blockState.attach(Downgraded).get()
   return latestHeight || 0;
 }
+
 export const useGetLogs = () => {
   const { logsState } = useContext(ElectronContext);
   return logsState.attach(Downgraded).get();
 }
+
 export const useGetTxs = () => {
   const { txState } = useContext(ElectronContext);
   return txState.attach(Downgraded);

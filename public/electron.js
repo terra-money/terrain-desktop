@@ -16,13 +16,18 @@ const {
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
   parseTxDescriptionAndMsg,
+  getSmartContractRefs,
+  ContractStore,
 } = require('./utils');
+
+const contractStore = new ContractStore({ name: 'Imported Contracts' });
 
 const {
   showPathSelectionDialog,
   showWrongDirectoryDialog,
   showLocalTerraAlreadyExistsDialog,
   showTxOccuredNotif,
+  showSmartContractDialog
 } = require('./messages');
 
 async function init() {
@@ -95,7 +100,7 @@ async function init() {
 
   ipcMain.handle('ToggleLocalTerraStatus', async (_, localTerraStatus) => {
     const localTerraPath = await store.get('localTerraPath');
-    
+
     if (localTerraStatus) {
       localTerraProcess = startLocalTerra(localTerraPath);
       await subscribeToLocalTerraEvents(localTerraProcess, win);
@@ -105,6 +110,19 @@ async function init() {
     }
     return localTerraStatus;
   });
+
+  ipcMain.handle('AllContracts', async () => {
+    contractStore.checkIfContractExists(contractStore.contracts);
+    return contractStore.contracts;
+  })
+
+  ipcMain.handle('ImportContractRefs', async () => {
+    const { filePaths } = await showSmartContractDialog();
+    const [projectDir] = filePaths;
+    const contractRefs = getSmartContractRefs(projectDir);
+    await contractStore.addContract(contractRefs);
+    return contractStore.contracts;
+  })
 
   app.on('window-all-closed', async () => {
     await stopLocalTerra(localTerraProcess);
@@ -122,6 +140,7 @@ async function init() {
     win.show();
     win.focus()
   })
+
 }
 
 app.on('ready', init);

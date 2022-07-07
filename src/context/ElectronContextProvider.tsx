@@ -13,6 +13,8 @@ type TypeElectronContext = {
     logsState: State<string[]>,
 }
 
+const MAX_LOG_LENGTH = 500;
+
 const ElectronContext = React.createContext<TypeElectronContext>(null as any);
 
 export const ElectronContextProvider = ({ children } : { children: ReactElement }) => {
@@ -34,8 +36,9 @@ export const ElectronContextProvider = ({ children } : { children: ReactElement 
             txState.merge([{...tx}]);
         });
     
-        ipcRenderer.on('NewLogs', ((_: any, log: string) => {
-            logsState.merge([log]);
+        ipcRenderer.on('NewLogs', (async (_: any, log: string) => {
+            if (logsState.length >= MAX_LOG_LENGTH) logsState.set(p => p.slice(1).concat(log))
+            else logsState.merge([log])
         }));
     
         ipcRenderer.on('LocalTerraRunning', ((_: any, isLocalTerraRunning: boolean) => {

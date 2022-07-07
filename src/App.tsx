@@ -47,7 +47,7 @@ function App() {
   return (
     <div className="flex flex-col w-screen h-screen">
       <div className="flex">
-        <div className={`bg-terra-dark-blue h-full p-5 pt-8 ${open ? 'w-72' : 'w-20'} w-min duration-300 relative`}>
+        <div className={`bg-terra-dark-blue h-full p-5 pt-8 ${open ? 'w-72' : 'w-20'} duration-300 relative`}>
           <BsArrowLeftShort className={`bg-white text-terra-dark-blue text-3xl rounded-full absolute -right-4 top-9 border border-terra-dark-blue cursor-pointer ${!open && 'rotate-180'}`} onClick={() => setOpen(!open)} />
           <div className="inline-flex items-center">
             <div className="w-10 aspect-square mr-2">

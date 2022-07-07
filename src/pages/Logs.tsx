@@ -7,7 +7,7 @@ export default function LogsPage() {
   const logs = useGetLogs();
 
   return (
-    <Virtuoso className="flex flex-col w-full"
+    <Virtuoso className="flex flex-col w-full p-4"
       followOutput
       initialTopMostItemIndex={logs.length}
       data={logs}
