@@ -6,10 +6,9 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
 const { Tx } = require('@terra-money/terra.js');
-const Store = require('electron-store');
 
 const { readMsg } = require('@terra-money/msg-reader');
-const { showLocalTerraStartNotif, showLocalTerraStopNotif, noTerrainRefsError } = require('./messages');
+const { showLocalTerraStartNotif, showLocalTerraStopNotif, showNoTerrainRefsDialog } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
 
 const { LOCAL_TERRA_GIT, LOCAL_TERRA_WS } = require('./constants');
@@ -60,7 +59,7 @@ function getSmartContractRefs(projectDir) {
   if (validateTerraSmartContract(refsPath)) {
     return smartContractFromRefs(projectDir, refsPath);
   }
-  noTerrainRefsError();
+  showNoTerrainRefsDialog();
 }
 
 function smartContractFromRefs(projectDir, refsPath) {
@@ -136,56 +135,6 @@ const parseTxDescriptionAndMsg = (tx) => {
   return { msg: msg.toData(), description };
 };
 
-class ContractStore extends Store {
-  constructor(settings) {
-    super(settings)
-
-    this.contracts = this.get('contracts') || []
-  }
-
-  saveContracts() {
-    this.set('contracts', this.contracts)
-    return this
-  }
-
-  getContracts() {
-    this.contracts = this.get('contracts') || []
-    this.checkIfContractExists(this.contracts);
-    return this
-  }
-
-  addContract(contractsArray) {
-    if (contractsArray != null) {
-      contractsArray.map(contract => {
-        this.contracts = [...this.contracts, contract];
-        return this.saveContracts()
-      })
-    }
-  }
-
-  deleteContract(contract) {
-    this.contracts = this.contracts.filter(t => t !== contract)
-    return this.saveContracts()
-  }
-
-  deleteAllContracts() {
-    this.contracts = [];
-    return this.saveContracts;
-  }
-
-  checkIfContractExists(contractsArray) {
-    contractsArray.map(contract => {
-      if (!fs.existsSync(contract.path)) {
-        this.deleteContract(contract);
-      }
-      return true;
-    })
-  }
-
-}
-
-
-
 module.exports = {
   txWs,
   stopLocalTerra,
@@ -196,6 +145,5 @@ module.exports = {
   parseTxMsg,
   validateLocalTerraPath,
   getSmartContractRefs,
-  subscribeToLocalTerraEvents,
-  ContractStore
+  subscribeToLocalTerraEvents
 };

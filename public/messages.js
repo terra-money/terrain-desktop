@@ -36,7 +36,7 @@ async function showLocalTerraAlreadyExistsDialog() {
   });
 }
 
-async function noTerrainRefsError() {
+async function showNoTerrainRefsDialog() {
   return dialog.showMessageBox({
     message: 'Error with reading contract. Ensure refs.terrain.json exists before trying again.',
     title: 'Terrarium',
@@ -66,5 +66,5 @@ module.exports = {
   showWrongDirectoryDialog,
   showSmartContractDialog,
   showLocalTerraAlreadyExistsDialog,
-  noTerrainRefsError
+  showNoTerrainRefsDialog
 };
