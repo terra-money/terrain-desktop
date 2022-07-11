@@ -5,6 +5,8 @@ import { TerrariumTx } from '../models/TerrariumTx';
 import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
 import EventInfo from './EventInfo';
 import { truncate } from '../utils'
+import { REACT_APP_FINDER_URL } from '../constants'
+
 
 type TransactionType = {
   data: TerrariumTx,
@@ -14,7 +16,7 @@ type TransactionType = {
 
 function Transaction(props: TransactionType) {
   const { txhash, result, height } = props.data.TxResult;
-  const txHref = `${process.env.REACT_APP_FINDER_URL}/tx/${txhash}`;
+  const txHref = `${REACT_APP_FINDER_URL}/tx/${txhash}`;
 
   const [open, setOpen] = React.useState(props.data.hasEventsOpenInUi);
 
@@ -23,7 +25,7 @@ function Transaction(props: TransactionType) {
     props.onToggleEventDetails(props.index);
   };
 
-  const calculateUsed = () => (Number(result.gas_used) / Number(result.gas_wanted)).toFixed(2);
+  const percentGasUsed = 100 * (Number(result.gas_used) / Number(result.gas_wanted));
 
   return (
     <ul className='divide-y divide-solid'>
@@ -36,11 +38,11 @@ function Transaction(props: TransactionType) {
         </div>
         <div className='p-4 w-90 overflow-auto'>{props.data.msg['@type']}</div>
         <div className='p-4'>{height}</div>
-        <div className='p-4 text-ellipsis overflow-hidden whitespace-nowrap'>{result.gas_wanted} / {result.gas_used} ({calculateUsed()} %)</div>
+        <div className='p-4 text-ellipsis overflow-hidden whitespace-nowrap'>{result.gas_wanted} / {result.gas_used} ({percentGasUsed.toFixed(2)} %)</div>
         <div className='p-4'>
           <KeyboardArrowDownIcon 
             className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
-            onClick={() => toggleEventsRow()} />
+            onClick={toggleEventsRow} />
         </div>
       </li>
 

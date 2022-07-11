@@ -1,9 +1,8 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso'
 import { Checkbox, FormControlLabel } from '@mui/material';
-import  Block from '../component/Block';
 import { useBlocks } from '../package/hooks';
-
+import { BlockView } from '../component';
 
 const BLOCKS_HEADER = [{
   title: "Number",
