@@ -1,14 +1,11 @@
 const path = require('path');
-const Store = require('electron-store');
 const { app, shell, ipcMain, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev');
 const { TerrariumStore } = require('./store');
 
 const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = require('./constants');
 
-const store = new Store();
-
-const terrariumStore = new TerrariumStore({ name: 'Imported Contracts' });
+const store = new TerrariumStore();
 
 const {
   txWs,
@@ -75,7 +72,7 @@ async function init() {
     const isValid = validateLocalTerraPath(filePaths[0]);
 
     if (isValid) {
-      await store.set('localTerraPath', filePaths[0]);
+      await store.setLocalTerraPath(filePaths[0]);
       localTerraProcess = startLocalTerra(filePaths[0]);
       await subscribeToLocalTerraEvents(localTerraProcess, win);
     }
@@ -91,7 +88,7 @@ async function init() {
       localTerraPath = await downloadLocalTerra();
       localTerraProcess = startLocalTerra(localTerraPath);
       await subscribeToLocalTerraEvents(localTerraProcess, win);
-      await store.set('localTerraPath', localTerraPath);
+      await store.setLocalTerraPath(localTerraPath);
     }
     catch (e) {
       await showLocalTerraAlreadyExistsDialog();
@@ -100,7 +97,7 @@ async function init() {
   });
 
   ipcMain.handle('ToggleLocalTerraStatus', async (_, localTerraStatus) => {
-    const localTerraPath = await store.get('localTerraPath');
+    const localTerraPath = await store.getLocalTerraPath();
 
     if (localTerraStatus) {
       localTerraProcess = startLocalTerra(localTerraPath);
@@ -112,20 +109,17 @@ async function init() {
     return localTerraStatus;
   });
 
-  ipcMain.handle('ImportContracts', async () => {
-    terrariumStore.checkIfContractExists(terrariumStore.contracts);
-    return terrariumStore.contracts;
-  })
+  ipcMain.handle('ImportContracts', () => store.getContracts())
 
   ipcMain.handle('ImportContractRefs', async () => {
     const { filePaths } = await showSmartContractDialog();
 
-    if (filePaths.length === 0) {
-      return terrariumStore.contracts;
+    if (!filePaths.length) {
+      return store.getContracts();
     }
-    const [projectDir] = filePaths;
+    const [ projectDir ] = filePaths;
     const contractRefs = getSmartContractRefs(projectDir);
-    const { contracts } = await terrariumStore.addContract(contractRefs);
+    const contracts = await store.importContracts(contractRefs);
     return contracts;
   })
 
@@ -134,18 +128,15 @@ async function init() {
     app.quit();
   });
 
-  const localTerraPath = await store.get('localTerraPath');
+  const localTerraPath = await store.getLocalTerraPath();
   if (localTerraPath) {
     win.webContents.send('LocalTerraPath', true);
     localTerraProcess = startLocalTerra(localTerraPath);
     await subscribeToLocalTerraEvents(localTerraProcess, win);
   }
 
-  app.on('ready-to-show', () => {
-    win.show();
-    win.focus()
-  })
-
+  win.show();
+  win.focus()
 }
 
 app.on('ready', init);
