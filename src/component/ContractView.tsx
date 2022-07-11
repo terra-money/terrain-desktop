@@ -1,10 +1,12 @@
 import React from 'react';
 import { ContractData } from '../models/Contract';
 import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
+import { REACT_APP_FINDER_URL } from '../constants'
+
 
 function ContractView(props: ContractData) {
     const { name, codeId, address, path } = props.data;
-    const contractHref = `${process.env.REACT_APP_FINDER_URL}/address/${address}`;
+    const contractHref = `${REACT_APP_FINDER_URL}/address/${address}`;
 
     return (
         <ul className='divide-y divide-solid bg-white rounded-2xl m-2'>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso'
-import  Block from '../component/Block';
+import  { BlockView } from '../component';
 import { useGetBlocks } from '../package/hooks';
 
 const BLOCKS_HEADER = [{
@@ -42,7 +42,7 @@ export default function BlocksPage() {
         followOutput
         initialTopMostItemIndex={data.blocks.length}
         data={data.blocks}
-        itemContent={(index, block) => <Block onToggleEventDetails={toggleEventDetails} data={block} index={index} key={index}  />} />
+        itemContent={(index, block) => <BlockView onToggleEventDetails={toggleEventDetails} data={block} index={index} key={index}  />} />
       </div>
     </div>
   );

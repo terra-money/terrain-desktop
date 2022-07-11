@@ -3,6 +3,7 @@ import React from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
 import { TerrariumBlockInfo, useGetTxFromHeight } from '../package';
+import { REACT_APP_FINDER_URL } from '../constants'
 import EventInfo from './EventInfo';
 
 type BlockType = {
@@ -11,15 +12,16 @@ type BlockType = {
   onToggleEventDetails: (index: number) => void,
 }
 
-function Block(props: BlockType) {
+const BlockView = (props: BlockType) => {
   const { height, time } = props.data.block.header;
   const { result_begin_block} = props.data;
-  const blockHref = `${process.env.REACT_APP_FINDER_URL}/blocks/${height}`;
+  const blockHref = `${REACT_APP_FINDER_URL}/blocks/${height}`;
 
   const [open, setOpen] = React.useState(props.data.hasEventsOpenInUi);
 
   const txInfos = useGetTxFromHeight(parseInt(height, 10));
-  const dateString = (new Date(time)).toDateString();
+  const dateString = `${new Date(time).toDateString()} | ${new Date(time).toLocaleTimeString()}`;
+  
   let gasUsed: number = 0;
   txInfos.forEach(({ gas_used: gas }: { gas_used: number }) => { gasUsed += gas; });
 
@@ -44,7 +46,7 @@ function Block(props: BlockType) {
         <div className='p-4'>
           <KeyboardArrowDownIcon 
             className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
-            onClick={() => toggleEventsRow()} />
+            onClick={toggleEventsRow} />
         </div>
       </li>
 
@@ -57,4 +59,4 @@ function Block(props: BlockType) {
   );
 }
 
-export default React.memo(Block);
+export default React.memo(BlockView);
