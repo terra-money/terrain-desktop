@@ -52,5 +52,6 @@ class TerrariumStore extends Store {
         })
     }
 }
+const store = new TerrariumStore()
 
-module.exports = { TerrariumStore }
+module.exports = { store }

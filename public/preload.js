@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron');
-const Store = require('electron-store');
+const { store } = require('./store');
 
 window.ipcRenderer = ipcRenderer.setMaxListeners(1);
-window.store = new Store();
+window.store = store;
 

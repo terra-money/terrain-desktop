@@ -1,8 +1,8 @@
-import store from 'electron-store';
+import TerrariumStore from "../public/store";
 
 export {};
 declare global {
   export interface Window {
-    store: store
+    store: TerrariumStore
   }
 }
