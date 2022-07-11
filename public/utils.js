@@ -65,6 +65,12 @@ function getSmartContractRefs(projectDir) {
 function smartContractFromRefs(projectDir, refsPath) {
   const refsData = fs.readFileSync(refsPath, 'utf8');
   const { localterra } = JSON.parse(refsData);
+
+  if (localterra === undefined) {
+    showNoTerrainRefsDialog();
+    return;
+  }
+
   const contracts = Object.keys(localterra).map((name) =>
   ({
     name,
@@ -73,6 +79,7 @@ function smartContractFromRefs(projectDir, refsPath) {
     codeId: localterra[name].codeId,
   })
   );
+
   return contracts;
 }
 

@@ -38,7 +38,7 @@ async function showLocalTerraAlreadyExistsDialog() {
 
 async function showNoTerrainRefsDialog() {
   return dialog.showMessageBox({
-    message: 'Error with reading contract. Ensure refs.terrain.json exists before trying again.',
+    message: 'Error with reading contract. Ensure refs.terrain.json exists and is not empty before trying again.',
     title: 'Terrarium',
     type: 'error'
   });
