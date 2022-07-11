@@ -21,7 +21,7 @@ export const ElectronContextProvider = ({ children } : { children: ReactElement 
     const blockState = useState(createState<TerrariumBlocks>({ blocks: [], latestHeight: 0 }));
     const txState = useState(createState<TerrariumTx[]>([]));
     const logsState = useState(createState<string[]>([]));
-    const localTerraPathConfigured = useState(createState<boolean>(!!window.store.get('localTerraPath')));
+    const localTerraPathConfigured = useState(createState<boolean>(!!window.store.getLocalTerraPath()));
     const localTerraStarted = useState(createState<boolean | null>(null));
 
 

@@ -1,11 +1,9 @@
 const path = require('path');
 const { app, shell, ipcMain, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev');
-const { TerrariumStore } = require('./store');
+const { store } = require('./store');
 
 const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = require('./constants');
-
-const store = new TerrariumStore();
 
 const {
   txWs,
