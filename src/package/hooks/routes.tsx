@@ -5,7 +5,6 @@ import {
   LogsPage,
   BlockPage,
   ContractsPage,
-  EventsPage,
   OnboardPage,
   AccountsPage,
 } from '../../pages';
@@ -13,7 +12,6 @@ import { ReactComponent as AccountsIcon } from '../../assets/icons/menu/accounts
 import { ReactComponent as BlocksIcon } from '../../assets/icons/menu/blocks.svg';
 import { ReactComponent as TransactionsIcon } from '../../assets/icons/menu/transactions.svg';
 import { ReactComponent as ContractsIcon } from '../../assets/icons/menu/contracts.svg';
-import { ReactComponent as EventsIcon } from '../../assets/icons/menu/events.svg';
 import { ReactComponent as LogsIcon } from '../../assets/icons/menu/logs.svg';
 
 const useNav = () => {
@@ -41,12 +39,6 @@ const useNav = () => {
       icon: <ContractsIcon />,
       path: '/contracts',
       element: <ContractsPage />,
-    },
-    {
-      name: 'Events',
-      icon: <EventsIcon />,
-      path: '/events',
-      element: <EventsPage />,
     },
     {
       name: 'Logs',
