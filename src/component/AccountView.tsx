@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTerra } from '../package';
 import { demicrofy, nFormatter } from '../utils';
 import { KeyView } from '.';
+import { REACT_APP_FINDER_URL } from '../constants'
 
 function AccountView({ wallet } : { wallet : any }) {
   const { accAddress, mnemonic } = wallet.key;
@@ -32,7 +33,7 @@ function AccountView({ wallet } : { wallet : any }) {
   return (
     <div className="flex text-left justify-between px-4 py-2 border-b border-b-blue-900">
       {open && <KeyView mnemonic={mnemonic} handleClose={handleClose} />}
-      <a href={`${process.env.REACT_APP_FINDER_URL}/address/${accAddress}`} target="_blank" rel="noreferrer">
+      <a href={`${REACT_APP_FINDER_URL}/address/${accAddress}`} target="_blank" rel="noreferrer">
         <div className="flex w-[570px]">
           <div>
             <p className="text-xs font-bold text-blue-600 uppercase">
