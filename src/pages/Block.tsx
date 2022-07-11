@@ -1,7 +1,9 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso'
+import { Checkbox, FormControlLabel } from '@mui/material';
 import  Block from '../component/Block';
-import { useGetBlocks } from '../package/hooks';
+import { useBlocks } from '../package/hooks';
+
 
 const BLOCKS_HEADER = [{
   title: "Number",
@@ -21,13 +23,17 @@ const BLOCKS_HEADER = [{
 }];
 
 export default function BlocksPage() {
-  const { get, set } = useGetBlocks();
-  const data = get();
+  const [ filter, setFilter ] = React.useState(false);
+  const { get: getBlocks, set: setBlocks } = useBlocks();
+  const data = getBlocks();
 
+  const handleToggleFilter = () => setFilter(!filter);
+  
+  const getFilteredBlocks = () => data.blocks.filter(({ block }) => block.data.txs!.length > 0);
 
   const toggleEventDetails = (index: number) => {
     data.blocks[index].hasEventsOpenInUi = !data.blocks[index].hasEventsOpenInUi;
-    set(data);
+    setBlocks(data);
   };
 
   return (
@@ -38,11 +44,16 @@ export default function BlocksPage() {
         ))}
       </div>
       <div className='bg-white' style={{flexGrow: 1}}>
-      <Virtuoso className="flex flex-col w-full"
-        followOutput
-        initialTopMostItemIndex={data.blocks.length}
-        data={data.blocks}
-        itemContent={(index, block) => <Block onToggleEventDetails={toggleEventDetails} data={block} index={index} key={index}  />} />
+        <FormControlLabel
+              control={<Checkbox checked={filter} onChange={handleToggleFilter} />}
+              label="Filter Empty Blocks"
+        />
+        <Virtuoso className="flex flex-col w-full"
+          followOutput
+          initialTopMostItemIndex={data.blocks.length}
+          data={filter ? getFilteredBlocks() : data.blocks}
+          itemContent={(index, block) => <Block onToggleEventDetails={toggleEventDetails} data={block} index={index} key={index}  />} 
+        />
       </div>
     </div>
   );

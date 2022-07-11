@@ -1,8 +1,7 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
-import { Checkbox, FormControlLabel } from '@mui/material';
 import Transaction from '../component/Transaction';
-import { useGetTxs } from '../package';
+import { useTxs } from '../package';
 
 const TRANSACTIONS_HEADER = [{
   title: "Hash",
@@ -22,30 +21,21 @@ const TRANSACTIONS_HEADER = [{
 }];
 
 export default function TransactionsPage() {
-  const { get, set } = useGetTxs();
-  const [filterIsChecked, setFilterIsChecked] = React.useState(false);
-  const txs = get();
+  const { get: getTxs, set: setTxs } = useTxs();
+  const txs = getTxs();
 
   if (txs.length === 0) {
     return <h1>There are no transactions yet.</h1>;
   }
 
-  const handleToggleFilter = (event: any) => {
-    setFilterIsChecked(event.target.checked);
-  };
-
   const toggleEventDetails = (index: number) => {
     txs[index].hasEventsOpenInUi = !txs[index].hasEventsOpenInUi;
-    set(txs);
+    setTxs(txs);
   };
 
   return (
     <div className='flex flex-col w-full'>
       <div className='bg-gray-background flex justify-between'>
-      <FormControlLabel
-          control={<Checkbox checked={filterIsChecked} onChange={handleToggleFilter} />}
-          label="Filter Empty Blocks"
-        />
         {TRANSACTIONS_HEADER.map((header, index) => (
           <div key={index} className={header.className}>{header.title}</div>
         ))}
@@ -54,7 +44,8 @@ export default function TransactionsPage() {
         <Virtuoso followOutput
           className="flex flex-col w-full"
           data={txs}
-          itemContent={(index, data) => <Transaction onToggleEventDetails={toggleEventDetails} data={data} key={index} index={index} />} />
+          itemContent={(index, data) => <Transaction onToggleEventDetails={toggleEventDetails} data={data} key={index} index={index} />} 
+        />
       </div>
     </div>
   );
