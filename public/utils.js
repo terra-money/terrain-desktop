@@ -35,7 +35,7 @@ function validateTerraSmartContract(refsPath) {
   try {
     return fs.existsSync(refsPath);
   } catch (e) {
-    console.log('Error with reading contract. Ensure refs.terrain.json exists before trying again. ', e);
+    showNoTerrainRefsDialog()
     return false;
   }
 }
@@ -63,17 +63,22 @@ function getSmartContractRefs(projectDir) {
 }
 
 function smartContractFromRefs(projectDir, refsPath) {
-  const refsData = fs.readFileSync(refsPath, 'utf8');
-  const { localterra } = JSON.parse(refsData);
-  const contracts = Object.keys(localterra).map((name) =>
-  ({
-    name,
-    path: projectDir,
-    address: localterra[name].contractAddresses.default,
-    codeId: localterra[name].codeId,
-  })
-  );
-  return contracts;
+  try {
+    const refsData = fs.readFileSync(refsPath, 'utf8');
+    const { localterra } = JSON.parse(refsData);
+
+    const contracts = Object.keys(localterra).map((name) =>
+    ({
+      name,
+      path: projectDir,
+      address: localterra[name].contractAddresses.default,
+      codeId: localterra[name].codeId,
+    })
+    );
+    return contracts;
+  } catch {
+    showNoTerrainRefsDialog();
+  }
 }
 
 async function subscribeToLocalTerraEvents(localTerraProcess, win) {
