@@ -115,7 +115,7 @@ async function init() {
     if (!filePaths.length) {
       return store.getContracts();
     }
-    const [projectDir] = filePaths;
+    const [ projectDir ] = filePaths;
     const contractRefs = getSmartContractRefs(projectDir);
     const contracts = await store.importContracts(contractRefs);
     return contracts;
