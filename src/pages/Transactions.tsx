@@ -1,7 +1,7 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import Transaction from '../component/Transaction';
-import { useGetTxs } from '../package';
+import { useTxs } from '../package';
 
 const TRANSACTIONS_HEADER = [{
   title: "Hash",
@@ -21,8 +21,8 @@ const TRANSACTIONS_HEADER = [{
 }];
 
 export default function TransactionsPage() {
-  const { get, set } = useGetTxs();
-  const txs = get();
+  const { get: getTxs, set: setTxs } = useTxs();
+  const txs = getTxs();
 
   if (txs.length === 0) {
     return <h1>There are no transactions yet.</h1>;
@@ -30,7 +30,7 @@ export default function TransactionsPage() {
 
   const toggleEventDetails = (index: number) => {
     txs[index].hasEventsOpenInUi = !txs[index].hasEventsOpenInUi;
-    set(txs);
+    setTxs(txs);
   };
 
   return (
@@ -40,11 +40,12 @@ export default function TransactionsPage() {
           <div key={index} className={header.className}>{header.title}</div>
         ))}
       </div>
-      <div className='bg-white' style={{flexGrow: 1}}>
+      <div className='bg-white' style={{ flexGrow: 1 }}>
         <Virtuoso followOutput
           className="flex flex-col w-full"
           data={txs}
-          itemContent={(index, data) => <Transaction onToggleEventDetails={toggleEventDetails} data={data} key={index} index={index} />} />
+          itemContent={(index, data) => <Transaction onToggleEventDetails={toggleEventDetails} data={data} key={index} index={index} />} 
+        />
       </div>
     </div>
   );
