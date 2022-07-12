@@ -115,11 +115,13 @@ async function init() {
     if (!filePaths.length) {
       return store.getContracts();
     }
-    const [ projectDir ] = filePaths;
+    const [projectDir] = filePaths;
     const contractRefs = getSmartContractRefs(projectDir);
     const contracts = await store.importContracts(contractRefs);
     return contracts;
   })
+
+  ipcMain.handle('DeleteAllContractRefs', async () => store.deleteAllContracts())
 
   app.on('window-all-closed', async () => {
     await stopLocalTerra(localTerraProcess);

@@ -41,7 +41,7 @@ class TerrariumStore extends Store {
 
     async deleteAllContracts() {
         this.contracts = [];
-        this.setContracts();
+        return this.setContracts();
     }
 
     checkIfContractsExists(contracts) {
