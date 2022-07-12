@@ -63,24 +63,22 @@ function getSmartContractRefs(projectDir) {
 }
 
 function smartContractFromRefs(projectDir, refsPath) {
-  const refsData = fs.readFileSync(refsPath, 'utf8');
-  const { localterra } = JSON.parse(refsData);
+  try {
+    const refsData = fs.readFileSync(refsPath, 'utf8');
+    const { localterra } = JSON.parse(refsData);
 
-  if (localterra === undefined) {
+    const contracts = Object.keys(localterra).map((name) =>
+    ({
+      name,
+      path: projectDir,
+      address: localterra[name].contractAddresses.default,
+      codeId: localterra[name].codeId,
+    })
+    );
+    return contracts;
+  } catch {
     showNoTerrainRefsDialog();
-    return;
   }
-
-  const contracts = Object.keys(localterra).map((name) =>
-  ({
-    name,
-    path: projectDir,
-    address: localterra[name].contractAddresses.default,
-    codeId: localterra[name].codeId,
-  })
-  );
-
-  return contracts;
 }
 
 async function subscribeToLocalTerraEvents(localTerraProcess, win) {
