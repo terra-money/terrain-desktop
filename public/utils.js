@@ -35,7 +35,7 @@ function validateTerraSmartContract(refsPath) {
   try {
     return fs.existsSync(refsPath);
   } catch (e) {
-    console.log('Error with reading contract. Ensure refs.terrain.json exists before trying again. ', e);
+    showNoTerrainRefsDialog()
     return false;
   }
 }

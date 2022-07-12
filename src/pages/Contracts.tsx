@@ -56,10 +56,12 @@ export default function ContractsPage() {
         ))}
       </div>
       <div className='bg-white rounded-lg' />
-      <Virtuoso followOutput
+      {contracts && (
+        <Virtuoso followOutput
         className="flex flex-col w-full"
         data={contracts}
         itemContent={(index, data) => <ContractView data={data} key={index} />} />
+      )}
     </div>
   );
 }
