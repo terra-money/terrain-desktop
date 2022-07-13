@@ -150,6 +150,14 @@ const isDockerRunning = async () => {
   }
 }
 
+const shutdown = async (localTerraProcess, win) => {
+  win.hide();
+  setDockIconDisplay(false, win);
+  app.isQuitting = true;
+  await stopLocalTerra(localTerraProcess);
+  app.exit();
+}
+
 module.exports = {
   txWs,
   blockWs,
@@ -163,4 +171,5 @@ module.exports = {
   getSmartContractRefs,
   subscribeToLocalTerraEvents,
   setDockIconDisplay,
+  shutdown,
 };

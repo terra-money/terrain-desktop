@@ -1,6 +1,7 @@
 const path = require('path');
-const { app, shell, ipcMain, BrowserWindow, Menu, Tray } = require('electron');
+const { app, shell, ipcMain, BrowserWindow, Menu, Tray, MenuItem } = require('electron');
 const isDev = require('electron-is-dev');
+const defaultMenu = require('electron-default-menu');
 const { store } = require('./store');
 const pkg = require('../package.json');
 
@@ -17,7 +18,8 @@ const {
   parseTxDescriptionAndMsg,
   getSmartContractRefs,
   setDockIconDisplay,
-  isDockerRunning
+  isDockerRunning,
+  shutdown,
 } = require('./utils');
 
 const {
@@ -66,13 +68,7 @@ async function init() {
     { type: 'separator' },
     {
       label: 'Quit',
-      click: async () => {
-        win.hide();
-        setDockIconDisplay(false, win);
-        app.isQuitting = true;
-        await stopLocalTerra(localTerraProcess);
-        app.exit();
-      },
+      click: () => shutdown(localTerraProcess, win),
     },
   ]);
 
@@ -86,7 +82,22 @@ async function init() {
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
   }
 
-  if (!(await isDockerRunning()))  {
+  /** 
+   * On macOS we need to patch the default Electron menu to run 
+   * our custom shutdown instead of just closing or hiding the window.
+   * On Windows and Linux closing the app isn't an option from the app menu.
+   * */ 
+  if (process.platform === "darwin") {
+    const appMenu = defaultMenu(app, shell);
+    appMenu[0].submenu[8] = new MenuItem({
+      label: `Quit ${app.getName()}`,
+      accelerator: "Command+Q",
+      click: () => shutdown(localTerraProcess, win),
+    });
+    Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
+  }
+
+  if (!(await isDockerRunning())) {
     await showStartDockerDialog();
     app.quit();
   }
