@@ -8,8 +8,10 @@ const util = require('util');
 const { Tx } = require('@terra-money/terra.js');
 
 const { readMsg } = require('@terra-money/msg-reader');
+const execSync = require('child_process').exec;
 const { showLocalTerraStartNotif, showLocalTerraStopNotif, showNoTerrainRefsDialog } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
+
 
 const { LOCAL_TERRA_GIT, LOCAL_TERRA_WS } = require('./constants');
 
@@ -51,6 +53,8 @@ async function downloadLocalTerra() {
 }
 
 function startLocalTerra(localTerraPath) {
+  const isRunning = dockerIsRunning();
+  console.log('isRunning', isRunning)
   return spawn('docker-compose', ['up'], { cwd: localTerraPath });
 }
 
@@ -121,16 +125,11 @@ async function stopLocalTerra(localTerraProcess) {
     showLocalTerraStopNotif()
   });
 }
-
-function decodeTx(encodedTx) {
-  return Tx.unpackAny({
+const parseTxMsg = (encodedTx) => {
+  const unpacked = Tx.unpackAny({
     value: Buffer.from(encodedTx, 'base64'),
     typeUrl: '',
-  });
-}
-
-const parseTxMsg = (tx) => {
-  const unpacked = decodeTx(tx);
+  });;
   return unpacked.body.messages[0];
 };
 
@@ -140,13 +139,25 @@ const parseTxDescriptionAndMsg = (tx) => {
   return { msg: msg.toData(), description };
 };
 
+const dockerIsRunning = () => {
+  let cmd = '';
+  switch (process.platform) {
+      case 'win32' : cmd = `tasklist`; break;
+      case 'darwin' : cmd = `ps -ax | grep docker`; break;
+      case 'linux' : cmd = `ps -A`; break;
+      default: break;
+  }
+  console.log('cmd', cmd)
+  execSync(cmd, (err, stdout) => {console.log('here', stdout.toLowerCase())});
+}
+
 module.exports = {
   txWs,
+  blockWs,
   stopLocalTerra,
   parseTxDescriptionAndMsg,
   startLocalTerra,
   downloadLocalTerra,
-  blockWs,
   parseTxMsg,
   validateLocalTerraPath,
   getSmartContractRefs,

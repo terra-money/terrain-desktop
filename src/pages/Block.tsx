@@ -51,7 +51,7 @@ export default function BlocksPage() {
           followOutput
           initialTopMostItemIndex={data.blocks.length}
           data={filter ? getFilteredBlocks() : data.blocks}
-          itemContent={(index, block) => <Block onToggleEventDetails={toggleEventDetails} data={block} index={index} key={index}  />} 
+          itemContent={(index, block) => <BlockView onToggleEventDetails={toggleEventDetails} data={block} index={index} key={index}  />} 
         />
       </div>
     </div>
