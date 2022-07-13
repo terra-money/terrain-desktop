@@ -26,7 +26,6 @@ function validateLocalTerraPath(url) {
     const ltServices = Object.keys(services);
     return ltServices.includes('terrad');
   } catch (e) {
-    console.log('Error validating path', e);
     return false;
   }
 }
@@ -67,15 +66,14 @@ function smartContractFromRefs(projectDir, refsPath) {
     const refsData = fs.readFileSync(refsPath, 'utf8');
     const { localterra } = JSON.parse(refsData);
 
-    const contracts = Object.keys(localterra).map((name) =>
-    ({
-      name,
-      path: projectDir,
-      address: localterra[name].contractAddresses.default,
-      codeId: localterra[name].codeId,
-    })
+    return Object.keys(localterra).map((name) =>
+      ({
+        name,
+        path: projectDir,
+        address: localterra[name].contractAddresses.default,
+        codeId: localterra[name].codeId,
+      })
     );
-    return contracts;
   } catch {
     showNoTerrainRefsDialog();
   }
@@ -121,16 +119,11 @@ async function stopLocalTerra(localTerraProcess) {
     showLocalTerraStopNotif()
   });
 }
-
-function decodeTx(encodedTx) {
-  return Tx.unpackAny({
+const parseTxMsg = (encodedTx) => {
+  const unpacked = Tx.unpackAny({
     value: Buffer.from(encodedTx, 'base64'),
     typeUrl: '',
-  });
-}
-
-const parseTxMsg = (tx) => {
-  const unpacked = decodeTx(tx);
+  });;
   return unpacked.body.messages[0];
 };
 
@@ -140,13 +133,23 @@ const parseTxDescriptionAndMsg = (tx) => {
   return { msg: msg.toData(), description };
 };
 
+const isDockerRunning = async () => {
+  try {
+    await exec('docker ps')
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
 module.exports = {
   txWs,
+  blockWs,
+  isDockerRunning,
   stopLocalTerra,
   parseTxDescriptionAndMsg,
   startLocalTerra,
   downloadLocalTerra,
-  blockWs,
   parseTxMsg,
   validateLocalTerraPath,
   getSmartContractRefs,
