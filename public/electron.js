@@ -121,7 +121,7 @@ async function init() {
     return contracts;
   })
 
-  ipcMain.handle('DeleteAllContractRefs', async () => store.deleteAllContracts())
+  ipcMain.handle('DeleteAllContractRefs', () => store.deleteAllContracts())
 
   app.on('window-all-closed', async () => {
     await stopLocalTerra(localTerraProcess);
