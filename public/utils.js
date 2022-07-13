@@ -8,7 +8,6 @@ const util = require('util');
 const { Tx } = require('@terra-money/terra.js');
 
 const { readMsg } = require('@terra-money/msg-reader');
-const execSync = require('child_process').exec;
 const { showLocalTerraStartNotif, showLocalTerraStopNotif, showNoTerrainRefsDialog, showStartDockerDialog } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
 
@@ -116,12 +115,10 @@ async function subscribeToLocalTerraEvents(localTerraProcess, win) {
 }
 
 async function stopLocalTerra(localTerraProcess) {
-  console.log('localTerraProcess.killed', localTerraProcess.killed)
   return new Promise(resolve => {
     if (localTerraProcess.killed) {
       return resolve();
     }
-    console.log('after kill')
     txWs.destroy();
     blockWs.destroy();
     localTerraProcess.once('close', resolve);
