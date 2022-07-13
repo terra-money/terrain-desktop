@@ -43,11 +43,11 @@ export default function ContractsPage() {
   }, []);
 
   return (
-    <div className='flex-col w-full '>
-      <div className='flex-row justify-items-end'>
-        <button type='button' onClick={handleRefsImport} className='w-72 h-10 my-3 mx-2 px-5 rounded-lg text-white bg-terra-dark-blue inset-y-0 right-0'>Add Contract</button>
+    <div className='flex flex-col w-full '>
+      <div className='flex flex-row justify-items-end my-3 mx-3 h-19'>
+        <button type='button' onClick={handleRefsImport} className='grow px-5 rounded-lg text-white bg-terra-dark-blue'>Add Contracts</button>
         <button type='button' onClick={handleRefsDeletion}>
-          <FaTrash className='text-terra-dark-blue' />
+          <FaTrash className='flex-none w-15 text-terra-dark-blue mx-5' />
         </button>
       </div>
       <div className='bg-gray-background flex justify-between'>
