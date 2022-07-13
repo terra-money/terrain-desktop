@@ -87,11 +87,11 @@ async function init() {
    * our custom shutdown instead of just closing or hiding the window.
    * On Windows and Linux closing the app isn't an option from the app menu.
    * */ 
-  if (process.platform === "darwin") {
+  if (process.platform === 'darwin') {
     const appMenu = defaultMenu(app, shell);
     appMenu[0].submenu[8] = new MenuItem({
       label: `Quit ${app.getName()}`,
-      accelerator: "Command+Q",
+      accelerator: 'Command+Q',
       click: () => shutdown(localTerraProcess, win),
     });
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
