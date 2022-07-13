@@ -20,6 +20,14 @@ async function showSmartContractDialog() {
   });
 }
 
+async function showStartDockerDialog() {
+  return dialog.showMessageBox({
+    message: `Start Docker then try opening Terrarium again.`,
+    title: 'Terrarium',
+    type: 'warning'
+  });
+}
+
 async function showWrongDirectoryDialog() {
   return dialog.showMessageBox({
     message: 'Please select a valid LocalTerra directory',
@@ -66,5 +74,6 @@ module.exports = {
   showWrongDirectoryDialog,
   showSmartContractDialog,
   showLocalTerraAlreadyExistsDialog,
-  showNoTerrainRefsDialog
+  showNoTerrainRefsDialog,
+  showStartDockerDialog
 };
