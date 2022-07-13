@@ -1,7 +1,8 @@
 const path = require('path');
-const { app, shell, ipcMain, BrowserWindow } = require('electron');
+const { app, shell, ipcMain, BrowserWindow, Menu, Tray } = require('electron');
 const isDev = require('electron-is-dev');
 const { store } = require('./store');
+const pkg = require('../package.json');
 
 const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = require('./constants');
 
@@ -14,9 +15,9 @@ const {
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
   parseTxDescriptionAndMsg,
-  getSmartContractRefs
+  getSmartContractRefs,
+  setDockIconDisplay,
 } = require('./utils');
-
 
 const {
   showPathSelectionDialog,
@@ -25,6 +26,13 @@ const {
   showTxOccuredNotif,
   showSmartContractDialog
 } = require('./messages');
+
+let tray = null;
+
+app.setAboutPanelOptions({
+  applicationName: app.getName(), 
+  applicationVersion: pkg.version,
+});
 
 async function init() {
   const win = new BrowserWindow({
@@ -41,6 +49,25 @@ async function init() {
     }
   });
   let localTerraProcess;
+    tray = new Tray(path.join(__dirname, 'tray.png'));
+    const contextMenu = Menu.buildFromTemplate([
+      { label: 'Open', click: () => { 
+        setDockIconDisplay(true, win);
+        win.show();
+      } },
+      { type: 'separator' },
+      { label: 'About', role: 'about' },
+      { type: 'separator' },
+      { label: 'Quit', click: async () => {
+        win.hide();
+        setDockIconDisplay(false, win);
+        app.isQuitting = true;
+        await stopLocalTerra(localTerraProcess);
+        app.exit();
+      } },
+    ]);
+
+    tray.setContextMenu(contextMenu);
 
   if (isDev) {
     win.loadURL('http://localhost:3000');
@@ -121,10 +148,16 @@ async function init() {
     return contracts;
   })
 
-  app.on('window-all-closed', async () => {
-    await stopLocalTerra(localTerraProcess);
-    app.quit();
-  });
+  // Catch window close and hide the window instead.
+  win.on('close', (event) => {
+    if (!app.isQuitting){
+        event.preventDefault();
+        win.hide();
+        setDockIconDisplay(false, win);
+    }
+
+    return false;
+});
 
   const localTerraPath = await store.getLocalTerraPath();
   if (localTerraPath) {

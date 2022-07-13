@@ -1,4 +1,4 @@
-const { app } = require('electron');
+const { app, dialog } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 const { WebSocketClient } = require('@terra-money/terra.js');
@@ -140,6 +140,14 @@ const parseTxDescriptionAndMsg = (tx) => {
   return { msg: msg.toData(), description };
 };
 
+const setDockIconDisplay = (state, win) => {
+  if (process.platform === 'darwin') {
+    app.dock[state ? 'show' : 'hide']();
+  } else {
+    win.setSkipTaskbar(!!state);
+  }
+}
+
 module.exports = {
   txWs,
   stopLocalTerra,
@@ -150,5 +158,6 @@ module.exports = {
   parseTxMsg,
   validateLocalTerraPath,
   getSmartContractRefs,
-  subscribeToLocalTerraEvents
+  subscribeToLocalTerraEvents,
+  setDockIconDisplay,
 };
