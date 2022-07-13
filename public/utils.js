@@ -1,4 +1,4 @@
-const { app, dialog } = require('electron');
+const { app } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 const { WebSocketClient } = require('@terra-money/terra.js');

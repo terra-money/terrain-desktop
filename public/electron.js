@@ -37,8 +37,6 @@ app.setAboutPanelOptions({
 });
 
 async function init() {
-  let localTerraProcess;
-
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
@@ -54,25 +52,31 @@ async function init() {
   });
 
   let localTerraProcess;
-    tray = new Tray(path.join(__dirname, 'tray.png'));
-    const contextMenu = Menu.buildFromTemplate([
-      { label: 'Open', click: () => { 
+  tray = new Tray(path.join(__dirname, 'tray.png'));
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Open',
+      click: () => {
         setDockIconDisplay(true, win);
         win.show();
-      } },
-      { type: 'separator' },
-      { label: 'About', role: 'about' },
-      { type: 'separator' },
-      { label: 'Quit', click: async () => {
+      },
+    },
+    { type: 'separator' },
+    { label: 'About', role: 'about' },
+    { type: 'separator' },
+    {
+      label: 'Quit',
+      click: async () => {
         win.hide();
         setDockIconDisplay(false, win);
         app.isQuitting = true;
         await stopLocalTerra(localTerraProcess);
         app.exit();
-      } },
-    ]);
+      },
+    },
+  ]);
 
-    tray.setContextMenu(contextMenu);
+  tray.setContextMenu(contextMenu);
 
   if (isDev) {
     win.loadURL('http://localhost:3000');
