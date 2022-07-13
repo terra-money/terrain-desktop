@@ -8,7 +8,7 @@ const util = require('util');
 const { Tx } = require('@terra-money/terra.js');
 
 const { readMsg } = require('@terra-money/msg-reader');
-const { showLocalTerraStartNotif, showLocalTerraStopNotif, showNoTerrainRefsDialog, showStartDockerDialog } = require('./messages');
+const { showLocalTerraStartNotif, showLocalTerraStopNotif, showNoTerrainRefsDialog } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
 
 const { LOCAL_TERRA_GIT, LOCAL_TERRA_WS } = require('./constants');
@@ -26,7 +26,6 @@ function validateLocalTerraPath(url) {
     const ltServices = Object.keys(services);
     return ltServices.includes('terrad');
   } catch (e) {
-    console.log('Error validating path', e);
     return false;
   }
 }
@@ -51,13 +50,7 @@ async function downloadLocalTerra() {
 }
 
 function startLocalTerra(localTerraPath) {
-  try {
-    return spawn('docker-compose', ['up'], { cwd: localTerraPath });
-  } catch (err) {
-    console.log('err', err)
-    showStartDockerDialog();
-    return false
-  }
+  return spawn('docker-compose', ['up'], { cwd: localTerraPath });
 }
 
 function getSmartContractRefs(projectDir) {
@@ -74,12 +67,12 @@ function smartContractFromRefs(projectDir, refsPath) {
     const { localterra } = JSON.parse(refsData);
 
     return Object.keys(localterra).map((name) =>
-    ({
-      name,
-      path: projectDir,
-      address: localterra[name].contractAddresses.default,
-      codeId: localterra[name].codeId,
-    })
+      ({
+        name,
+        path: projectDir,
+        address: localterra[name].contractAddresses.default,
+        codeId: localterra[name].codeId,
+      })
     );
   } catch {
     showNoTerrainRefsDialog();
