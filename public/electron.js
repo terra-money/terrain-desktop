@@ -159,7 +159,7 @@ async function init() {
     const contractRefs = getSmartContractRefs(projectDir);
     const contracts = await store.importContracts(contractRefs);
     return contracts;
-  })
+  });
 
   // Catch window close and hide the window instead.
   win.on('close', (event) => {
@@ -168,9 +168,15 @@ async function init() {
         win.hide();
         setDockIconDisplay(false, win);
     }
-
     return false;
-});
+  });
+  
+  ipcMain.handle('DeleteAllContractRefs', () => store.deleteAllContracts())
+
+  app.on('window-all-closed', async () => {
+    await stopLocalTerra(localTerraProcess);
+    app.quit();
+  });
 
   process.on('SIGINT', async () => {    // catch ctrl+c event
     await stopLocalTerra(localTerraProcess);
