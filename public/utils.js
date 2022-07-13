@@ -9,9 +9,8 @@ const { Tx } = require('@terra-money/terra.js');
 
 const { readMsg } = require('@terra-money/msg-reader');
 const execSync = require('child_process').exec;
-const { showLocalTerraStartNotif, showLocalTerraStopNotif, showNoTerrainRefsDialog } = require('./messages');
+const { showLocalTerraStartNotif, showLocalTerraStopNotif, showNoTerrainRefsDialog, showStartDockerDialog } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
-
 
 const { LOCAL_TERRA_GIT, LOCAL_TERRA_WS } = require('./constants');
 
@@ -53,9 +52,13 @@ async function downloadLocalTerra() {
 }
 
 function startLocalTerra(localTerraPath) {
-  const isRunning = dockerIsRunning();
-  console.log('isRunning', isRunning)
-  return spawn('docker-compose', ['up'], { cwd: localTerraPath });
+  try {
+    return spawn('docker-compose', ['up'], { cwd: localTerraPath });
+  } catch (err) {
+    console.log('err', err)
+    showStartDockerDialog();
+    return false
+  }
 }
 
 function getSmartContractRefs(projectDir) {
@@ -71,7 +74,7 @@ function smartContractFromRefs(projectDir, refsPath) {
     const refsData = fs.readFileSync(refsPath, 'utf8');
     const { localterra } = JSON.parse(refsData);
 
-    const contracts = Object.keys(localterra).map((name) =>
+    return Object.keys(localterra).map((name) =>
     ({
       name,
       path: projectDir,
@@ -79,7 +82,6 @@ function smartContractFromRefs(projectDir, refsPath) {
       codeId: localterra[name].codeId,
     })
     );
-    return contracts;
   } catch {
     showNoTerrainRefsDialog();
   }
@@ -114,10 +116,12 @@ async function subscribeToLocalTerraEvents(localTerraProcess, win) {
 }
 
 async function stopLocalTerra(localTerraProcess) {
+  console.log('localTerraProcess.killed', localTerraProcess.killed)
   return new Promise(resolve => {
     if (localTerraProcess.killed) {
       return resolve();
     }
+    console.log('after kill')
     txWs.destroy();
     blockWs.destroy();
     localTerraProcess.once('close', resolve);
@@ -139,21 +143,19 @@ const parseTxDescriptionAndMsg = (tx) => {
   return { msg: msg.toData(), description };
 };
 
-const dockerIsRunning = () => {
-  let cmd = '';
-  switch (process.platform) {
-      case 'win32' : cmd = `tasklist`; break;
-      case 'darwin' : cmd = `ps -ax | grep docker`; break;
-      case 'linux' : cmd = `ps -A`; break;
-      default: break;
+const isDockerRunning = async () => {
+  try {
+    await exec('docker ps')
+    return true;
+  } catch (err) {
+    return false;
   }
-  console.log('cmd', cmd)
-  execSync(cmd, (err, stdout) => {console.log('here', stdout.toLowerCase())});
 }
 
 module.exports = {
   txWs,
   blockWs,
+  isDockerRunning,
   stopLocalTerra,
   parseTxDescriptionAndMsg,
   startLocalTerra,

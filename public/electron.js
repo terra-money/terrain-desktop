@@ -14,19 +14,23 @@ const {
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
   parseTxDescriptionAndMsg,
-  getSmartContractRefs
+  getSmartContractRefs,
+  isDockerRunning
 } = require('./utils');
-
 
 const {
   showPathSelectionDialog,
   showWrongDirectoryDialog,
   showLocalTerraAlreadyExistsDialog,
   showTxOccuredNotif,
-  showSmartContractDialog
+  showSmartContractDialog,
+  showStartDockerDialog
 } = require('./messages');
 
+
 async function init() {
+  let localTerraProcess;
+
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
@@ -40,7 +44,6 @@ async function init() {
       preload: path.join(__dirname, 'preload.js'),
     }
   });
-  let localTerraProcess;
 
   if (isDev) {
     win.loadURL('http://localhost:3000');
@@ -48,6 +51,11 @@ async function init() {
   }
   else {
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
+  }
+
+  if (!(await isDockerRunning()))  {
+    await showStartDockerDialog();
+    app.quit();
   }
 
   win.webContents.setWindowOpenHandler(({ url }) => {
@@ -90,7 +98,7 @@ async function init() {
     }
     catch (e) {
       await showLocalTerraAlreadyExistsDialog();
-      throw Error("LocalTerra already exists under the default path")
+      throw Error('LocalTerra already exists under the default path')
     }
   });
 
@@ -100,8 +108,7 @@ async function init() {
     if (localTerraStatus) {
       localTerraProcess = startLocalTerra(localTerraPath);
       await subscribeToLocalTerraEvents(localTerraProcess, win);
-    }
-    else {
+    } else {
       stopLocalTerra(localTerraProcess);
     }
     return localTerraStatus;
@@ -126,6 +133,11 @@ async function init() {
     app.quit();
   });
 
+  process.on('SIGINT', async () => {    // catch ctrl+c event
+    await stopLocalTerra(localTerraProcess);
+    app.quit();
+  });
+
   const localTerraPath = await store.getLocalTerraPath();
   if (localTerraPath) {
     win.webContents.send('LocalTerraPath', true);
@@ -134,7 +146,7 @@ async function init() {
   }
 
   win.show();
-  win.focus()
+  win.focus();
 }
 
 app.on('ready', init);
