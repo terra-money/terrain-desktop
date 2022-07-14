@@ -24,7 +24,7 @@ export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
 
   async function handleRefsImport() {
-    const res = await ipcRenderer.invoke('ImportContractRefs');
+    const res = await ipcRenderer.invoke('ImportNewContracts');
     setContracts(res);
   };
 
@@ -34,7 +34,7 @@ export default function ContractsPage() {
   }
 
   async function importAllContracts() {
-    const allContracts = await ipcRenderer.invoke('ImportContracts');
+    const allContracts = await ipcRenderer.invoke('ImportSavedContracts');
     setContracts(allContracts);
   };
 

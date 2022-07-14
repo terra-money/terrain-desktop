@@ -30,7 +30,7 @@ function validateLocalTerraPath(url) {
   }
 }
 
-function validateTerraSmartContract(refsPath) {
+function validateRefsPath(refsPath) {
   try {
     return fs.existsSync(refsPath);
   } catch (e) {
@@ -53,27 +53,42 @@ function startLocalTerra(localTerraPath) {
   return spawn('docker-compose', ['up'], { cwd: localTerraPath });
 }
 
-function getSmartContractRefs(projectDir) {
-  const refsPath = path.join(projectDir, 'refs.terrain.json');
-  if (validateTerraSmartContract(refsPath)) {
-    return smartContractFromRefs(projectDir, refsPath);
+function getContractSchemas(projectDir, contractName) {
+  try {
+    const schemaDir = path.join(projectDir, 'contracts', contractName, 'schema')
+    const schemas = fs.readdirSync(schemaDir, 'utf8');
+    return schemas.map(file => {
+      const schema = fs.readFileSync(path.join(schemaDir, file), 'utf8');
+      return JSON.parse(schema.toString());
+    })
+  } catch (e) {
+    return null;
+  }
+}
+
+function getSmartContractData(projectDir) {
+  const p = path.join(projectDir, 'refs.terrain.json');
+  if (validateRefsPath(p)) {
+    return getContractDataFromRefs(projectDir, p);
   }
   showNoTerrainRefsDialog();
 }
 
-function smartContractFromRefs(projectDir, refsPath) {
+function getContractDataFromRefs(projectDir, refsPath) {
   try {
     const refsData = fs.readFileSync(refsPath, 'utf8');
     const { localterra } = JSON.parse(refsData);
-
-    return Object.keys(localterra).map((name) =>
-      ({
+    const contracts = Object.keys(localterra).map((name) => {
+      const schemas = getContractSchemas(projectDir, name);
+      return {
         name,
         path: projectDir,
         address: localterra[name].contractAddresses.default,
         codeId: localterra[name].codeId,
-      })
-    );
+        schemas,
+      }
+    });
+    return contracts;
   } catch {
     showNoTerrainRefsDialog();
   }
@@ -168,7 +183,7 @@ module.exports = {
   downloadLocalTerra,
   parseTxMsg,
   validateLocalTerraPath,
-  getSmartContractRefs,
+  getSmartContractData,
   subscribeToLocalTerraEvents,
   setDockIconDisplay,
   shutdown,
