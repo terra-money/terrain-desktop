@@ -1,7 +1,9 @@
 const path = require('path');
-const { app, shell, ipcMain, BrowserWindow } = require('electron');
+const { app, shell, ipcMain, BrowserWindow, Menu, Tray, MenuItem } = require('electron');
 const isDev = require('electron-is-dev');
+const defaultMenu = require('electron-default-menu');
 const { store } = require('./store');
+const pkg = require('../package.json');
 
 const { BROWSER_WINDOW_WIDTH, BROWSER_WINDOW_HEIGHT } = require('./constants');
 
@@ -15,7 +17,9 @@ const {
   validateLocalTerraPath,
   parseTxDescriptionAndMsg,
   getSmartContractRefs,
-  isDockerRunning
+  setDockIconDisplay,
+  isDockerRunning,
+  shutdown,
 } = require('./utils');
 
 const {
@@ -27,10 +31,14 @@ const {
   showStartDockerDialog
 } = require('./messages');
 
+let tray = null;
+
+app.setAboutPanelOptions({
+  applicationName: app.getName(), 
+  applicationVersion: pkg.version,
+});
 
 async function init() {
-  let localTerraProcess;
-
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
@@ -45,6 +53,27 @@ async function init() {
     }
   });
 
+  let localTerraProcess;
+  tray = new Tray(path.join(__dirname, 'tray.png'));
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Open',
+      click: () => {
+        setDockIconDisplay(true, win);
+        win.show();
+      },
+    },
+    { type: 'separator' },
+    { label: 'About', role: 'about' },
+    { type: 'separator' },
+    {
+      label: 'Quit',
+      click: () => shutdown(localTerraProcess, win),
+    },
+  ]);
+
+  tray.setContextMenu(contextMenu);
+
   if (isDev) {
     win.loadURL('http://localhost:3000');
     win.webContents.openDevTools();
@@ -53,7 +82,22 @@ async function init() {
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
   }
 
-  if (!(await isDockerRunning()))  {
+  /** 
+   * On macOS we need to patch the default Electron menu to run 
+   * our custom shutdown instead of just closing or hiding the window.
+   * On Windows and Linux closing the app isn't an option from the app menu.
+   * */ 
+  if (process.platform === 'darwin') {
+    const appMenu = defaultMenu(app, shell);
+    appMenu[0].submenu[8] = new MenuItem({
+      label: `Quit ${app.getName()}`,
+      accelerator: 'Command+Q',
+      click: () => shutdown(localTerraProcess, win),
+    });
+    Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
+  }
+
+  if (!(await isDockerRunning())) {
     await showStartDockerDialog();
     app.quit();
   }
@@ -126,8 +170,18 @@ async function init() {
     const contractRefs = getSmartContractRefs(projectDir);
     const contracts = await store.importContracts(contractRefs);
     return contracts;
-  })
+  });
 
+  // Catch window close and hide the window instead.
+  win.on('close', (event) => {
+    if (!app.isQuitting){
+        event.preventDefault();
+        win.hide();
+        setDockIconDisplay(false, win);
+    }
+    return false;
+  });
+  
   ipcMain.handle('DeleteAllContractRefs', () => store.deleteAllContracts())
 
   app.on('window-all-closed', async () => {

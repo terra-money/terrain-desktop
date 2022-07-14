@@ -133,6 +133,14 @@ const parseTxDescriptionAndMsg = (tx) => {
   return { msg: msg.toData(), description };
 };
 
+const setDockIconDisplay = (state, win) => {
+  if (process.platform === 'darwin') {
+    app.dock[state ? 'show' : 'hide']();
+  } else {
+    win.setSkipTaskbar(!!state);
+  }
+}
+
 const isDockerRunning = async () => {
   try {
     await exec('docker ps')
@@ -140,6 +148,14 @@ const isDockerRunning = async () => {
   } catch (err) {
     return false;
   }
+}
+
+const shutdown = async (localTerraProcess, win) => {
+  win.hide();
+  setDockIconDisplay(false, win);
+  app.isQuitting = true;
+  await stopLocalTerra(localTerraProcess);
+  app.exit();
 }
 
 module.exports = {
@@ -153,5 +169,7 @@ module.exports = {
   parseTxMsg,
   validateLocalTerraPath,
   getSmartContractRefs,
-  subscribeToLocalTerraEvents
+  subscribeToLocalTerraEvents,
+  setDockIconDisplay,
+  shutdown,
 };
