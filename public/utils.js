@@ -56,7 +56,7 @@ function startLocalTerra(localTerraPath) {
 function getContractSchemas(projectDir, contractName) {
   try {
     const schemaDir = path.join(projectDir, 'contracts', contractName, 'schema')
-    const schemas = fs.readdirSync(schemaDir, 'utf8');
+    const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file ==='query_msg.json' || file === 'execute_msg.json');
     return schemas.map(file => {
       const schema = fs.readFileSync(path.join(schemaDir, file), 'utf8');
       return JSON.parse(schema.toString());

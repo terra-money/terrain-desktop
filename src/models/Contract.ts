@@ -3,6 +3,7 @@
     path: string;
     address: string;
     codeId: number;
+    schemas: any[] | null;
 }
 export type ContractData = {
     data: SmartContract
