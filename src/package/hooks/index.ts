@@ -10,6 +10,7 @@ export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
   const hookExport: ITerraHook = {
     terra,
+    wallets: terra.wallets,
     getTestAccounts(): Wallet[] {
       return Object.values(terra.wallets);
     },
