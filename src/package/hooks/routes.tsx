@@ -7,6 +7,7 @@ import {
   ContractsPage,
   OnboardPage,
   AccountsPage,
+  SettingsPage,
 } from '../../pages';
 import { ReactComponent as AccountsIcon } from '../../assets/icons/menu/accounts.svg';
 import { ReactComponent as BlocksIcon } from '../../assets/icons/menu/blocks.svg';
@@ -53,6 +54,11 @@ const useNav = () => {
       name: 'Onboard',
       path: '/onboard',
       element: <OnboardPage />,
+    },
+    {
+      name: 'Settings',
+      path: '/settings',
+      element: <SettingsPage />,
     },
     // Add here routes that cannot be accessed directly from the menu entry
 

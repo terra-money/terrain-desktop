@@ -1,5 +1,6 @@
 const Store = require('electron-store');
 const fs = require('fs');
+const { app } = require('electron');
 
 class TerrariumStore extends Store {
     constructor() {
@@ -14,6 +15,16 @@ class TerrariumStore extends Store {
 
     async getLocalTerraPath() {
         return this.get('localTerraPath');
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    get openAtLogin() {
+        return app.getLoginItemSettings().openAtLogin;
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    set openAtLogin(status) {
+        return app.setLoginItemSettings({ openAtLogin: status });
     }
 
     setContracts() {

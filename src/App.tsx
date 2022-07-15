@@ -22,7 +22,7 @@ function App() {
 
   useEffect(() => {
     if (!isLocalTerraPathConfigured) navigate('/onboard');
-    else navigate('/')
+    else navigate('/settings')
   }, [isLocalTerraPathConfigured]);
 
   useEffect(() => {
