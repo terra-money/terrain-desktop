@@ -97,10 +97,10 @@ async function init() {
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
   }
 
-  if (!(await isDockerRunning())) {
-    await showStartDockerDialog();
-    app.quit();
-  }
+  // if (!(await isDockerRunning())) {
+  //   await showStartDockerDialog();
+  //   app.quit();
+  // }
 
   win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
@@ -172,9 +172,12 @@ async function init() {
     return contracts;
   });
 
+  ipcMain.handle('getOpenAtLogin', () => app.getLoginItemSettings().openAtLogin);
+  ipcMain.handle('setOpenAtLogin', (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
+
   // Catch window close and hide the window instead.
   win.on('close', (event) => {
-    if (!app.isQuitting){
+    if (!app.isQuitting) {
         event.preventDefault();
         win.hide();
         setDockIconDisplay(false, win);

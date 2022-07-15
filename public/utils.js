@@ -109,14 +109,14 @@ async function subscribeToLocalTerraEvents(localTerraProcess, win) {
 
 async function stopLocalTerra(localTerraProcess) {
   return new Promise(resolve => {
-    if (localTerraProcess.killed) {
+    if (localTerraProcess && localTerraProcess.killed) {
       return resolve();
     }
     txWs.destroy();
     blockWs.destroy();
     localTerraProcess.once('close', resolve);
     localTerraProcess.kill();
-    showLocalTerraStopNotif()
+    showLocalTerraStopNotif();
   });
 }
 const parseTxMsg = (encodedTx) => {
