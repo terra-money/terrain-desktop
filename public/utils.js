@@ -55,12 +55,21 @@ function startLocalTerra(localTerraPath) {
 
 function getContractSchemas(projectDir, contractName) {
   try {
-    const schemaDir = path.join(projectDir, 'contracts', contractName, 'schema')
+    const parsedSchemas = [];
+    const schemaDir = path.join(projectDir, 'contracts', contractName, 'schema');
     const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file ==='query_msg.json' || file === 'execute_msg.json');
-    return schemas.map(file => {
-      const schema = fs.readFileSync(path.join(schemaDir, file), 'utf8');
-      return JSON.parse(schema.toString());
+
+    schemas.forEach(file => {
+      const schema = JSON.parse(fs.readFileSync(path.join(schemaDir, file), 'utf8'));
+      schema.msgType = schema.title;
+      schema.anyOf.forEach((props) => {
+        [schema.title] = Object.keys(props.properties);
+        delete schema.anyOf;
+        parsedSchemas.push({ ...schema, ...props });
+      })
     })
+
+    return parsedSchemas;
   } catch (e) {
     return null;
   }
