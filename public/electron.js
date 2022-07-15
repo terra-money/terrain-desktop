@@ -1,5 +1,7 @@
 const path = require('path');
-const { app, shell, ipcMain, BrowserWindow, Menu, Tray, MenuItem } = require('electron');
+const {
+  app, shell, ipcMain, BrowserWindow, Menu, Tray, MenuItem,
+} = require('electron');
 const isDev = require('electron-is-dev');
 const defaultMenu = require('electron-default-menu');
 const { store } = require('./store');
@@ -28,13 +30,13 @@ const {
   showLocalTerraAlreadyExistsDialog,
   showTxOccuredNotif,
   showSmartContractDialog,
-  showStartDockerDialog
+  showStartDockerDialog,
 } = require('./messages');
 
 let tray = null;
 
 app.setAboutPanelOptions({
-  applicationName: app.getName(), 
+  applicationName: app.getName(),
   applicationVersion: pkg.version,
 });
 
@@ -50,7 +52,7 @@ async function init() {
       nodeIntegration: true,
       enableRemoteModule: true,
       preload: path.join(__dirname, 'preload.js'),
-    }
+    },
   });
 
   let localTerraProcess;
@@ -77,16 +79,15 @@ async function init() {
   if (isDev) {
     win.loadURL('http://localhost:3000');
     win.webContents.openDevTools();
-  }
-  else {
-    win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
+  } else {
+    win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
   }
 
-  /** 
-   * On macOS we need to patch the default Electron menu to run 
+  /**
+   * On macOS we need to patch the default Electron menu to run
    * our custom shutdown instead of just closing or hiding the window.
    * On Windows and Linux closing the app isn't an option from the app menu.
-   * */ 
+   * */
   if (process.platform === 'darwin') {
     const appMenu = defaultMenu(app, shell);
     appMenu[0].submenu[8] = new MenuItem({
@@ -110,7 +111,7 @@ async function init() {
   txWs.subscribeTx({}, async ({ value }) => {
     const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
     win.webContents.send('Tx', { description, msg, ...value });
-    showTxOccuredNotif(description)
+    showTxOccuredNotif(description);
   });
 
   blockWs.subscribe('NewBlock', {}, ({ value }) => {
@@ -125,12 +126,11 @@ async function init() {
       await store.setLocalTerraPath(filePaths[0]);
       localTerraProcess = startLocalTerra(filePaths[0]);
       await subscribeToLocalTerraEvents(localTerraProcess, win);
-    }
-    else {
+    } else {
       await showWrongDirectoryDialog();
       throw Error(`LocalTerra does not exist under the path '${localTerraPath}'`);
     }
-  })
+  });
 
   ipcMain.handle('InstallLocalTerra', async () => {
     let localTerraPath;
@@ -139,10 +139,9 @@ async function init() {
       localTerraProcess = startLocalTerra(localTerraPath);
       await subscribeToLocalTerraEvents(localTerraProcess, win);
       await store.setLocalTerraPath(localTerraPath);
-    }
-    catch (e) {
+    } catch (e) {
       await showLocalTerraAlreadyExistsDialog();
-      throw Error('LocalTerra already exists under the default path')
+      throw Error('LocalTerra already exists under the default path');
     }
   });
 
@@ -160,6 +159,7 @@ async function init() {
 
   ipcMain.handle('ImportSavedContracts', () => store.getContracts())
 
+
   ipcMain.handle('ImportNewContracts', async () => {
     const { filePaths } = await showSmartContractDialog();
 
@@ -167,28 +167,29 @@ async function init() {
 
     const [ projectDir ] = filePaths;
     const contractRefs = getSmartContractData(projectDir);
+
     const contracts = await store.importContracts(contractRefs);
     return contracts;
   });
 
   // Catch window close and hide the window instead.
   win.on('close', (event) => {
-    if (!app.isQuitting){
-        event.preventDefault();
-        win.hide();
-        setDockIconDisplay(false, win);
+    if (!app.isQuitting) {
+      event.preventDefault();
+      win.hide();
+      setDockIconDisplay(false, win);
     }
     return false;
   });
-  
-  ipcMain.handle('DeleteAllContractRefs', () => store.deleteAllContracts())
+
+  ipcMain.handle('DeleteAllContractRefs', () => store.deleteAllContracts());
 
   app.on('window-all-closed', async () => {
     await stopLocalTerra(localTerraProcess);
     app.quit();
   });
 
-  process.on('SIGINT', async () => {    // catch ctrl+c event
+  process.on('SIGINT', async () => { // catch ctrl+c event
     await stopLocalTerra(localTerraProcess);
     app.quit();
   });

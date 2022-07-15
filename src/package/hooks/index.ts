@@ -47,33 +47,33 @@ export function useTerra() {
 export const useBlocks = () => {
   const { blockState } = useContext(ElectronContext);
   return blockState.attach(Downgraded);
-}
+};
 
 export const useGetLatestHeight = () => {
   const { blockState } = useContext(ElectronContext);
-  const { latestHeight } = blockState.attach(Downgraded).get()
+  const { latestHeight } = blockState.attach(Downgraded).get();
   return latestHeight || 0;
-}
+};
 
 export const useGetLogs = () => {
   const { logsState } = useContext(ElectronContext);
   return logsState.attach(Downgraded).get();
-}
+};
 
 export const useTxs = () => {
   const { txState } = useContext(ElectronContext);
   return txState.attach(Downgraded);
-}
+};
 
 export const useLocalTerraPathConfigured = () => {
   const { localTerraPathConfigured } = useContext(ElectronContext);
   return localTerraPathConfigured.attach(Downgraded).get();
-}
+};
 
 export const useLocalTerraStarted = () => {
   const { localTerraStarted } = useContext(ElectronContext);
   return localTerraStarted.attach(Downgraded).get();
-}
+};
 
 export function useGetTxFromHeight(height?: number) {
   const terra = useContext(TerraContext) as LocalTerra;

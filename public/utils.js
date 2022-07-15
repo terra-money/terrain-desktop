@@ -34,17 +34,17 @@ function validateRefsPath(refsPath) {
   try {
     return fs.existsSync(refsPath);
   } catch (e) {
-    showNoTerrainRefsDialog()
+    showNoTerrainRefsDialog();
     return false;
   }
 }
 
 async function downloadLocalTerra() {
-  const LOCAL_TERRA_PATH = path.join(app.getPath('appData'), "LocalTerra");
+  const LOCAL_TERRA_PATH = path.join(app.getPath('appData'), 'LocalTerra');
   if (fs.existsSync(LOCAL_TERRA_PATH)) {
     throw Error(`LocalTerra already exists under the path '${LOCAL_TERRA_PATH}'`);
   } else {
-    await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, { cwd: app.getPath('appData') })
+    await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, { cwd: app.getPath('appData') });
   }
   return LOCAL_TERRA_PATH;
 }
@@ -105,7 +105,7 @@ function getContractDataFromRefs(projectDir, refsPath) {
 
 async function subscribeToLocalTerraEvents(localTerraProcess, win) {
   localTerraProcess.stdout.on('data', (data) => {
-    if (win.isDestroyed()) return
+    if (win.isDestroyed()) return;
 
     win.webContents.send('NewLogs', data.toString());
     if (!isLocalTerraRunning && data.includes('indexed block')) {
@@ -114,7 +114,7 @@ async function subscribeToLocalTerraEvents(localTerraProcess, win) {
       isLocalTerraRunning = true;
       win.webContents.send('LocalTerraRunning', true);
       win.webContents.send('LocalTerraPath', true);
-      showLocalTerraStartNotif()
+      showLocalTerraStartNotif();
     }
   });
 
@@ -123,7 +123,7 @@ async function subscribeToLocalTerraEvents(localTerraProcess, win) {
   });
 
   localTerraProcess.on('close', () => {
-    if (win.isDestroyed()) return
+    if (win.isDestroyed()) return;
     isLocalTerraRunning = false;
     win.webContents.send('LocalTerraRunning', false);
   });
@@ -132,7 +132,7 @@ async function subscribeToLocalTerraEvents(localTerraProcess, win) {
 }
 
 async function stopLocalTerra(localTerraProcess) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     if (localTerraProcess.killed) {
       return resolve();
     }
@@ -140,14 +140,14 @@ async function stopLocalTerra(localTerraProcess) {
     blockWs.destroy();
     localTerraProcess.once('close', resolve);
     localTerraProcess.kill();
-    showLocalTerraStopNotif()
+    showLocalTerraStopNotif();
   });
 }
 const parseTxMsg = (encodedTx) => {
   const unpacked = Tx.unpackAny({
     value: Buffer.from(encodedTx, 'base64'),
     typeUrl: '',
-  });;
+  });
   return unpacked.body.messages[0];
 };
 
@@ -163,16 +163,16 @@ const setDockIconDisplay = (state, win) => {
   } else {
     win.setSkipTaskbar(!!state);
   }
-}
+};
 
 const isDockerRunning = async () => {
   try {
-    await exec('docker ps')
+    await exec('docker ps');
     return true;
   } catch (err) {
     return false;
   }
-}
+};
 
 const shutdown = async (localTerraProcess, win) => {
   win.hide();
@@ -180,7 +180,7 @@ const shutdown = async (localTerraProcess, win) => {
   app.isQuitting = true;
   await stopLocalTerra(localTerraProcess);
   app.exit();
-}
+};
 
 module.exports = {
   txWs,

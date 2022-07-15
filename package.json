@@ -8,6 +8,7 @@
     "forge-start": "electron-forge start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
+    "lint": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
     "electron-dev": "concurrently -k \"npm run watch:css\" \"npm run start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "npm run build",

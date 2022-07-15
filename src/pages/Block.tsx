@@ -1,33 +1,33 @@
 import React from 'react';
-import { Virtuoso } from 'react-virtuoso'
+import { Virtuoso } from 'react-virtuoso';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { useBlocks } from '../package/hooks';
 import { BlockView } from '../component';
 
 const BLOCKS_HEADER = [{
-  title: "Number",
-  className: "w-32 p-4"
-},{
-  title: "Time",
-  className: "w-80 p-4"
-},  {
-  title: "Transactions",
-  className: "p-4"
+  title: 'Number',
+  className: 'w-32 p-4',
 }, {
-  title: "Gas used",
-  className: "p-4"
-},{
-  title: "",
-  className: "m-8"
+  title: 'Time',
+  className: 'w-80 p-4',
+}, {
+  title: 'Transactions',
+  className: 'p-4',
+}, {
+  title: 'Gas used',
+  className: 'p-4',
+}, {
+  title: '',
+  className: 'm-8',
 }];
 
 export default function BlocksPage() {
-  const [ filter, setFilter ] = React.useState(false);
+  const [filter, setFilter] = React.useState(false);
   const { get: getBlocks, set: setBlocks } = useBlocks();
   const data = getBlocks();
 
   const handleToggleFilter = () => setFilter(!filter);
-  
+
   const getFilteredBlocks = () => data.blocks.filter(({ block }) => block.data.txs!.length > 0);
 
   const toggleEventDetails = (index: number) => {
@@ -36,22 +36,30 @@ export default function BlocksPage() {
   };
 
   return (
-    <div className='flex flex-col w-full'>
-      <div className='bg-gray-background flex justify-between'>
+    <div className="flex flex-col w-full">
+      <div className="bg-gray-background flex justify-between">
         {BLOCKS_HEADER.map((header, index) => (
           <div key={index} className={header.className}>{header.title}</div>
         ))}
       </div>
-      <div className='bg-white' style={{flexGrow: 1}}>
+      <div className="bg-white" style={{ flexGrow: 1 }}>
         <FormControlLabel
-              control={<Checkbox checked={filter} onChange={handleToggleFilter} />}
-              label="Filter Empty Blocks"
+          control={<Checkbox checked={filter} onChange={handleToggleFilter} />}
+          label="Filter Empty Blocks"
         />
-        <Virtuoso className="flex flex-col w-full"
+        <Virtuoso
+          className="flex flex-col w-full"
           followOutput
           initialTopMostItemIndex={data.blocks.length}
           data={filter ? getFilteredBlocks() : data.blocks}
-          itemContent={(index, block) => <BlockView onToggleEventDetails={toggleEventDetails} data={block} index={index} key={index}  />} 
+          itemContent={(index, block) => (
+            <BlockView
+              onToggleEventDetails={toggleEventDetails}
+              data={block}
+              index={index}
+              key={index}
+            />
+          )}
         />
       </div>
     </div>
