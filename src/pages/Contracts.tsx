@@ -41,13 +41,12 @@ export default function ContractsPage() {
     importSavedContracts();
   }, []);
 
-
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-row justify-items-end my-3 mx-3 h-19">
         <button
           type="button"
-          onClick={handleRefsImport}
+          onClick={handleNewContractsImport}
           className="grow px-5 rounded-lg text-white bg-terra-dark-blue"
         >
           Add Contracts
