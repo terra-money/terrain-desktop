@@ -1,0 +1,20 @@
+.left-nav ul a:hover {
+  background-color: #0f40b9;
+  color: rgba(219, 234, 254, 1);
+}
+.left-nav ul a:hover svg {
+  fill: rgba(219, 234, 254, var(--tw-text-opacity));
+}
+
+.left-nav ul a.selected {
+  background-color: #0f40b9;
+}
+
+.left-nav ul a svg {
+  fill: rgba(191, 219, 254, 1);
+}
+
+.left-nav ul a.selected svg {
+  background-color: #0f40b9;
+  fill: rgba(219, 234, 254, var(--tw-text-opacity));
+}
