@@ -18,7 +18,7 @@ const {
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
   parseTxDescriptionAndMsg,
-  getSmartContractRefs,
+  getSmartContractData,
   setDockIconDisplay,
   isDockerRunning,
   shutdown,
@@ -157,16 +157,17 @@ async function init() {
     return localTerraStatus;
   });
 
-  ipcMain.handle('ImportContracts', () => store.getContracts());
+  ipcMain.handle('ImportSavedContracts', () => store.getContracts())
 
-  ipcMain.handle('ImportContractRefs', async () => {
+
+  ipcMain.handle('ImportNewContracts', async () => {
     const { filePaths } = await showSmartContractDialog();
 
-    if (!filePaths.length) {
-      return store.getContracts();
-    }
-    const [projectDir] = filePaths;
-    const contractRefs = getSmartContractRefs(projectDir);
+    if (!filePaths.length) return store.getContracts();
+
+    const [ projectDir ] = filePaths;
+    const contractRefs = getSmartContractData(projectDir);
+
     const contracts = await store.importContracts(contractRefs);
     return contracts;
   });

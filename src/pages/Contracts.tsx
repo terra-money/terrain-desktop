@@ -22,8 +22,8 @@ const CONTRACTS_HEADER = [{
 export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
 
-  async function handleRefsImport() {
-    const res = await ipcRenderer.invoke('ImportContractRefs');
+  async function handleNewContractsImport() {
+    const res = await ipcRenderer.invoke('ImportNewContracts');
     setContracts(res);
   }
 
@@ -32,13 +32,13 @@ export default function ContractsPage() {
     setContracts(res);
   }
 
-  async function importAllContracts() {
-    const allContracts = await ipcRenderer.invoke('ImportContracts');
+  async function importSavedContracts() {
+    const allContracts = await ipcRenderer.invoke('ImportSavedContracts');
     setContracts(allContracts);
   }
 
   useEffect(() => {
-    importAllContracts();
+    importSavedContracts();
   }, []);
 
   return (
@@ -46,7 +46,7 @@ export default function ContractsPage() {
       <div className="flex flex-row justify-items-end my-3 mx-3 h-19">
         <button
           type="button"
-          onClick={handleRefsImport}
+          onClick={handleNewContractsImport}
           className="grow px-5 rounded-lg text-white bg-terra-dark-blue"
         >
           Add Contracts

@@ -30,7 +30,7 @@ function validateLocalTerraPath(url) {
   }
 }
 
-function validateTerraSmartContract(refsPath) {
+function validateRefsPath(refsPath) {
   try {
     return fs.existsSync(refsPath);
   } catch (e) {
@@ -53,25 +53,51 @@ function startLocalTerra(localTerraPath) {
   return spawn('docker-compose', ['up'], { cwd: localTerraPath });
 }
 
-function getSmartContractRefs(projectDir) {
-  const refsPath = path.join(projectDir, 'refs.terrain.json');
-  if (validateTerraSmartContract(refsPath)) {
-    return smartContractFromRefs(projectDir, refsPath);
+function getContractSchemas(projectDir, contractName) {
+  try {
+    const parsedSchemas = [];
+    const schemaDir = path.join(projectDir, 'contracts', contractName, 'schema');
+    const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file ==='query_msg.json' || file === 'execute_msg.json');
+
+    schemas.forEach(file => {
+      const schema = JSON.parse(fs.readFileSync(path.join(schemaDir, file), 'utf8'));
+      schema.msgType = schema.title;
+      schema.anyOf.forEach((props) => {
+        [schema.title] = Object.keys(props.properties);
+        delete schema.anyOf;
+        parsedSchemas.push({ ...schema, ...props });
+      })
+    })
+
+    return parsedSchemas;
+  } catch (e) {
+    return null;
+  }
+}
+
+function getSmartContractData(projectDir) {
+  const p = path.join(projectDir, 'refs.terrain.json');
+  if (validateRefsPath(p)) {
+    return getContractDataFromRefs(projectDir, p);
   }
   showNoTerrainRefsDialog();
 }
 
-function smartContractFromRefs(projectDir, refsPath) {
+function getContractDataFromRefs(projectDir, refsPath) {
   try {
     const refsData = fs.readFileSync(refsPath, 'utf8');
     const { localterra } = JSON.parse(refsData);
-
-    return Object.keys(localterra).map((name) => ({
-      name,
-      path: projectDir,
-      address: localterra[name].contractAddresses.default,
-      codeId: localterra[name].codeId,
-    }));
+    const contracts = Object.keys(localterra).map((name) => {
+      const schemas = getContractSchemas(projectDir, name);
+      return {
+        name,
+        path: projectDir,
+        address: localterra[name].contractAddresses.default,
+        codeId: localterra[name].codeId,
+        schemas,
+      }
+    });
+    return contracts;
   } catch {
     showNoTerrainRefsDialog();
   }
@@ -166,7 +192,7 @@ module.exports = {
   downloadLocalTerra,
   parseTxMsg,
   validateLocalTerraPath,
-  getSmartContractRefs,
+  getSmartContractData,
   subscribeToLocalTerraEvents,
   setDockIconDisplay,
   shutdown,
