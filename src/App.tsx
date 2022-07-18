@@ -2,7 +2,7 @@ import React, { useEffect, useState, memo } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
-import { NavLink } from './component';
+import { NavLink } from './components';
 import {
   useTerra, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
 } from './package/hooks';

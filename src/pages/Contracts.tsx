@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { FaTrash } from 'react-icons/fa';
 
-import { ContractView } from '../component';
+import { ContractView } from '../components';
 
 const CONTRACTS_HEADER = [{
   title: 'Contract Name',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
-import Transaction from '../component/Transaction';
+import Transaction from '../components/Transaction';
 import { useTxs } from '../package';
 
 const TRANSACTIONS_HEADER = [{

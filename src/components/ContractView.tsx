@@ -5,6 +5,7 @@ import { ContractData } from '../models/Contract';
 import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
 import { REACT_APP_FINDER_URL } from '../constants';
 import ContractMethodsView from './ContractMethodsView';
+import { truncate } from '../utils';
 
 function ContractView(props: ContractData) {
   const {
@@ -13,9 +14,7 @@ function ContractView(props: ContractData) {
   const contractHref = `${REACT_APP_FINDER_URL}/address/${address}`;
   const [open, setOpen] = React.useState(false);
 
-  const toggleContractRow = () => {
-    setOpen(!open);
-  };
+  const toggleContractRow = () => setOpen(!open);
 
   return (
     <ul className="divide-y divide-solid bg-white rounded-2xl m-2">
@@ -28,7 +27,7 @@ function ContractView(props: ContractData) {
         </div>
         <div className="p-4 w-90 overflow-auto">{path}</div>
         <div className="p-4">{codeId}</div>
-        <div className="p-4 whitespace-nowrap">{address}</div>
+        <div className="p-4 whitespace-nowrap">{truncate(address, [15, 15])}</div>
         <div className="p-4">
           <KeyboardArrowDownIcon
             className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
