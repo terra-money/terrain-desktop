@@ -18,7 +18,7 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
-    'max-len': ['error', { code: 135 }],
+    'max-len': ['error', { code: 175 }],
     '@typescript-eslint/no-unused-vars': ['error'],
     'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'react/jsx-props-no-spreading': 0,

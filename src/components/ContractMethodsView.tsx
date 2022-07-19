@@ -1,21 +1,18 @@
 import React from 'react';
 import { MsgExecuteContract, Fee } from '@terra-money/terra.js';
+import Form from '@rjsf/core';
 import { useTerra } from '../package/hooks';
-import ContractSchemaForm from './ContractSchemaForm';
 
 const ContractMethodsView = ({ schemas, contractAddress }: any) => {
   const { terra, wallets } = useTerra();
   const [contractRes, setContractRes] = React.useState(null);
 
-  const queryContract = async (formData: any) => {
-    console.log('formData', formData);
+  const queryContract = async ({ formData }: any) => {
     const res = await terra.wasm.contractQuery(contractAddress, { ...formData }) as any;
     setContractRes(res);
   };
 
-  const executeContract = async (formData: any) => {
-    console.log('formData', formData);
-
+  const executeContract = async ({ formData }: any) => {
     const execMsg = await wallets.test1.createAndSignTx({
       msgs: [
         new MsgExecuteContract(
@@ -33,8 +30,7 @@ const ContractMethodsView = ({ schemas, contractAddress }: any) => {
   return (
     <>
       {schemas.map((schema: any) => (
-        <ContractSchemaForm
-          className="mb-4"
+        <Form
           schema={schema}
           key={schema.title}
           onSubmit={schema.msgType === 'ExecuteMsg' ? executeContract : queryContract}
