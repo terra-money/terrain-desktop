@@ -57,8 +57,8 @@ function getContractSchemas(projectDir, contractName) {
   try {
     const parsedSchemas = [];
     const schemaDir = path.join(projectDir, 'contracts', contractName, 'schema');
-    const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file ==='query_msg.json' || file === 'execute_msg.json');
-    schemas.forEach(file => {
+    const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file === 'query_msg.json' || file === 'execute_msg.json');
+    schemas.forEach((file) => {
       const schema = JSON.parse(fs.readFileSync(path.join(schemaDir, file), 'utf8'));
 
       schema.msgType = schema.title;

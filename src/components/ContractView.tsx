@@ -35,9 +35,11 @@ function ContractView(props: ContractData) {
           />
         </div>
       </li>
-      <Collapse in={open} timeout="auto" unmountOnExit className="px-16 py-8">
-        {schemas && <ContractMethodsView schemas={schemas} contractAddress={address} />}
-      </Collapse>
+      {schemas && (
+        <Collapse in={open} timeout="auto" unmountOnExit className="px-16 py-8">
+          <ContractMethodsView schemas={schemas} contractAddress={address} />
+        </Collapse>
+      )}
     </ul>
   );
 }

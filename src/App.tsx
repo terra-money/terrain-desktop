@@ -4,7 +4,7 @@ import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import { NavLink } from './components';
 import {
-  useTerra, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
+  useTerraBlockUpdate, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
 } from './package/hooks';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
@@ -13,7 +13,7 @@ import useNav from './package/hooks/routes';
 function App() {
   const { element: routes, menu } = useNav();
   const navigate = useNavigate();
-  const { terra } = useTerra();
+  const { terra } = useTerraBlockUpdate();
   const latestHeight = useGetLatestHeight();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
