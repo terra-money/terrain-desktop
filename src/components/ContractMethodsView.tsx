@@ -1,7 +1,17 @@
 import React from 'react';
 import { MsgExecuteContract, Fee } from '@terra-money/terra.js';
-import Form from '@rjsf/core';
+import Form from '@rjsf/material-ui';
 import { useTerra } from '../package/hooks';
+
+function ObjectFieldTemplate(props: any) {
+  return (
+    <div className="py-4">
+      <div className="text-xl">{props.title}</div>
+      {props.description}
+      {props.properties.map((element: any) => <div className="property-wrapper">{element.content}</div>)}
+    </div>
+  );
+}
 
 const ContractMethodsView = ({ schemas, contractAddress }: any) => {
   const { terra, wallets } = useTerra();
@@ -32,6 +42,7 @@ const ContractMethodsView = ({ schemas, contractAddress }: any) => {
       {schemas.map((schema: any) => (
         <Form
           schema={schema}
+          ObjectFieldTemplate={ObjectFieldTemplate}
           key={schema.title}
           onSubmit={schema.msgType === 'ExecuteMsg' ? executeContract : queryContract}
         />

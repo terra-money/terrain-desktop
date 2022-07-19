@@ -58,16 +58,24 @@ function getContractSchemas(projectDir, contractName) {
     const parsedSchemas = [];
     const schemaDir = path.join(projectDir, 'contracts', contractName, 'schema');
     const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file ==='query_msg.json' || file === 'execute_msg.json');
-
     schemas.forEach(file => {
       const schema = JSON.parse(fs.readFileSync(path.join(schemaDir, file), 'utf8'));
+
       schema.msgType = schema.title;
-      schema.anyOf.forEach((props) => {
-        [schema.title] = Object.keys(props.properties);
+
+      // TODO: DRY THIS LOGIC
+      schema.anyOf?.forEach((props) => {
+        [schema.title] = [];
         delete schema.anyOf;
         parsedSchemas.push({ ...schema, ...props });
-      })
-    })
+      });
+
+      schema.oneOf?.forEach((props) => {
+        [schema.title] = [];
+        delete schema.oneOf;
+        parsedSchemas.push({ ...schema, ...props });
+      });
+    });
 
     return parsedSchemas;
   } catch (e) {
@@ -95,7 +103,7 @@ function getContractDataFromRefs(projectDir, refsPath) {
         address: localterra[name].contractAddresses.default,
         codeId: localterra[name].codeId,
         schemas,
-      }
+      };
     });
     return contracts;
   } catch {
