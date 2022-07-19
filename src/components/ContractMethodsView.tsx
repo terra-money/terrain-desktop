@@ -1,6 +1,7 @@
 import React from 'react';
 import { MsgExecuteContract, Fee } from '@terra-money/terra.js';
 import Form from '@rjsf/material-ui';
+import { Button } from '@mui/material';
 import { useTerra } from '../package/hooks';
 
 function ObjectFieldTemplate(props: any) {
@@ -44,8 +45,10 @@ const ContractMethodsView = ({ schemas, contractAddress }: any) => {
           schema={schema}
           ObjectFieldTemplate={ObjectFieldTemplate}
           key={schema.title}
-          onSubmit={schema.msgType === 'ExecuteMsg' ? executeContract : queryContract}
-        />
+          onSubmit={schema.msgType === 'execute' ? executeContract : queryContract}
+        >
+          <Button type="submit">{schema.msgType}</Button>
+        </Form>
       ))}
       {contractRes && (
         <>

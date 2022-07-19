@@ -53,6 +53,8 @@ function startLocalTerra(localTerraPath) {
   return spawn('docker-compose', ['up'], { cwd: localTerraPath });
 }
 
+const mergeSchemaArrs = (schema) => (schema.oneOf && schema.anyOf && [...schema.oneOf, ...schema.anyOf]) || schema.anyOf || schema.oneOf;
+
 function getContractSchemas(projectDir, contractName) {
   try {
     const parsedSchemas = [];
@@ -60,23 +62,15 @@ function getContractSchemas(projectDir, contractName) {
     const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file === 'query_msg.json' || file === 'execute_msg.json');
     schemas.forEach((file) => {
       const schema = JSON.parse(fs.readFileSync(path.join(schemaDir, file), 'utf8'));
-
-      schema.msgType = schema.title;
-
-      // TODO: DRY THIS LOGIC
-      schema.anyOf?.forEach((props) => {
-        [schema.title] = [];
-        delete schema.anyOf;
-        parsedSchemas.push({ ...schema, ...props });
-      });
-
-      schema.oneOf?.forEach((props) => {
-        [schema.title] = [];
-        delete schema.oneOf;
-        parsedSchemas.push({ ...schema, ...props });
+      schema.msgType = schema.title.replace('Msg', '').toLowerCase();
+      mergeSchemaArrs(schema).forEach((props) => {
+        const {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          anyOf, oneOf, title, ...restSchema
+        } = schema; // remove unwanted props
+        parsedSchemas.push({ ...restSchema, ...props });
       });
     });
-
     return parsedSchemas;
   } catch (e) {
     return null;
