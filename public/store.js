@@ -17,6 +17,16 @@ class TerrariumStore extends Store {
   }
 
   // eslint-disable-next-line class-methods-use-this
+  async getBlocktime() {
+    return window.ipcRenderer.invoke('getBlocktime');
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async setBlocktime(newBlocktime) {
+    return window.ipcRenderer.invoke('setBlocktime', newBlocktime);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
   async getOpenAtLogin() {
     return window.ipcRenderer.invoke('getOpenAtLogin');
   }

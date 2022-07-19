@@ -21,6 +21,7 @@
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@hookstate/core": "^4.0.0-rc.4",
+    "@iarna/toml": "^2.2.5",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.8.6",
     "@terra-money/msg-reader": "^3.0.1",
@@ -41,6 +42,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-virtuoso": "^2.14.0",
+    "toml": "^3.0.0",
     "wait-on": "^6.0.1"
   },
   "devDependencies": {

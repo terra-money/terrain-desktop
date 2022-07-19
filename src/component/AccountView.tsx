@@ -18,7 +18,7 @@ function AccountView({ wallet } : { wallet : any }) {
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
-    if (!hasStartedLocalTerra) return
+    if (!hasStartedLocalTerra.get()) return
     getBalance(accAddress).then((coins: any) => {
       const { amount } = coins.find(({ denom } : { denom: Denom }) => denom === 'uluna');
       setBalance(demicrofy(Number(amount)));

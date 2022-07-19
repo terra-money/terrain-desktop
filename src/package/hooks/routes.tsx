@@ -14,6 +14,7 @@ import { ReactComponent as BlocksIcon } from '../../assets/icons/menu/blocks.svg
 import { ReactComponent as TransactionsIcon } from '../../assets/icons/menu/transactions.svg';
 import { ReactComponent as ContractsIcon } from '../../assets/icons/menu/contracts.svg';
 import { ReactComponent as LogsIcon } from '../../assets/icons/menu/logs.svg';
+import { ReactComponent as CogIcon } from '../../assets/icons/menu/cog.svg';
 
 const useNav = () => {
   const menu = [
@@ -47,6 +48,12 @@ const useNav = () => {
       path: '/logs',
       element: <LogsPage />,
     },
+    {
+      name: 'Settings',
+      icon: <CogIcon />,
+      path: '/settings',
+      element: <SettingsPage />,
+    },
   ];
 
   const routes = [
@@ -54,11 +61,6 @@ const useNav = () => {
       name: 'Onboard',
       path: '/onboard',
       element: <OnboardPage />,
-    },
-    {
-      name: 'Settings',
-      path: '/settings',
-      element: <SettingsPage />,
     },
     // Add here routes that cannot be accessed directly from the menu entry
 

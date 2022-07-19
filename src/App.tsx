@@ -3,7 +3,9 @@ import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import { NavLink } from './component';
-import { useTerra, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted } from './package/hooks';
+import {
+  useTerra, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
+} from './package/hooks';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
 import useNav from './package/hooks/routes';
@@ -15,19 +17,18 @@ function App() {
   const latestHeight = useGetLatestHeight();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
-  
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (!isLocalTerraPathConfigured) navigate('/onboard');
-    else navigate('/settings')
+    else navigate('/');
   }, [isLocalTerraPathConfigured]);
 
   useEffect(() => {
-    if (latestHeight) setIsLoading(false)
-    else if (hasStartedLocalTerra === null && !latestHeight) setIsLoading(true);
+    if (latestHeight) setIsLoading(false);
+    else if (hasStartedLocalTerra.get() === null && !latestHeight) setIsLoading(true);
   }, [hasStartedLocalTerra, latestHeight]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
@@ -40,8 +41,8 @@ function App() {
   };
 
   const toggleLocalTerra = async () => {
-    setIsLoading(true)
-    await ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra);
+    setIsLoading(true);
+    await ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra.get());
   };
 
   return (
@@ -91,10 +92,11 @@ function App() {
               </li>
               <li>
                 <button type="button" onClick={toggleLocalTerra} className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground">
-                  <BsCircleFill className={ 
-                    isLoading ? 'animate-bounce text-is-loading-grey' 
-                    : hasStartedLocalTerra ? 'text-is-connected-green' 
-                    : 'text-not-connected-red'} 
+                  <BsCircleFill className={
+                    isLoading ? 'animate-bounce text-is-loading-grey'
+                      : hasStartedLocalTerra.get() ? 'text-is-connected-green'
+                        : 'text-not-connected-red'
+}
                   />
                   <p className="text-terra-dark-blue text-lg font-bold">LocalTerra</p>
                 </button>

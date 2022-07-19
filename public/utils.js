@@ -123,7 +123,7 @@ const parseTxMsg = (encodedTx) => {
   const unpacked = Tx.unpackAny({
     value: Buffer.from(encodedTx, 'base64'),
     typeUrl: '',
-  });;
+  });
   return unpacked.body.messages[0];
 };
 

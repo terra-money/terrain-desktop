@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-// import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
+import { ipcRenderer } from 'electron';
 import { useForm, FieldValues } from 'react-hook-form';
 import {
   Checkbox,
@@ -8,17 +8,21 @@ import {
   Select,
   MenuItem,
   Input,
+  Button,
 } from '@mui/material';
-// import { ReactComponent as TerraLogo } from '../assets/terra-logo.svg';
 
 export default function Settings() {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, resetField } = useForm();
   const [openAtLogin, setOpenAtLogin] = useState(false);
+  const [localTerraPath, setLocalTerraPath] = useState('');
+  const [blocktime, setBlocktime] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   const saveSettings = (data: FieldValues) => {
     window.store.setOpenAtLogin(data.openAtLogin);
+    window.store.setLocalTerraPath(data.localTerraPath);
+    window.store.setBlocktime(data.blocktime);
     navigate('/');
   };
 
@@ -26,6 +30,12 @@ export default function Settings() {
     const updateCurrentSettings = async () => {
       const currentOpenAtLogin = await window.store.getOpenAtLogin();
       setOpenAtLogin(currentOpenAtLogin);
+
+      const currentLocalTerraPath = await window.store.getLocalTerraPath();
+      setLocalTerraPath(currentLocalTerraPath);
+
+      const currentBlocktime = await window.store.getBlocktime();
+      setBlocktime(currentBlocktime);
 
       setIsLoading(false);
     };
@@ -75,6 +85,7 @@ export default function Settings() {
           <div className="p-6 space-y-6">
             <form>
               <FormControlLabel
+                labelPlacement="start"
                 control={(
                   <Checkbox
                     defaultChecked={openAtLogin}
@@ -85,20 +96,42 @@ export default function Settings() {
               />
               <br />
               <FormControlLabel
+                labelPlacement="start"
                 control={(
-                  <Input
-                    defaultValue="/Users/json/LocalTerra"
-                    {...register('localTerraPath')}
-                  />
+                  <>
+                    <Button onClick={async () => {
+                      const newPath = await ipcRenderer.invoke('SetLocalTerraPath');
+                      resetField('localTerraPath', { defaultValue: newPath });
+                    }}
+                    >
+                      Browse
+
+                    </Button>
+                    <Input
+                      className="pl-4"
+                      defaultValue={localTerraPath}
+                      {...register('localTerraPath')}
+                    />
+
+                  </>
                 )}
                 label="Path to LocalTerra"
               />
               <br />
-              <Select defaultValue="default" {...register('blockTime')}>
-                <MenuItem value="default">Default</MenuItem>
-                <MenuItem value={200}>200 milliseconds</MenuItem>
-                <MenuItem value={1000}>1 second</MenuItem>
-              </Select>
+              <FormControlLabel
+                labelPlacement="start"
+                control={(
+                  <div className="pl-4">
+                    <Select size="small" defaultValue={blocktime} {...register('blocktime')}>
+                      <MenuItem value="default">Default (5 seconds)</MenuItem>
+                      <MenuItem value="200ms">200 milliseconds</MenuItem>
+                      <MenuItem value="1s">1 second</MenuItem>
+                    </Select>
+                  </div>
+                )}
+                label="Time between Terra blocks"
+              />
+
             </form>
           </div>
           <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
