@@ -48,12 +48,12 @@ function App() {
     <div className="flex flex-col w-screen h-screen">
       <div className="flex">
         <div
-          className={`left-nav bg-terra-dark-blue h-full p-5 pt-8 ${
+          className={`left-nav bg-terra-dark-blue h-full p-5 pt-7 ${
             open ? "w-72" : "w-20"
           } duration-300 relative`}
         >
           <BsArrowLeftShort
-            className={`bg-white text-terra-dark-blue text-3xl rounded-full absolute -right-4 top-9 border border-terra-dark-blue cursor-pointer ${
+            className={`bg-white text-terra-dark-blue text-3xl rounded-full absolute -right-4 top-8 border border-terra-dark-blue cursor-pointer ${
               !open && "rotate-180"
             }`}
             onClick={() => setOpen(!open)}
@@ -101,7 +101,7 @@ function App() {
               <NavLink
                 key={menuItem.name}
                 to={menuItem.path}
-                className={`${open ? 'px-3' : 'justify-center'}`}
+                className={`${open ? "px-3" : "justify-center"}`}
               >
                 <div className={`float-left ${open ? "mr-2" : "block"}`}>
                   {menuItem.icon}
@@ -118,50 +118,46 @@ function App() {
           </ul>
         </div>
 
-        <div className="flex-auto bg-gray-background w-full h-screen overflow-auto">
-          <header className="p-4 bg-white overflow-x-auto">
-            <ul className="flex flex-row justify-between items-center font-medium">
+        <div className="flex-auto bg-gray-background w-full h-screen overflow-hidden">
+          <header className="top-header flex justify-between p-6 pl-12 bg-white overflow-x-auto">
+            <ul className="flex flex-row gap-20 items-center font-medium">
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                <p className="text-center uppercase">Current Block</p>
-                <p className="text-center text-terra-mid-blue">
-                  {latestHeight}
-                </p>
+                <p className="text-2xl text-terra-mid-blue">{latestHeight}</p>
+                <p>Current Block</p>
               </li>
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                <p className="text-center uppercase">Network ID</p>
-                <p className="text-center text-terra-mid-blue">
+                <p className="text-2xl text-terra-mid-blue">
                   {terra.config.chainID}
                 </p>
+                <p>Network ID</p>
               </li>
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                <p className="text-center uppercase">RPC Server</p>
-                <p className="text-center text-terra-mid-blue">
+                <p className="text-2xl text-terra-mid-blue">
                   {terra.config.URL}
                 </p>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={toggleLocalTerra}
-                  className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground"
-                >
-                  <BsCircleFill
-                    className={
-                      isLoading
-                        ? "animate-bounce text-is-loading-grey"
-                        : hasStartedLocalTerra
-                        ? "text-is-connected-green"
-                        : "text-not-connected-red"
-                    }
-                  />
-                  <p className="text-terra-dark-blue text-lg font-bold">
-                    LocalTerra
-                  </p>
-                </button>
+                <p>RPC Server</p>
               </li>
             </ul>
+            <button
+              type="button"
+              onClick={toggleLocalTerra}
+              className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground"
+            >
+              <BsCircleFill
+                className={
+                  isLoading
+                    ? "animate-bounce text-is-loading-grey"
+                    : hasStartedLocalTerra
+                    ? "text-is-connected-green"
+                    : "text-not-connected-red"
+                }
+              />
+              <p className="text-terra-dark-blue text-lg font-bold">
+                LocalTerra
+              </p>
+            </button>
           </header>
-          <main className="flex w-full h-[calc(100vh-72px)] overflow-auto">
+          <main className="flex w-full h-[calc(100vh-96px)] overflow-hidden">
             {routes}
           </main>
         </div>
