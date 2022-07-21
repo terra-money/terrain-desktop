@@ -1,6 +1,6 @@
 import { TxInfo, Denom } from '@terra-money/terra.js';
 import React, { useEffect, useState } from 'react';
-import { useTerra, useLocalTerraStarted } from '../package';
+import { useTerraBlockUpdate, useLocalTerraStarted } from '../package';
 import { demicrofy, nFormatter } from '../utils';
 import { KeyView } from '.';
 import { REACT_APP_FINDER_URL } from '../constants';
@@ -9,7 +9,7 @@ function AccountView({ wallet } : { wallet : any }) {
   const { accAddress, mnemonic } = wallet.key;
 
   const [balance, setBalance] = useState(0.00);
-  const { getBalance, listenToAccountTx } = useTerra();
+  const { getBalance, listenToAccountTx } = useTerraBlockUpdate();
   const [txInfos, setTxInfos] = useState([]);
   const [open, setOpen] = useState(false);
   const hasStartedLocalTerra = useLocalTerraStarted();
