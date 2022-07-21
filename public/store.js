@@ -29,7 +29,6 @@ class TerrariumStore extends Store {
 
   importContracts(contracts) {
     if (contracts) {
-      console.log('contracts in importContracts', contracts);
       this.contracts = [...this.contracts, ...contracts];
       return this.setContracts();
     }
