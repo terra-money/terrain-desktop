@@ -3,16 +3,24 @@ import { useContext, useEffect, useState } from 'react';
 import { Downgraded, useState as useStateHook } from '@hookstate/core';
 import { ipcRenderer } from 'electron';
 import { TerraContext } from '../components/Provider';
-import { ITerraHook } from '../interface/ITerraHook';
+import { ITerraHook, ITerraHookBlockUpdate } from '../interface/ITerraHook';
 import ElectronContext from '../../context/ElectronContextProvider';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
-  const hookExport: ITerraHook = {
+  const hook: ITerraHook = {
     terra,
+    wallets: terra.wallets,
     getTestAccounts(): Wallet[] {
       return Object.values(terra.wallets);
     },
+  };
+  return hook;
+}
+export function useTerraBlockUpdate() {
+  const terra = useContext(TerraContext) as LocalTerra;
+  const hookExport: ITerraHookBlockUpdate = {
+    ...useTerra(),
     getBalance: async (address: string) => {
       const [coins] = (await terra.bank.balance(address));
       return coins.toData();

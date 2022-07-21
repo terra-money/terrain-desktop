@@ -6,7 +6,6 @@ export interface TerrariumBlocks {
   latestHeight: number
 }
 
-
 export interface TerrariumBlockInfo extends BlockInfo {
   result_begin_block: {
     events: Event[]

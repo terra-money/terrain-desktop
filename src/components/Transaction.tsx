@@ -38,7 +38,12 @@ function Transaction(props: TransactionType) {
         <div className="p-4 w-90 overflow-auto">{props.data.msg['@type']}</div>
         <div className="p-4">{height}</div>
         <div className="p-4 text-ellipsis overflow-hidden whitespace-nowrap">
-          {result.gas_wanted} / {result.gas_used} ({percentGasUsed.toFixed(2)} %)
+          {result.gas_wanted}
+          /
+          {result.gas_used}
+          (
+          {percentGasUsed.toFixed(2)}
+          %)
         </div>
         <div className="p-4">
           <KeyboardArrowDownIcon

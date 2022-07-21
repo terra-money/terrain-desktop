@@ -50,7 +50,13 @@ export default function Onboard() {
         </div>
         {isDockerInstalled && (
           <>
-            <button className="text-white hover:underline" type="button" onClick={onSetLocalTerraPath}>I already have LocalTerra installed</button>
+            <button
+              className="text-white hover:underline"
+              type="button"
+              onClick={onSetLocalTerraPath}
+            >
+              I already have LocalTerra installed
+            </button>
             <button className="text-white hover:underline" type="button" onClick={onLocalTerraInstall}>Install LocalTerra</button>
           </>
         )}

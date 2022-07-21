@@ -25,7 +25,7 @@ const BlockView = (props: BlockType) => {
   let gasUsed: number = 0;
   txInfos.forEach(({ gas_used: gas }: { gas_used: number }) => { gasUsed += gas; });
 
-  const toggleEventsRow = () => {
+  const toggleBlocksRow = () => {
     setOpen(!open);
     props.onToggleEventDetails(props.index);
   };
@@ -46,7 +46,7 @@ const BlockView = (props: BlockType) => {
         <div className="p-4">
           <KeyboardArrowDownIcon
             className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
-            onClick={toggleEventsRow}
+            onClick={toggleBlocksRow}
           />
         </div>
       </li>

@@ -26,7 +26,6 @@ export default function Settings() {
     if (localTerraPath !== data.localTerraPath || blocktime !== data.blocktime) {
       await ipcRenderer.invoke('promptUserRestart');
     }
-    console.log(window.store.getBlocktime());
     navigate('/');
   };
 

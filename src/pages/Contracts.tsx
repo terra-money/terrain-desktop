@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { FaTrash } from 'react-icons/fa';
 
-import { ContractView } from '../component';
+import { ContractView } from '../components';
 
 const CONTRACTS_HEADER = [{
   title: 'Contract Name',
@@ -22,8 +22,8 @@ const CONTRACTS_HEADER = [{
 export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
 
-  async function handleRefsImport() {
-    const res = await ipcRenderer.invoke('ImportContractRefs');
+  async function handleNewContractsImport() {
+    const res = await ipcRenderer.invoke('ImportNewContracts');
     setContracts(res);
   }
 
@@ -32,19 +32,25 @@ export default function ContractsPage() {
     setContracts(res);
   }
 
-  async function importAllContracts() {
-    const allContracts = await ipcRenderer.invoke('ImportContracts');
+  async function importSavedContracts() {
+    const allContracts = await ipcRenderer.invoke('ImportSavedContracts');
     setContracts(allContracts);
   }
 
   useEffect(() => {
-    importAllContracts();
+    importSavedContracts();
   }, []);
 
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-row justify-items-end my-3 mx-3 h-19">
-        <button type="button" onClick={handleRefsImport} className="grow px-5 rounded-lg text-white bg-terra-dark-blue">Add Contracts</button>
+        <button
+          type="button"
+          onClick={handleNewContractsImport}
+          className="grow px-5 rounded-lg text-white bg-terra-dark-blue"
+        >
+          Add Contracts
+        </button>
         <button type="button" onClick={handleRefsDeletion}>
           <FaTrash className="flex-none w-15 text-terra-dark-blue mx-5" />
         </button>

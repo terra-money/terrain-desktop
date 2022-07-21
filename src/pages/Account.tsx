@@ -1,6 +1,6 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
-import { AccountView } from '../component';
+import { AccountView } from '../components';
 import { useTerra } from '../package';
 
 export default function AccountsPage() {
@@ -14,7 +14,10 @@ export default function AccountsPage() {
       initialTopMostItemIndex={accounts.length}
       data={accounts}
       itemContent={(index, account) => (
-        <AccountView wallet={account} key={account.key.accAddress} />
+        <AccountView
+          wallet={account}
+          key={account.key.accAddress}
+        />
       )}
     />
   );

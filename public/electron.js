@@ -150,9 +150,9 @@ async function init() {
     return localTerraStatus;
   });
 
-  ipcMain.handle('ImportContracts', () => store.getContracts());
+  ipcMain.handle('ImportSavedContracts', () => store.getContracts());
 
-  ipcMain.handle('ImportContractRefs', async () => {
+  ipcMain.handle('ImportNewContracts', async () => {
     const { filePaths } = await showSmartContractDialog();
 
     if (!filePaths.length) {

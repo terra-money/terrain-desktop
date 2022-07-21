@@ -10,8 +10,6 @@ type EventInfoType = {
 function EventInfo(props: EventInfoType) {
   const events = EventUtils.parseEventsAttributes(props.events);
 
-  console.log(props);
-
   return (
     <>
       <h3>{props.title}</h3>
@@ -19,7 +17,12 @@ function EventInfo(props: EventInfoType) {
         {events.map((event, index) => (
           <ListItem className="overflow-auto" style={{ alignItems: 'start' }} key={index}>
             <div className="text-blue-800 w-40">
-              <h4>[{index}] {event.type}</h4>
+              <h4>
+                [
+                {index}
+                ]
+                {event.type}
+              </h4>
             </div>
             <div>
               {event.attributes.map((attribute, _index) => (

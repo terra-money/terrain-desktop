@@ -76,7 +76,7 @@ module.exports = (win, globals) => {
       shutdown(globals.localTerraProcess, win, true);
     }
   }).catch((err) => {
-    console.log(err);
+    console.error(`stderr: ${err}`);
   }));
 
   ipcMain.handle('getOpenAtLogin', () => app.getLoginItemSettings().openAtLogin);
