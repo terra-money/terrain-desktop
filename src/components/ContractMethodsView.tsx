@@ -1,5 +1,5 @@
 import React from 'react';
-import { MsgExecuteContract, Fee } from '@terra-money/terra.js';
+import { MsgExecuteContract } from '@terra-money/terra.js';
 import Form from '@rjsf/material-ui';
 import { Button } from '@mui/material';
 import { useTerra } from '../package/hooks';
@@ -19,7 +19,7 @@ const ContractMethodsView = ({ schemas, contractAddress }: any) => {
   const [contractRes, setContractRes] = React.useState(null);
 
   const queryContract = async ({ formData }: any) => {
-    const res = await terra.wasm.contractQuery(contractAddress, { ...formData }) as any;
+    const res = await terra.wasm.contractQuery(contractAddress, formData) as any;
     setContractRes(res);
   };
 
@@ -29,10 +29,9 @@ const ContractMethodsView = ({ schemas, contractAddress }: any) => {
         new MsgExecuteContract(
           wallets.test1.key.accAddress,
           contractAddress,
-            { ...formData } as any,
+          formData,
         ),
       ],
-      fee: new Fee(2000000, '1000000uluna'),
     });
     const res = await terra.tx.broadcast(execMsg) as any;
     setContractRes(res);
