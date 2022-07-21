@@ -157,18 +157,24 @@ async function init() {
     return localTerraStatus;
   });
 
-  ipcMain.handle('ImportSavedContracts', () => store.getContracts())
-
+  ipcMain.handle('ImportSavedContracts', async () => {
+    let contracts = store.getContracts();
+    if (!contracts.length) {
+      const contractData = getSmartContractData();
+      contracts = await store.importContracts(contractData);
+    }
+    return contracts;
+  });
 
   ipcMain.handle('ImportNewContracts', async () => {
     const { filePaths } = await showSmartContractDialog();
 
     if (!filePaths.length) return store.getContracts();
 
-    const [ projectDir ] = filePaths;
-    const contractRefs = getSmartContractData(projectDir);
+    const [projectDir] = filePaths;
+    const contractData = getSmartContractData(projectDir);
 
-    const contracts = await store.importContracts(contractRefs);
+    const contracts = await store.importContracts(contractData);
     return contracts;
   });
 
