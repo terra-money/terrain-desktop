@@ -1,5 +1,5 @@
 import React from 'react';
-import { Virtuoso } from 'react-virtuoso'
+import { Virtuoso } from 'react-virtuoso';
 import { AccountView } from '../component';
 import { useTerra } from '../package';
 
@@ -8,10 +8,14 @@ export default function AccountsPage() {
   const accounts = getTestAccounts();
 
   return (
-    <Virtuoso className="flex flex-col w-full"
+    <Virtuoso
+      className="flex flex-col w-full"
       followOutput
       initialTopMostItemIndex={accounts.length}
       data={accounts}
-      itemContent={(index, account) =>  <AccountView wallet={account} key={account.key.accAddress} />} />
+      itemContent={(index, account) => (
+        <AccountView wallet={account} key={account.key.accAddress} />
+      )}
+    />
   );
 }

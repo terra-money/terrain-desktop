@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTerra, useLocalTerraStarted } from '../package';
 import { demicrofy, nFormatter } from '../utils';
 import { KeyView } from '.';
-import { REACT_APP_FINDER_URL } from '../constants'
+import { REACT_APP_FINDER_URL } from '../constants';
 
 function AccountView({ wallet } : { wallet : any }) {
   const { accAddress, mnemonic } = wallet.key;
@@ -18,7 +18,7 @@ function AccountView({ wallet } : { wallet : any }) {
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
-    if (!hasStartedLocalTerra.get()) return
+    if (!hasStartedLocalTerra.get()) return;
     getBalance(accAddress).then((coins: any) => {
       const { amount } = coins.find(({ denom } : { denom: Denom }) => denom === 'uluna');
       setBalance(demicrofy(Number(amount)));

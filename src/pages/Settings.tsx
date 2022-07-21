@@ -19,10 +19,14 @@ export default function Settings() {
   const [blocktime, setBlocktime] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  const saveSettings = (data: FieldValues) => {
-    window.store.setOpenAtLogin(data.openAtLogin);
-    window.store.setLocalTerraPath(data.localTerraPath);
-    window.store.setBlocktime(data.blocktime);
+  const saveSettings = async (data: FieldValues) => {
+    await window.store.setOpenAtLogin(data.openAtLogin);
+    await window.store.setLocalTerraPath(data.localTerraPath);
+    await window.store.setBlocktime(data.blocktime);
+    if (localTerraPath !== data.localTerraPath || blocktime !== data.blocktime) {
+      await ipcRenderer.invoke('promptUserRestart');
+    }
+    console.log(window.store.getBlocktime());
     navigate('/');
   };
 
@@ -124,8 +128,8 @@ export default function Settings() {
                   <div className="pl-4">
                     <Select size="small" defaultValue={blocktime} {...register('blocktime')}>
                       <MenuItem value="default">Default (5 seconds)</MenuItem>
-                      <MenuItem value="200ms">200 milliseconds</MenuItem>
                       <MenuItem value="1s">1 second</MenuItem>
+                      <MenuItem value="200ms">200 milliseconds</MenuItem>
                     </Select>
                   </div>
                 )}

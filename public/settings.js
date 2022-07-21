@@ -1,4 +1,4 @@
-const { app, ipcMain } = require('electron');
+const { app, dialog, ipcMain } = require('electron');
 const toml = require('@iarna/toml');
 const fs = require('fs');
 const path = require('path');
@@ -8,6 +8,7 @@ const {
   startLocalTerra,
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
+  shutdown,
 } = require('./utils');
 
 const {
@@ -64,6 +65,19 @@ module.exports = (win, globals) => {
 
     fs.writeFileSync(configPath, toml.stringify(parsedConfig));
   });
+
+  ipcMain.handle('promptUserRestart', async () => dialog.showMessageBox({
+    message: 'Settings which you have changed require a restart to update.  Restart the application?',
+    buttons: ['No', 'Yes'],
+    title: 'Terrarium',
+    type: 'question',
+  }).then((result) => {
+    if (result.response === 1) {
+      shutdown(globals.localTerraProcess, win, true);
+    }
+  }).catch((err) => {
+    console.log(err);
+  }));
 
   ipcMain.handle('getOpenAtLogin', () => app.getLoginItemSettings().openAtLogin);
   ipcMain.handle('setOpenAtLogin', (_, status) => app.setLoginItemSettings({ openAtLogin: status }));

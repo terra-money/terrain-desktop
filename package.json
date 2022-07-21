@@ -42,6 +42,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-virtuoso": "^2.14.0",
+    "tree-kill": "^1.2.2",
     "wait-on": "^6.0.1"
   },
   "devDependencies": {

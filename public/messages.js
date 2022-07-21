@@ -7,7 +7,7 @@ async function showPathSelectionDialog() {
     message: 'Select your LocalTerra directory.',
     title: 'Terrarium',
     type: 'info',
-    properties: ['openDirectory']
+    properties: ['openDirectory'],
   });
 }
 
@@ -16,15 +16,15 @@ async function showSmartContractDialog() {
     message: 'Select your project directory. It must contain a refs.terrain.json file.',
     title: 'Terrarium',
     type: 'info',
-    properties: ['openDirectory']
+    properties: ['openDirectory'],
   });
 }
 
 async function showStartDockerDialog() {
   return dialog.showMessageBox({
-    message: `Start Docker then try opening Terrarium again.`,
+    message: 'Start Docker then try opening Terrarium again.',
     title: 'Terrarium',
-    type: 'warning'
+    type: 'warning',
   });
 }
 
@@ -32,7 +32,7 @@ async function showWrongDirectoryDialog() {
   return dialog.showMessageBox({
     message: 'Please select a valid LocalTerra directory',
     title: 'Terrarium',
-    type: 'warning'
+    type: 'warning',
   });
 }
 
@@ -40,7 +40,7 @@ async function showLocalTerraAlreadyExistsDialog() {
   return dialog.showMessageBox({
     message: `LocalTerra already exists in the default installation folder '${app.getPath('appData')}/LocalTerra'. Delete the exsisting LocalTerra directory to continue with the installation or select it to start Terrarium.`,
     title: 'Terrarium',
-    type: 'warning'
+    type: 'warning',
   });
 }
 
@@ -48,7 +48,7 @@ async function showNoTerrainRefsDialog() {
   return dialog.showMessageBox({
     message: 'Unable to read contract refs. Make sure refs.terrain.json exists and is not empty before trying again.',
     title: 'Terrarium',
-    type: 'error'
+    type: 'error',
   });
 }
 
@@ -75,5 +75,5 @@ module.exports = {
   showSmartContractDialog,
   showLocalTerraAlreadyExistsDialog,
   showNoTerrainRefsDialog,
-  showStartDockerDialog
+  showStartDockerDialog,
 };
