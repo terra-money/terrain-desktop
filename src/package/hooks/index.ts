@@ -1,6 +1,6 @@
 import { LocalTerra, Wallet } from '@terra-money/terra.js';
 import { useContext, useEffect, useState } from 'react';
-import { Downgraded } from '@hookstate/core';
+import { Downgraded, useState as useStateHook } from '@hookstate/core';
 import { ipcRenderer } from 'electron';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook, ITerraHookBlockUpdate } from '../interface/ITerraHook';
@@ -79,7 +79,7 @@ export const useLocalTerraPathConfigured = () => {
 
 export const useLocalTerraStarted = () => {
   const { localTerraStarted } = useContext(ElectronContext);
-  return localTerraStarted.attach(Downgraded).get();
+  return useStateHook(localTerraStarted);
 };
 
 export function useGetTxFromHeight(height?: number) {

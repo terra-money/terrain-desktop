@@ -45,7 +45,14 @@ export default function TransactionsPage() {
           followOutput
           className="flex flex-col w-full"
           data={txs}
-          itemContent={(index, data) => <Transaction onToggleEventDetails={toggleEventDetails} data={data} key={index} index={index} />}
+          itemContent={(index, data) => (
+            <Transaction
+              onToggleEventDetails={toggleEventDetails}
+              data={data}
+              key={index}
+              index={index}
+            />
+          )}
         />
       </div>
     </div>
