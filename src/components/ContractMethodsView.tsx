@@ -5,16 +5,11 @@ import { Button } from '@mui/material';
 import { useTerra } from '../package/hooks';
 
 function ObjectFieldTemplate(props: any) {
-  const { schema: { description }, ...restProps } = props;
-  delete props.schema.description;
   return (
     <div className="py-4">
       <div className="text-xl">{props.title}</div>
       {props.description}
-      {props.properties.map((element: any) => {
-        console.log(element) as any;
-        return <div key={element.key} className="property-wrapper">{element.content}</div>;
-      })}
+      {props.properties.map((element: any) => <div key={element.key} className="property-wrapper">{element.content}</div>)}
     </div>
   );
 }
