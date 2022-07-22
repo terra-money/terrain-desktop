@@ -1,8 +1,11 @@
 # Terrarium
 
-Terra 2.0, UI tool to perform local development using with [LocalTerra](https://github.com/terra-money/LocalTerra/) as blockchain. 
+Terrarium is a complementary UI tool for local Terra 2.0 development utilizing [LocalTerra](https://github.com/terra-money/LocalTerra/), a locally run Terra testnet and ecosystem. 
 
 
 ## Local Development
 
-Start the local development environment with `npm run electron-dev`.
+To start the local development environment, execute the following command in your terminal.
+```
+npm run electron-dev
+```
