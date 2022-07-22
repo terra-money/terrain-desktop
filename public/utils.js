@@ -8,6 +8,7 @@ const util = require('util');
 const { Tx } = require('@terra-money/terra.js');
 
 const { readMsg } = require('@terra-money/msg-reader');
+const kill = require('tree-kill');
 const { showLocalTerraStartNotif, showLocalTerraStopNotif, showNoTerrainRefsDialog } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
 
@@ -22,7 +23,8 @@ function validateLocalTerraPath(url) {
   try {
     const dockerComposePath = path.join(url, 'docker-compose.yml');
     const dockerComposeYml = fs.readFileSync(dockerComposePath, 'utf8');
-    const { services } = yaml.load(dockerComposeYml); // All properties from docker-compose are available here
+    // All properties from docker-compose are available here
+    const { services } = yaml.load(dockerComposeYml);
     const ltServices = Object.keys(services);
     return ltServices.includes('terrad');
   } catch (e) {
@@ -141,7 +143,7 @@ async function stopLocalTerra(localTerraProcess) {
     txWs.destroy();
     blockWs.destroy();
     localTerraProcess.once('close', resolve);
-    localTerraProcess.kill();
+    kill(localTerraProcess.pid);
     showLocalTerraStopNotif();
   });
 }
@@ -176,11 +178,14 @@ const isDockerRunning = async () => {
   }
 };
 
-const shutdown = async (localTerraProcess, win) => {
+const shutdown = async (localTerraProcess, win, restart = false) => {
   win.hide();
   setDockIconDisplay(false, win);
   app.isQuitting = true;
   await stopLocalTerra(localTerraProcess);
+  if (restart) {
+    app.relaunch();
+  }
   app.exit();
 };
 

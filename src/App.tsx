@@ -17,7 +17,6 @@ function App() {
   const latestHeight = useGetLatestHeight();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
-
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -29,7 +28,7 @@ function App() {
 
   useEffect(() => {
     if (latestHeight) setIsLoading(false);
-    else if (hasStartedLocalTerra === null && !latestHeight) setIsLoading(true);
+    else if (hasStartedLocalTerra.get() === null && !latestHeight) setIsLoading(true);
   }, [hasStartedLocalTerra, latestHeight]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
@@ -43,7 +42,7 @@ function App() {
 
   const toggleLocalTerra = async () => {
     setIsLoading(true);
-    await ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra);
+    await ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra.get());
   };
 
   return (
