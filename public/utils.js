@@ -64,7 +64,7 @@ function getContractSchemas(projectDir, contractName) {
     const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file.endsWith('query_msg.json') || file.endsWith('execute_msg.json'));
     schemas.forEach((file) => {
       const schema = JSON.parse(fs.readFileSync(path.join(schemaDir, file), 'utf8'));
-      schema.msgType = schema.title.replace('Msg', '').toLowerCase();
+      schema.msgType = schema.title.toLowerCase().includes('execute') ? 'execute' : 'query';
       mergeSchemaArrs(schema).forEach((props) => {
         const { anyOf, oneOf, title, ...restSchema } = schema;// eslint-disable-line
         parsedSchemas.push({ ...restSchema, ...props });
