@@ -28,12 +28,14 @@ function ContractView(props: ContractData) {
         <div className="p-4 w-90 overflow-auto">{path}</div>
         <div className="p-4">{codeId}</div>
         <div className="p-4 whitespace-nowrap">{truncate(address, [15, 15])}</div>
+        { schemas && (
         <div className="p-4">
           <KeyboardArrowDownIcon
             className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
             onClick={toggleContractRow}
           />
         </div>
+        )}
       </li>
       {schemas && (
         <Collapse in={open} timeout="auto" unmountOnExit className="px-16 py-8">

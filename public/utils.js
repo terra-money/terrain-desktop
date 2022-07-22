@@ -74,7 +74,7 @@ function getContractSchemas(projectDir, contractName) {
   }
 }
 
-function getSmartContractData(projectDir = null) { // if null, it will look for pre-baked contracts in pub folder
+function getSmartContractData(projectDir = null) {
   const p = path.join(projectDir || path.join(__dirname, 'contracts'), 'refs.terrain.json');
   if (validateRefsPath(p)) {
     return getContractDataFromRefs(projectDir, p);
