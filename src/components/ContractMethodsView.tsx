@@ -14,9 +14,10 @@ function ObjectFieldTemplate(props: any) {
   );
 }
 
-const ContractMethodsView = ({ schemas, contractAddress }: any) => {
+const ContractMethodsView = ({ schemas, contractAddress, walletName }: any) => {
   const { terra, wallets } = useTerra();
   const [contractRes, setContractRes] = React.useState(null);
+  const wallet = wallets[walletName];
 
   const queryContract = async ({ formData }: any) => {
     const res = await terra.wasm.contractQuery(contractAddress, formData) as any;
@@ -24,10 +25,10 @@ const ContractMethodsView = ({ schemas, contractAddress }: any) => {
   };
 
   const executeContract = async ({ formData }: any) => {
-    const execMsg = await wallets.test1.createAndSignTx({
+    const execMsg = await wallet.createAndSignTx({
       msgs: [
         new MsgExecuteContract(
-          wallets.test1.key.accAddress,
+          wallet.key.accAddress,
           contractAddress,
           formData,
         ),
@@ -44,9 +45,10 @@ const ContractMethodsView = ({ schemas, contractAddress }: any) => {
           schema={schema}
           ObjectFieldTemplate={ObjectFieldTemplate}
           key={schema.required[0]}
+          className="border-t-2 mb-2 border-blue-900"
           onSubmit={schema.msgType === 'execute' ? executeContract : queryContract}
         >
-          <Button type="submit">{schema.msgType}</Button>
+          <Button variant="contained" type="submit">{schema.msgType}</Button>
         </Form>
       ))}
       {contractRes && (

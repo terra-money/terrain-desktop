@@ -1,13 +1,14 @@
 import React from 'react';
 import { Collapse } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { ContractData } from '../models/Contract';
+import { ContractViewProps } from '../models/Contract';
 import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
 import { REACT_APP_FINDER_URL } from '../constants';
 import ContractMethodsView from './ContractMethodsView';
 import { truncate } from '../utils';
 
-function ContractView(props: ContractData) {
+function ContractView(props: ContractViewProps) {
+  const { walletName } = props;
   const {
     name, codeId, address, path, schemas,
   } = props.data;
@@ -39,7 +40,7 @@ function ContractView(props: ContractData) {
       </li>
       {schemas && (
         <Collapse in={open} timeout="auto" unmountOnExit className="px-16 py-8">
-          <ContractMethodsView schemas={schemas} contractAddress={address} />
+          <ContractMethodsView walletName={walletName} schemas={schemas} contractAddress={address} />
         </Collapse>
       )}
     </ul>
