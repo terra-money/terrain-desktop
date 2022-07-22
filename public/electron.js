@@ -25,6 +25,7 @@ const {
   setDockIconDisplay,
   isDockerRunning,
   shutdown,
+  getSmartContractData,
 } = require('./utils');
 
 const {
