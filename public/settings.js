@@ -66,7 +66,7 @@ module.exports = (win, globals) => {
     fs.writeFileSync(configPath, toml.stringify(parsedConfig));
   });
 
-  ipcMain.handle('promptUserRestart', async () => dialog.showMessageBox({
+  ipcMain.handle('PromptUserRestart', async () => dialog.showMessageBox({
     message: 'Settings which you have changed require a restart to update.  Restart the application?',
     buttons: ['No', 'Yes'],
     title: 'Terrarium',
