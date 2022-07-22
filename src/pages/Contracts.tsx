@@ -2,8 +2,8 @@ import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { FaTrash } from 'react-icons/fa';
-
-import { ContractView } from '../components';
+import { SelectChangeEvent } from '@mui/material/Select';
+import { SelectWallet, ContractView } from '../components';
 
 const CONTRACTS_HEADER = [{
   title: 'Contract Name',
@@ -21,6 +21,7 @@ const CONTRACTS_HEADER = [{
 
 export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
+  const [walletName, setWalletName] = React.useState('test1');
 
   async function handleNewContractsImport() {
     const res = await ipcRenderer.invoke('ImportNewContracts');
@@ -36,6 +37,7 @@ export default function ContractsPage() {
     const allContracts = await ipcRenderer.invoke('ImportSavedContracts');
     setContracts(allContracts);
   }
+  const handleWalletChange = (event: SelectChangeEvent) => setWalletName(event.target.value);
 
   useEffect(() => {
     importSavedContracts();
@@ -54,6 +56,7 @@ export default function ContractsPage() {
         <button type="button" onClick={handleRefsDeletion}>
           <FaTrash className="flex-none w-15 text-terra-dark-blue mx-5" />
         </button>
+        <SelectWallet walletName={walletName} handleWalletChange={handleWalletChange} />
       </div>
       <div className="bg-gray-background flex justify-between">
         {CONTRACTS_HEADER.map((header, index) => (
@@ -66,7 +69,7 @@ export default function ContractsPage() {
           followOutput
           className="flex flex-col w-full"
           data={contracts}
-          itemContent={(index, data) => <ContractView data={data} key={index} />}
+          itemContent={(index, data) => <ContractView walletName={walletName} data={data} key={index} />}
         />
       )}
     </div>

@@ -19,9 +19,15 @@ import { ReactComponent as CogIcon } from '../../assets/icons/menu/cog.svg';
 const useNav = () => {
   const menu = [
     {
+      name: 'Contracts',
+      icon: <ContractsIcon />,
+      path: '/',
+      element: <ContractsPage />,
+    },
+    {
       name: 'Accounts',
       icon: <AccountsIcon />,
-      path: '/',
+      path: '/accounts',
       element: <AccountsPage />,
     },
     {
@@ -36,12 +42,7 @@ const useNav = () => {
       path: '/transactions',
       element: <TransactionsPage />,
     },
-    {
-      name: 'Contracts',
-      icon: <ContractsIcon />,
-      path: '/contracts',
-      element: <ContractsPage />,
-    },
+
     {
       name: 'Logs',
       icon: <LogsIcon />,

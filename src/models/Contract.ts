@@ -5,6 +5,7 @@
     codeId: number;
     schemas: any[] | null;
 }
-export type ContractData = {
+export type ContractViewProps = {
     data: SmartContract
+    walletName: string
 }

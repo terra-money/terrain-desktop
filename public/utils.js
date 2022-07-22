@@ -58,18 +58,15 @@ function startLocalTerra(localTerraPath) {
 const mergeSchemaArrs = (schema) => (schema.oneOf && schema.anyOf && [...schema.oneOf, ...schema.anyOf]) || schema.anyOf || schema.oneOf;
 
 function getContractSchemas(projectDir, contractName) {
-  try {
+  try { // if projectDir is null, it will look for pre-baked contracts in pub/contracts dir
     const parsedSchemas = [];
-    const schemaDir = path.join(projectDir, 'contracts', contractName, 'schema');
-    const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file === 'query_msg.json' || file === 'execute_msg.json');
+    const schemaDir = projectDir ? path.join(projectDir, 'contracts', contractName, 'schema') : path.join(__dirname, 'contracts', contractName);
+    const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file.endsWith('query_msg.json') || file.endsWith('execute_msg.json'));
     schemas.forEach((file) => {
       const schema = JSON.parse(fs.readFileSync(path.join(schemaDir, file), 'utf8'));
-      schema.msgType = schema.title.replace('Msg', '').toLowerCase();
+      schema.msgType = schema.title.toLowerCase().includes('execute') ? 'execute' : 'query';
       mergeSchemaArrs(schema).forEach((props) => {
-        const {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          anyOf, oneOf, title, ...restSchema
-        } = schema; // remove unwanted props
+        const { anyOf, oneOf, title, ...restSchema } = schema;// eslint-disable-line
         parsedSchemas.push({ ...restSchema, ...props });
       });
     });
@@ -79,8 +76,8 @@ function getContractSchemas(projectDir, contractName) {
   }
 }
 
-function getSmartContractData(projectDir) {
-  const p = path.join(projectDir, 'refs.terrain.json');
+function getSmartContractData(projectDir = null) {
+  const p = path.join(projectDir || path.join(__dirname, 'contracts'), 'refs.terrain.json');
   if (validateRefsPath(p)) {
     return getContractDataFromRefs(projectDir, p);
   }

@@ -25,6 +25,7 @@ const {
   setDockIconDisplay,
   isDockerRunning,
   shutdown,
+  getSmartContractData,
 } = require('./utils');
 
 const {
@@ -150,11 +151,17 @@ async function init() {
     return localTerraStatus;
   });
 
-  ipcMain.handle('ImportSavedContracts', () => store.getContracts());
+  ipcMain.handle('ImportSavedContracts', async () => {
+    let contracts = store.getContracts();
+    if (!contracts.length) {
+      const contractData = getSmartContractData();
+      contracts = await store.importContracts(contractData);
+    }
+    return contracts;
+  });
 
   ipcMain.handle('ImportNewContracts', async () => {
     const { filePaths } = await showSmartContractDialog();
-
     if (!filePaths.length) {
       return store.getContracts();
     }
