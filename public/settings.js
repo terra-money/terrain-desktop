@@ -79,6 +79,6 @@ module.exports = (win, globals) => {
     console.error(`stderr: ${err}`);
   }));
 
-  ipcMain.handle('getOpenAtLogin', () => app.getLoginItemSettings().openAtLogin);
-  ipcMain.handle('setOpenAtLogin', (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
+  ipcMain.handle('GetOpenAtLogin', () => app.getLoginItemSettings().openAtLogin);
+  ipcMain.handle('SetOpenAtLogin', (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
 };
