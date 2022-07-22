@@ -35,7 +35,7 @@ module.exports = (win, globals) => {
     return filePaths[0];
   });
 
-  ipcMain.handle('getBlocktime', async () => {
+  ipcMain.handle('GetBlocktime', async () => {
     const localTerraPath = await store.getLocalTerraPath();
     const parsedConfig = toml.parse(fs.readFileSync(path.join(localTerraPath, 'config/config.toml')));
     switch (parsedConfig.consensus.timeout_commit) {
