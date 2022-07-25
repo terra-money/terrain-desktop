@@ -132,7 +132,7 @@ async function init() {
       localTerraPath = await downloadLocalTerra();
       globals.localTerraProcess = startLocalTerra(localTerraPath);
       await subscribeToLocalTerraEvents(globals.localTerraProcess, win);
-      await store.setLocalTerraPath(localTerraPath);
+      store.setLocalTerraPath(localTerraPath);
     } catch (e) {
       await showLocalTerraAlreadyExistsDialog();
       throw Error('LocalTerra already exists under the default path');
@@ -140,7 +140,7 @@ async function init() {
   });
 
   ipcMain.handle('ToggleLocalTerraStatus', async (_, localTerraStatus) => {
-    const localTerraPath = await store.getLocalTerraPath();
+    const localTerraPath = store.getLocalTerraPath();
 
     if (localTerraStatus) {
       globals.localTerraProcess = startLocalTerra(localTerraPath);
@@ -155,7 +155,7 @@ async function init() {
     let contracts = store.getContracts();
     if (!contracts.length) {
       const contractData = getSmartContractData();
-      contracts = await store.importContracts(contractData);
+      contracts = store.importContracts(contractData);
     }
     return contracts;
   });
@@ -167,7 +167,7 @@ async function init() {
     }
     const [projectDir] = filePaths;
     const contractRefs = getSmartContractRefs(projectDir);
-    const contracts = await store.importContracts(contractRefs);
+    const contracts = store.importContracts(contractRefs);
     return contracts;
   });
 
@@ -193,7 +193,7 @@ async function init() {
     app.quit();
   });
 
-  const localTerraPath = await store.getLocalTerraPath();
+  const localTerraPath = store.getLocalTerraPath();
   if (localTerraPath) {
     win.webContents.send('LocalTerraPath', true);
     globals.localTerraProcess = startLocalTerra(localTerraPath);

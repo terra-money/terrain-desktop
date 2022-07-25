@@ -8,31 +8,31 @@ class TerrariumStore extends Store {
     this.localTerraPath = this.get('localTerraPath');
   }
 
-  async setLocalTerraPath(path) {
+  setLocalTerraPath(path) {
     return this.set('localTerraPath', path);
   }
 
-  async getLocalTerraPath() {
+  getLocalTerraPath() {
     return this.get('localTerraPath');
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async getBlocktime() {
+  getBlocktime() {
     return window.ipcRenderer.invoke('getBlocktime');
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async setBlocktime(newBlocktime) {
+  setBlocktime(newBlocktime) {
     return window.ipcRenderer.invoke('setBlocktime', newBlocktime);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async getOpenAtLogin() {
+  getOpenAtLogin() {
     return window.ipcRenderer.invoke('getOpenAtLogin');
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async setOpenAtLogin(status) {
+  setOpenAtLogin(status) {
     return window.ipcRenderer.invoke('setOpenAtLogin', status);
   }
 
@@ -41,8 +41,8 @@ class TerrariumStore extends Store {
     return this.contracts;
   }
 
-  async getContracts() {
-    this.contracts = await this.get('contracts') || [];
+  getContracts() {
+    this.contracts = this.get('contracts') || [];
     this.checkIfContractsExists(this.contracts);
     return this.contracts;
   }
@@ -54,12 +54,12 @@ class TerrariumStore extends Store {
     }
   }
 
-  async deleteContract(contract) {
+  deleteContract(contract) {
     this.contracts = this.contracts.filter((name) => name !== contract);
     this.setContracts();
   }
 
-  async deleteAllContracts() {
+  deleteAllContracts() {
     this.contracts = [];
     return this.setContracts();
   }
