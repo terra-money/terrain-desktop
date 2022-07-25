@@ -23,7 +23,7 @@ module.exports = (win, globals) => {
     const isValid = validateLocalTerraPath(filePaths[0]);
 
     if (isValid && save) {
-      await store.setLocalTerraPath(filePaths[0]);
+      store.setLocalTerraPath(filePaths[0]);
       // eslint-disable-next-line no-param-reassign
       globals.localTerraProcess = startLocalTerra(filePaths[0]);
       await subscribeToLocalTerraEvents(globals.localTerraProcess, win);
@@ -36,7 +36,7 @@ module.exports = (win, globals) => {
   });
 
   ipcMain.handle('GetBlocktime', async () => {
-    const localTerraPath = await store.getLocalTerraPath();
+    const localTerraPath = store.getLocalTerraPath();
     const parsedConfig = toml.parse(fs.readFileSync(path.join(localTerraPath, 'config/config.toml')));
     switch (parsedConfig.consensus.timeout_commit) {
       case '5s':
@@ -47,7 +47,7 @@ module.exports = (win, globals) => {
   });
 
   ipcMain.handle('setBlocktime', async (_, blocktime) => {
-    const localTerraPath = await store.getLocalTerraPath();
+    const localTerraPath = store.getLocalTerraPath();
     const configPath = path.join(localTerraPath, 'config/config.toml');
     const parsedConfig = toml.parse(fs.readFileSync(configPath, 'utf8'));
 

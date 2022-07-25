@@ -6,7 +6,6 @@ import Select from '@mui/material/Select';
 import { useTerra } from '../package/hooks';
 
 const SelectWallet = ({ handleWalletChange, walletName }: any) => {
-  console.log('wallet in SelectWallet', walletName);
   const { wallets } = useTerra();
 
   return (

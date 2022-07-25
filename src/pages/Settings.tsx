@@ -19,25 +19,25 @@ export default function Settings() {
   const [blocktime, setBlocktime] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  const saveSettings = async (data: FieldValues) => {
-    await window.store.setOpenAtLogin(data.openAtLogin);
-    await window.store.setLocalTerraPath(data.localTerraPath);
-    await window.store.setBlocktime(data.blocktime);
+  const saveSettings = (data: FieldValues) => {
+    window.store.setOpenAtLogin(data.openAtLogin);
+    window.store.setLocalTerraPath(data.localTerraPath);
+    window.store.setBlocktime(data.blocktime);
     if (localTerraPath !== data.localTerraPath || blocktime !== data.blocktime) {
-      await ipcRenderer.invoke('promptUserRestart');
+      ipcRenderer.invoke('promptUserRestart');
     }
     navigate('/');
   };
 
   useEffect(() => {
     const updateCurrentSettings = async () => {
-      const currentOpenAtLogin = await window.store.getOpenAtLogin();
+      const currentOpenAtLogin = window.store.getOpenAtLogin();
       setOpenAtLogin(currentOpenAtLogin);
 
-      const currentLocalTerraPath = await window.store.getLocalTerraPath();
+      const currentLocalTerraPath = window.store.getLocalTerraPath();
       setLocalTerraPath(currentLocalTerraPath);
 
-      const currentBlocktime = await window.store.getBlocktime();
+      const currentBlocktime = window.store.getBlocktime();
       setBlocktime(currentBlocktime);
 
       setIsLoading(false);
