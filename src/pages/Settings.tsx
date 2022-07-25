@@ -30,7 +30,7 @@ export default function Settings() {
   };
 
   useEffect(() => {
-    const updateCurrentSettings = async () => {
+    const updateCurrentSettings = () => {
       const currentOpenAtLogin = window.store.getOpenAtLogin();
       setOpenAtLogin(currentOpenAtLogin);
 
