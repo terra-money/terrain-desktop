@@ -1,9 +1,11 @@
 import React, { useEffect, useState, memo } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
-import { useNavigate } from "react-router-dom";
-import { NavLink } from './component';
-import { useTerra, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted } from './package/hooks';
+import { useNavigate } from 'react-router-dom';
+import { NavLink } from './components';
+import {
+  useTerraBlockUpdate, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
+} from './package/hooks';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
 import useNav from './package/hooks/routes';
@@ -11,23 +13,22 @@ import useNav from './package/hooks/routes';
 function App() {
   const { element: routes, menu } = useNav();
   const navigate = useNavigate();
-  const { terra } = useTerra();
+  const { terra } = useTerraBlockUpdate();
   const latestHeight = useGetLatestHeight();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
-
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (!isLocalTerraPathConfigured) navigate('/onboard');
-    else navigate('/')
+    else navigate('/');
   }, [isLocalTerraPathConfigured]);
 
   useEffect(() => {
-    if (latestHeight) setIsLoading(false)
-    else if (hasStartedLocalTerra === null && !latestHeight) setIsLoading(true);
+    if (latestHeight) setIsLoading(false);
+    else if (hasStartedLocalTerra.get() === null && !latestHeight) setIsLoading(true);
   }, [hasStartedLocalTerra, latestHeight]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
@@ -40,8 +41,8 @@ function App() {
   };
 
   const toggleLocalTerra = async () => {
-    setIsLoading(true)
-    await ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra);
+    setIsLoading(true);
+    await ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra.get());
   };
 
   return (
@@ -49,12 +50,12 @@ function App() {
       <div className="flex">
         <div
           className={`left-nav bg-terra-dark-blue h-full p-5 pt-7 ${
-            open ? "w-72" : "w-20"
+            open ? 'w-72' : 'w-20'
           } duration-300 relative`}
         >
           <BsArrowLeftShort
             className={`bg-white text-terra-dark-blue text-3xl rounded-full absolute -right-4 top-8 border border-terra-dark-blue cursor-pointer ${
-              !open && "rotate-180"
+              !open && 'rotate-180'
             }`}
             onClick={() => setOpen(!open)}
           />
@@ -63,14 +64,14 @@ function App() {
               <img
                 src={logo}
                 className={`object-contain cursor-pointer block duration-500 ${
-                  open && "rotate-[360deg]"
+                  open && 'rotate-[360deg]'
                 }`}
                 alt="logo"
               />
             </div>
             <h1
               className={`text-white origin-left font-medium text-2xl ${
-                !open && "scale-0"
+                !open && 'scale-0'
               }`}
             >
               Terrarium
@@ -78,12 +79,12 @@ function App() {
           </div>
           <div
             className={`flex items-center rounded-md mt-6 bg-light-white py-2 ${
-              !open ? "px-2.5" : "px-4"
+              !open ? 'px-2.5' : 'px-4'
             }`}
           >
             <BsSearch
               className={`text-white text-lg block cursor-pointer ${
-                open && "mr-2 float-left"
+                open && 'mr-2 float-left'
               }`}
             />
             <input
@@ -92,23 +93,23 @@ function App() {
               type="search"
               placeholder="Search"
               className={`text-base bg-transparent w-full text-white focus:outline-none duration-300 ${
-                !open && "hidden"
+                !open && 'hidden'
               }`}
             />
           </div>
-          <ul className={`py-2 mt-2 ${open ? "" : ""}`}>
+          <ul className={`py-2 mt-2 ${open ? '' : ''}`}>
             {menu.map((menuItem) => (
               <NavLink
                 key={menuItem.name}
                 to={menuItem.path}
-                className={`${open ? "px-3" : "justify-center"}`}
+                className={`${open ? 'px-3' : 'justify-center'}`}
               >
-                <div className={`float-left ${open ? "mr-2" : "block"}`}>
+                <div className={`float-left ${open ? 'mr-2' : 'block'}`}>
                   {menuItem.icon}
                 </div>
                 <div
                   className={`text-base font-medium flex-1 items-center cursor-pointer ${
-                    !open && "hidden"
+                    !open && 'hidden'
                   }`}
                 >
                   <p>{menuItem.name}</p>
@@ -120,7 +121,7 @@ function App() {
 
         <div className="flex-auto bg-gray-background w-full h-screen overflow-hidden">
           <header className="top-header flex justify-between p-6 pl-12 bg-white overflow-x-auto">
-            <ul className="flex flex-row gap-20 items-center font-medium">
+            <ul className="flex flex-row w-full gap-20 items-center font-medium">
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-2xl text-terra-mid-blue">{latestHeight}</p>
                 <p>Current Block</p>
@@ -137,25 +138,27 @@ function App() {
                 </p>
                 <p>RPC Server</p>
               </li>
+              <li className="ml-auto">
+                <button
+                  type="button"
+                  onClick={toggleLocalTerra}
+                  className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground"
+                >
+                  <BsCircleFill
+                    className={
+                      isLoading
+                        ? 'animate-bounce text-is-loading-grey'
+                        : hasStartedLocalTerra
+                          ? 'text-is-connected-green'
+                          : 'text-not-connected-red'
+                    }
+                  />
+                  <p className="text-terra-dark-blue text-lg font-bold">
+                    LocalTerra
+                  </p>
+                </button>
+              </li>
             </ul>
-            <button
-              type="button"
-              onClick={toggleLocalTerra}
-              className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground"
-            >
-              <BsCircleFill
-                className={
-                  isLoading
-                    ? "animate-bounce text-is-loading-grey"
-                    : hasStartedLocalTerra
-                    ? "text-is-connected-green"
-                    : "text-not-connected-red"
-                }
-              />
-              <p className="text-terra-dark-blue text-lg font-bold">
-                LocalTerra
-              </p>
-            </button>
           </header>
           <main className="flex w-full h-[calc(100vh-96px)] overflow-hidden">
             {routes}

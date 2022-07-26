@@ -1,0 +1,11 @@
+
+{
+  "localterra": {
+    "cw20_base": {
+      "codeId": "5",
+      "contractAddresses": {
+        "default": "terra1hm4y6fzgxgu688jgf7ek66px6xkrtmn3gyk8fax3eawhp68c2d5q74k9fw"
+      }
+    }
+  }
+}

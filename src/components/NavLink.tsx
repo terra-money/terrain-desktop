@@ -8,7 +8,7 @@ function NavLink(props: { to: any, children: any, className: string }) {
     <Link
       {...props}
       className={`${props.className} flex ${
-        match ? "selected text-blue-100" : "text-blue-200"
+        match ? 'selected text-blue-100' : 'text-blue-200'
       } space-x-1 items-center rounded-md h-12 mt-2`}
     />
   );

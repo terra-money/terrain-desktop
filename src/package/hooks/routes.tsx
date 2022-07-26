@@ -7,19 +7,27 @@ import {
   ContractsPage,
   OnboardPage,
   AccountsPage,
+  SettingsPage,
 } from '../../pages';
 import { ReactComponent as AccountsIcon } from '../../assets/icons/menu/accounts.svg';
 import { ReactComponent as BlocksIcon } from '../../assets/icons/menu/blocks.svg';
 import { ReactComponent as TransactionsIcon } from '../../assets/icons/menu/transactions.svg';
 import { ReactComponent as ContractsIcon } from '../../assets/icons/menu/contracts.svg';
 import { ReactComponent as LogsIcon } from '../../assets/icons/menu/logs.svg';
+import { ReactComponent as CogIcon } from '../../assets/icons/menu/cog.svg';
 
 const useNav = () => {
   const menu = [
     {
+      name: 'Contracts',
+      icon: <ContractsIcon />,
+      path: '/',
+      element: <ContractsPage />,
+    },
+    {
       name: 'Accounts',
       icon: <AccountsIcon />,
-      path: '/',
+      path: '/accounts',
       element: <AccountsPage />,
     },
     {
@@ -34,17 +42,18 @@ const useNav = () => {
       path: '/transactions',
       element: <TransactionsPage />,
     },
-    {
-      name: 'Contracts',
-      icon: <ContractsIcon />,
-      path: '/contracts',
-      element: <ContractsPage />,
-    },
+
     {
       name: 'Logs',
       icon: <LogsIcon />,
       path: '/logs',
       element: <LogsPage />,
+    },
+    {
+      name: 'Settings',
+      icon: <CogIcon />,
+      path: '/settings',
+      element: <SettingsPage />,
     },
   ];
 

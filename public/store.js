@@ -2,56 +2,76 @@ const Store = require('electron-store');
 const fs = require('fs');
 
 class TerrariumStore extends Store {
-    constructor() {
-        super();
-        this.contracts = this.get('contracts') || []
-        this.localTerraPath = this.get('localTerraPath')
-    }
+  constructor() {
+    super();
+    this.contracts = this.get('contracts') || [];
+    this.localTerraPath = this.get('localTerraPath');
+  }
 
-    async setLocalTerraPath(path) {
-        return this.set('localTerraPath', path);
-    }
+  setLocalTerraPath(path) {
+    return this.set('localTerraPath', path);
+  }
 
-    async getLocalTerraPath() {
-        return this.get('localTerraPath');
-    }
+  getLocalTerraPath() {
+    return this.get('localTerraPath');
+  }
 
-    setContracts() {
-        this.set('contracts', this.contracts)
-        return this.contracts
-    }
+  // eslint-disable-next-line class-methods-use-this
+  getBlocktime() {
+    return window.ipcRenderer.invoke('getBlocktime');
+  }
 
-    async getContracts() {
-        this.contracts = await this.get('contracts') || []
-        this.checkIfContractsExists(this.contracts);
-        return this.contracts
-    }
+  // eslint-disable-next-line class-methods-use-this
+  setBlocktime(newBlocktime) {
+    return window.ipcRenderer.invoke('setBlocktime', newBlocktime);
+  }
 
-    importContracts(contracts) {
-        if (contracts) {
-            this.contracts = [...this.contracts, ...contracts]
-            return this.setContracts()
-        }
-    }
+  // eslint-disable-next-line class-methods-use-this
+  getOpenAtLogin() {
+    return window.ipcRenderer.invoke('getOpenAtLogin');
+  }
 
-    async deleteContract(contract) {
-        this.contracts = this.contracts.filter(name => name !== contract)
-        this.setContracts()
-    }
+  // eslint-disable-next-line class-methods-use-this
+  setOpenAtLogin(status) {
+    return window.ipcRenderer.invoke('setOpenAtLogin', status);
+  }
 
-    async deleteAllContracts() {
-        this.contracts = [];
-        return this.setContracts();
-    }
+  setContracts() {
+    this.set('contracts', this.contracts);
+    return this.contracts;
+  }
 
-    checkIfContractsExists(contracts) {
-        contracts.forEach(contract => {
-            if (!fs.existsSync(contract.path)) {
-                this.deleteContract(contract);
-            }
-        })
+  getContracts() {
+    this.contracts = this.get('contracts') || [];
+    this.checkIfContractsExists(this.contracts);
+    return this.contracts;
+  }
+
+  importContracts(contracts) {
+    if (contracts) {
+      this.contracts = [...this.contracts, ...contracts];
+      return this.setContracts();
     }
+  }
+
+  deleteContract(contract) {
+    this.contracts = this.contracts.filter((name) => name !== contract);
+    this.setContracts();
+  }
+
+  deleteAllContracts() {
+    this.contracts = [];
+    return this.setContracts();
+  }
+
+  checkIfContractsExists(contracts) {
+    contracts.forEach((contract) => {
+      if (!fs.existsSync(contract.path)) {
+        this.deleteContract(contract);
+      }
+    });
+  }
 }
-const store = new TerrariumStore()
+const store = new TerrariumStore();
 
-module.exports = { store }
+module.exports = { store };

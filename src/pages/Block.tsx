@@ -1,28 +1,28 @@
 import React from 'react';
-import { Virtuoso } from 'react-virtuoso'
+import { Virtuoso } from 'react-virtuoso';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { useBlocks } from '../package/hooks';
-import { BlockView } from '../component';
+import { BlockView } from '../components';
 
 const BLOCKS_HEADER = [{
-  title: "Number",
-  className: "w-32 p-4"
-},{
-  title: "Time",
-  className: "w-80 p-4"
-},  {
-  title: "Transactions",
-  className: "p-4"
+  title: 'Number',
+  className: 'w-32 p-4',
 }, {
-  title: "Gas used",
-  className: "p-4"
-},{
-  title: "",
-  className: "m-8"
+  title: 'Time',
+  className: 'w-80 p-4',
+}, {
+  title: 'Transactions',
+  className: 'p-4',
+}, {
+  title: 'Gas used',
+  className: 'p-4',
+}, {
+  title: '',
+  className: 'm-8',
 }];
 
 export default function BlocksPage() {
-  const [ filter, setFilter ] = React.useState(false);
+  const [filter, setFilter] = React.useState(false);
   const { get: getBlocks, set: setBlocks } = useBlocks();
   const data = getBlocks();
 
@@ -49,7 +49,7 @@ export default function BlocksPage() {
         label="Filter Empty Blocks"
         className="bg-white"
         style={{
-          margin: "0px"
+          margin: '0px',
         }}
       />
       <div className="bg-white" style={{ flexGrow: 1 }}>
