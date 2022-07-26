@@ -1,0 +1,29 @@
+.left-nav ul a:hover {
+  background-color: #0f40b9;
+  color: white;
+}
+.left-nav ul a:hover svg {
+  fill: rgba(219, 234, 254, var(--tw-text-opacity));
+}
+
+.left-nav ul a.selected {
+  background-color: #0f40b9;
+  color: white;
+}
+
+.left-nav ul a svg {
+  fill: rgba(191, 219, 254, 1);
+}
+
+.left-nav ul a.selected svg {
+  background-color: #0f40b9;
+  fill: white;
+}
+
+.left-nav .Settings {
+  background: rgb(0 44 149);
+}
+
+.top-header {
+  box-shadow: 0px 1px 4px 0px rgb(50 50 50 / 75%);
+}

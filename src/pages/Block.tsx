@@ -37,16 +37,22 @@ export default function BlocksPage() {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="bg-gray-background flex justify-between">
+      <div className="bg-gray-background flex justify-between mt-2">
         {BLOCKS_HEADER.map((header, index) => (
-          <div key={index} className={header.className}>{header.title}</div>
+          <div key={index} className={header.className}>
+            {header.title}
+          </div>
         ))}
       </div>
+      <FormControlLabel
+        control={<Checkbox checked={filter} onChange={handleToggleFilter} />}
+        label="Filter Empty Blocks"
+        className="bg-white"
+        style={{
+          margin: '0px',
+        }}
+      />
       <div className="bg-white" style={{ flexGrow: 1 }}>
-        <FormControlLabel
-          control={<Checkbox checked={filter} onChange={handleToggleFilter} />}
-          label="Filter Empty Blocks"
-        />
         <Virtuoso
           className="flex flex-col w-full"
           followOutput

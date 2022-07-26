@@ -35,28 +35,28 @@ function AccountView({ wallet } : { wallet : any }) {
   return (
     <div className="flex text-left justify-between px-4 py-2 border-b border-b-blue-900">
       {open && <KeyView mnemonic={mnemonic} handleClose={handleClose} />}
-      <a href={`${REACT_APP_FINDER_URL}/address/${accAddress}`} target="_blank" rel="noreferrer">
+      <a
+        href={`${REACT_APP_FINDER_URL}/address/${accAddress}`}
+        target="_blank"
+        rel="noreferrer"
+      >
         <div className="flex w-[570px]">
           <div>
-            <p className="text-xs font-bold text-blue-600 uppercase">
-              Address
-            </p>
+            <p className="text-xs font-bold text-blue-600 uppercase">Address</p>
             <p className="text-2xl">{accAddress}</p>
           </div>
         </div>
       </a>
-      <div className="flex space-x-6">
+      <div className="flex gap-20">
         <div className="ml-6">
-          <p className="text-xs font-bold text-blue-600 uppercase">
-            Luna
-          </p>
+          <p className="text-xs font-bold text-blue-600 uppercase">Luna</p>
           <p className="text-xl text-blue-900">{nFormatter(balance)}</p>
         </div>
         <div>
+          <p className="text-xs font-bold text-blue-600 uppercase">TX Count</p>
           <p className="text-xs font-bold text-blue-600 uppercase">
-            TX Count
+            {txInfos.length}
           </p>
-          <p className="text-xs font-bold text-blue-600 uppercase">{txInfos.length}</p>
         </div>
         <button type="button" onClick={handleOpen} className="text-blue-500">
           <svg
