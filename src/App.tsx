@@ -98,11 +98,18 @@ function App() {
             />
           </div>
           <ul className={`py-2 mt-2 ${open ? '' : ''}`}>
-            {menu.map((menuItem) => (
+            {menu.map((menuItem, index) => (
               <NavLink
                 key={menuItem.name}
                 to={menuItem.path}
-                className={`${open ? 'px-3' : 'justify-center'}`}
+                className={`${menuItem.name}
+                ${open ? 'px-3' : 'justify-center'}
+                ${
+                  index === menu.length - 1
+                    ? 'px-8 h-16 absolute bottom-0 left-0 w-full rounded-none'
+                    : 'h-12'
+                }
+                `}
               >
                 <div className={`float-left ${open ? 'mr-2' : 'block'}`}>
                   {menuItem.icon}
