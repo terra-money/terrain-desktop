@@ -27,7 +27,7 @@ export default function BlocksPage() {
   const data = getBlocks();
 
   const handleToggleFilter = () => setFilter(!filter);
-  
+
   const getFilteredBlocks = () => data.blocks.filter(({ block }) => block.data.txs!.length > 0);
 
   const toggleEventDetails = (index: number) => {
@@ -36,22 +36,36 @@ export default function BlocksPage() {
   };
 
   return (
-    <div className='flex flex-col w-full'>
-      <div className='bg-gray-background flex justify-between'>
+    <div className="flex flex-col w-full">
+      <div className="bg-gray-background flex justify-between mt-2">
         {BLOCKS_HEADER.map((header, index) => (
-          <div key={index} className={header.className}>{header.title}</div>
+          <div key={index} className={header.className}>
+            {header.title}
+          </div>
         ))}
       </div>
-      <div className='bg-white' style={{flexGrow: 1}}>
-        <FormControlLabel
-              control={<Checkbox checked={filter} onChange={handleToggleFilter} />}
-              label="Filter Empty Blocks"
-        />
-        <Virtuoso className="flex flex-col w-full"
+      <FormControlLabel
+        control={<Checkbox checked={filter} onChange={handleToggleFilter} />}
+        label="Filter Empty Blocks"
+        className="bg-white"
+        style={{
+          margin: "0px"
+        }}
+      />
+      <div className="bg-white" style={{ flexGrow: 1 }}>
+        <Virtuoso
+          className="flex flex-col w-full"
           followOutput
           initialTopMostItemIndex={data.blocks.length}
           data={filter ? getFilteredBlocks() : data.blocks}
-          itemContent={(index, block) => <BlockView onToggleEventDetails={toggleEventDetails} data={block} index={index} key={index}  />} 
+          itemContent={(index, block) => (
+            <BlockView
+              onToggleEventDetails={toggleEventDetails}
+              data={block}
+              index={index}
+              key={index}
+            />
+          )}
         />
       </div>
     </div>
