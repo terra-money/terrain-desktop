@@ -19,12 +19,12 @@ export default function Settings() {
   const [blocktime, setBlocktime] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  const saveSettings = (data: FieldValues) => {
+  const saveSettings = async (data: FieldValues) => {
     window.store.setOpenAtLogin(data.openAtLogin);
     window.store.setLocalTerraPath(data.localTerraPath);
     window.store.setBlocktime(data.blocktime);
     if (localTerraPath !== data.localTerraPath || blocktime !== data.blocktime) {
-      ipcRenderer.invoke('promptUserRestart');
+      await ipcRenderer.invoke('PromptUserRestart');
     }
     navigate('/');
   };
