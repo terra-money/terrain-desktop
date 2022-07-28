@@ -21,7 +21,8 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
-    "@hookstate/core": "^4.0.0-rc.4",
+    "@hookstate/core": "^3.0.13",
+    "@hookstate/devtools": "^3.0.2",
     "@iarna/toml": "^2.2.5",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",

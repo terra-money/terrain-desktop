@@ -21,14 +21,19 @@ function App() {
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // retrigger LocalTerraRunning ipc event.
   useEffect(() => {
-    if (!isLocalTerraPathConfigured) navigate('/onboard');
+    ipcRenderer.send('getLocalTerraStatus');
+  }, []);
+
+  useEffect(() => {
+    if (!isLocalTerraPathConfigured.get()) navigate('/onboard');
     else navigate('/');
   }, [isLocalTerraPathConfigured]);
 
   useEffect(() => {
-    if (latestHeight) setIsLoading(false);
-    else if (hasStartedLocalTerra.get() === null && !latestHeight) setIsLoading(true);
+    if (hasStartedLocalTerra.get() === null) setIsLoading(true);
+    else setIsLoading(false);
   }, [hasStartedLocalTerra, latestHeight]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
@@ -42,7 +47,9 @@ function App() {
 
   const toggleLocalTerra = async () => {
     setIsLoading(true);
-    await ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra.get());
+    ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra.get());
+    // We're not started or stopped.
+    hasStartedLocalTerra.set(null);
   };
 
   return (
@@ -155,7 +162,7 @@ function App() {
                     className={
                       isLoading
                         ? 'animate-bounce text-is-loading-grey'
-                        : hasStartedLocalTerra
+                        : hasStartedLocalTerra.get()
                           ? 'text-is-connected-green'
                           : 'text-not-connected-red'
                     }

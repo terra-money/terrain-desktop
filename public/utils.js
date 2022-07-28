@@ -1,4 +1,4 @@
-const { app } = require('electron');
+const { app, ipcMain } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 const { WebSocketClient } = require('@terra-money/terra.js');
@@ -6,11 +6,10 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
 const { Tx } = require('@terra-money/terra.js');
-
 const { readMsg } = require('@terra-money/msg-reader');
-const kill = require('tree-kill');
 const { showLocalTerraStartNotif, showLocalTerraStopNotif, showNoTerrainRefsDialog } = require('./messages');
 const exec = util.promisify(require('child_process').exec);
+const { store } = require('./store');
 
 const { LOCAL_TERRA_GIT, LOCAL_TERRA_WS } = require('./constants');
 
@@ -51,9 +50,7 @@ async function downloadLocalTerra() {
   return LOCAL_TERRA_PATH;
 }
 
-function startLocalTerra(localTerraPath) {
-  return spawn('docker-compose', ['up'], { cwd: localTerraPath });
-}
+const startLocalTerra = (localTerraPath) => exec('docker compose up -d --wait', { cwd: localTerraPath });
 
 const mergeSchemaArrs = (schema) => (schema.oneOf && schema.anyOf && [...schema.oneOf, ...schema.anyOf]) || schema.anyOf || schema.oneOf;
 
@@ -104,12 +101,19 @@ function getContractDataFromRefs(projectDir, refsPath) {
   }
 }
 
-async function subscribeToLocalTerraEvents(localTerraProcess, win) {
+const setupLocalTerraStatusHandler = (win) => {
+  ipcMain.on('getLocalTerraStatus', () => win.webContents.send('LocalTerraRunning', isLocalTerraRunning));
+};
+
+async function subscribeToLocalTerraEvents(win) {
+  const localTerraPath = await store.getLocalTerraPath();
+  const localTerraProcess = spawn('docker', ['compose', 'logs', '-f'], { cwd: localTerraPath });
+
   localTerraProcess.stdout.on('data', (data) => {
     if (win.isDestroyed()) return;
 
     win.webContents.send('NewLogs', data.toString());
-    if (!isLocalTerraRunning && data.includes('indexed block')) {
+    if (!isLocalTerraRunning) {
       txWs.start();
       blockWs.start();
       isLocalTerraRunning = true;
@@ -118,32 +122,32 @@ async function subscribeToLocalTerraEvents(localTerraProcess, win) {
       showLocalTerraStartNotif();
     }
   });
-
   localTerraProcess.stderr.on('data', (data) => {
     console.error(`stderr: ${data}`);
   });
-
   localTerraProcess.on('close', () => {
     if (win.isDestroyed()) return;
     isLocalTerraRunning = false;
     win.webContents.send('LocalTerraRunning', false);
   });
-
   return localTerraProcess;
 }
 
 async function stopLocalTerra(localTerraProcess) {
-  return new Promise((resolve) => {
-    if (localTerraProcess.killed) {
-      return resolve();
-    }
-    txWs.destroy();
-    blockWs.destroy();
-    localTerraProcess.once('close', resolve);
-    kill(localTerraProcess.pid);
-    showLocalTerraStopNotif();
-  });
+  const localTerraPath = await store.getLocalTerraPath();
+  if (localTerraProcess.killed) {
+    console.log('process already killed');
+    return;
+  }
+  txWs.destroy();
+  blockWs.destroy();
+
+  await exec('docker compose stop', { cwd: localTerraPath });
+
+  isLocalTerraRunning = false;
+  showLocalTerraStopNotif();
 }
+
 const parseTxMsg = (encodedTx) => {
   const unpacked = Tx.unpackAny({
     value: Buffer.from(encodedTx, 'base64'),
@@ -200,4 +204,5 @@ module.exports = {
   subscribeToLocalTerraEvents,
   setDockIconDisplay,
   shutdown,
+  setupLocalTerraStatusHandler,
 };

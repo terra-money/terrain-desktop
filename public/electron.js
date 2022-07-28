@@ -1,6 +1,6 @@
 const path = require('path');
 const {
-  app, shell, ipcMain, BrowserWindow, Menu, Tray, MenuItem,
+  app, shell, ipcMain, BrowserWindow, Menu, Tray, MenuItem, session,
 } = require('electron');
 const isDev = require('electron-is-dev');
 const defaultMenu = require('electron-default-menu');
@@ -26,6 +26,7 @@ const {
   isDockerRunning,
   shutdown,
   getSmartContractData,
+  setupLocalTerraStatusHandler,
 } = require('./utils');
 
 const {
@@ -84,6 +85,7 @@ async function init() {
 
   if (isDev) {
     win.loadURL('http://localhost:3000');
+    await session.defaultSession.loadExtension(path.resolve('extensions', 'redux'));
     win.webContents.openDevTools();
   } else {
     win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
@@ -114,24 +116,14 @@ async function init() {
     return { action: 'deny' };
   });
 
-  txWs.subscribeTx({}, async ({ value }) => {
-    const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
-    win.webContents.send('Tx', { description, msg, ...value });
-    showTxOccuredNotif(description);
-  });
-
-  blockWs.subscribe('NewBlock', {}, ({ value }) => {
-    win.webContents.send('NewBlock', value);
-  });
-
   registerSettingsHandlers(win, globals);
 
   ipcMain.handle('InstallLocalTerra', async () => {
     let localTerraPath;
     try {
       localTerraPath = await downloadLocalTerra();
-      globals.localTerraProcess = startLocalTerra(localTerraPath);
-      await subscribeToLocalTerraEvents(globals.localTerraProcess, win);
+      startLocalTerra(localTerraPath);
+      globals.localTerraProcess = await subscribeToLocalTerraEvents(win);
       store.setLocalTerraPath(localTerraPath);
     } catch (e) {
       await showLocalTerraAlreadyExistsDialog();
@@ -140,11 +132,12 @@ async function init() {
   });
 
   ipcMain.handle('ToggleLocalTerraStatus', async (_, localTerraStatus) => {
+    console.log('toggle called with: ', localTerraStatus)
     const localTerraPath = store.getLocalTerraPath();
 
     if (localTerraStatus) {
-      globals.localTerraProcess = startLocalTerra(localTerraPath);
-      await subscribeToLocalTerraEvents(globals.localTerraProcess, win);
+      startLocalTerra(localTerraPath);
+      globals.localTerraProcess = await subscribeToLocalTerraEvents(win);
     } else {
       stopLocalTerra(globals.localTerraProcess);
     }
@@ -171,6 +164,8 @@ async function init() {
     return contracts;
   });
 
+  setupLocalTerraStatusHandler(win);
+
   // Catch window close and hide the window instead.
   win.on('close', (event) => {
     if (!app.isQuitting) {
@@ -193,15 +188,27 @@ async function init() {
     app.quit();
   });
 
-  const localTerraPath = store.getLocalTerraPath();
-  if (localTerraPath) {
-    win.webContents.send('LocalTerraPath', true);
-    globals.localTerraProcess = startLocalTerra(localTerraPath);
-    await subscribeToLocalTerraEvents(globals.localTerraProcess, win);
-  }
+  win.webContents.once('dom-ready', async () => {
+    const localTerraPath = await store.getLocalTerraPath();
+    if (localTerraPath) {
+      win.webContents.send('LocalTerraPath', true);
+      startLocalTerra(localTerraPath);
+      globals.localTerraProcess = await subscribeToLocalTerraEvents(win);
+    }
 
-  win.show();
-  win.focus();
+    txWs.subscribeTx({}, async ({ value }) => {
+      const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
+      win.webContents.send('Tx', { description, msg, ...value });
+      showTxOccuredNotif(description);
+    });
+
+    blockWs.subscribe('NewBlock', {}, ({ value }) => {
+      win.webContents.send('NewBlock', value);
+    });
+
+    win.show();
+    win.focus();
+  });
 }
 
 app.on('ready', init);

@@ -1,30 +1,22 @@
-import { createState, State, useState } from '@hookstate/core';
+import { createState } from '@hookstate/core';
 import { ipcRenderer } from 'electron';
-import React, { ReactElement, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { TerrariumTx } from '../models/TerrariumTx';
 import { TerrariumBlockInfo, TerrariumBlocks } from '../package';
 
-type TypeElectronContext = {
-    localTerraPathConfigured: State<boolean>;
-    localTerraStarted: State<boolean | null>;
-    blockState: State<TerrariumBlocks>,
-    txState: State<TerrariumTx[]>,
-    logsState: State<string[]>,
-}
-
 const MAX_LOG_LENGTH = 500;
 
-const ElectronContext = React.createContext<TypeElectronContext>(null as any);
+export const localTerraStarted = createState<boolean | null>(null);
+export const localTerraPathConfigured = createState<boolean>(!!window.store.getLocalTerraPath());
+export const blockState = createState<TerrariumBlocks>({ blocks: [], latestHeight: 0 });
+export const txState = createState<TerrariumTx[]>([]);
+export const logsState = createState<string[]>([]);
 
-export const ElectronContextProvider = ({ children } : { children: ReactElement }) => {
-  const blockState = useState(createState<TerrariumBlocks>({ blocks: [], latestHeight: 0 }));
-  const txState = useState(createState<TerrariumTx[]>([]));
-  const logsState = useState(createState<string[]>([]));
-  const localTerraPathConfigured = useState(createState<boolean>(!!window.store.getLocalTerraPath()));
-  const localTerraStarted = useState(createState<boolean | null>(null));
-
+export const StateListeners = () => {
   useEffect(() => {
+    console.log('useEffect rendered');
     ipcRenderer.on('NewBlock', ((_: any, block: TerrariumBlockInfo) => {
+      console.log('got new block', block);
       const bHeight = Number(block.block.header.height);
       blockState.latestHeight.set(bHeight);
       blockState.blocks.merge([{ ...block }]);
@@ -56,14 +48,7 @@ export const ElectronContextProvider = ({ children } : { children: ReactElement 
     };
   }, [blockState, txState, logsState, localTerraPathConfigured, localTerraStarted]);
 
-  return (
-    <ElectronContext.Provider value={{
-      blockState, txState, logsState, localTerraPathConfigured, localTerraStarted,
-    }}
-    >
-      {children}
-    </ElectronContext.Provider>
-  );
+  return null;
 };
 
-export default ElectronContext;
+export default StateListeners;
