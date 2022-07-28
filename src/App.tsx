@@ -3,12 +3,14 @@ import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import { NavLink } from './components';
+import { GET_LOCAL_TERRA_STATUS, TOGGLE_LOCAL_TERRA } from './constants';
+
 import {
   useTerraBlockUpdate, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
-} from './package/hooks';
+} from './hooks';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
-import useNav from './package/hooks/routes';
+import useNav from './hooks/routes';
 
 function App() {
   const { element: routes, menu } = useNav();
@@ -23,7 +25,7 @@ function App() {
 
   // retrigger LocalTerraRunning ipc event.
   useEffect(() => {
-    ipcRenderer.send('getLocalTerraStatus');
+    ipcRenderer.send(GET_LOCAL_TERRA_STATUS);
   }, []);
 
   useEffect(() => {
@@ -47,7 +49,7 @@ function App() {
 
   const toggleLocalTerra = async () => {
     setIsLoading(true);
-    ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra.get());
+    ipcRenderer.invoke(TOGGLE_LOCAL_TERRA, !hasStartedLocalTerra.get());
     // We're not started or stopped.
     hasStartedLocalTerra.set(null);
   };

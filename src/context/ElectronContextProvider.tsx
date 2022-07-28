@@ -1,10 +1,9 @@
 import { createState } from '@hookstate/core';
 import { ipcRenderer } from 'electron';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { TerrariumTx } from '../models/TerrariumTx';
-import { TerrariumBlockInfo, TerrariumBlocks } from '../package';
-
-const MAX_LOG_LENGTH = 500;
+import { TerrariumBlockInfo, TerrariumBlocks } from '../models';
+import { MAX_LOG_LENGTH } from '../constants';
 
 export const localTerraStarted = createState<boolean | null>(null);
 export const localTerraPathConfigured = createState<boolean>(!!window.store.getLocalTerraPath());
@@ -14,9 +13,7 @@ export const logsState = createState<string[]>([]);
 
 export const StateListeners = () => {
   useEffect(() => {
-    console.log('useEffect rendered');
     ipcRenderer.on('NewBlock', ((_: any, block: TerrariumBlockInfo) => {
-      console.log('got new block', block);
       const bHeight = Number(block.block.header.height);
       blockState.latestHeight.set(bHeight);
       blockState.blocks.merge([{ ...block }]);

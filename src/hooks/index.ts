@@ -1,10 +1,12 @@
 import { LocalTerra, Wallet } from '@terra-money/terra.js';
 import { useContext, useEffect, useState } from 'react';
-import { Downgraded, useState as useStateHook } from '@hookstate/core';
+import { useState as useStateHook } from '@hookstate/core';
 import { ipcRenderer } from 'electron';
 import { TerraContext } from '../components/Provider';
-import { ITerraHook, ITerraHookBlockUpdate } from '../interface/ITerraHook';
-import { localTerraStarted, localTerraPathConfigured, logsState, blockState, txState } from '../../context/ElectronContextProvider';
+import { ITerraHook, ITerraHookBlockUpdate } from '../models/TerraHook';
+import {
+  localTerraStarted, localTerraPathConfigured, logsState, blockState, txState,
+} from '../context/ElectronContextProvider';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;

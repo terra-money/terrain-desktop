@@ -1,44 +1,38 @@
 const path = require('path');
 const {
-  app, shell, ipcMain, BrowserWindow, Menu, Tray, MenuItem, session,
+  app, shell, BrowserWindow, Menu, Tray, MenuItem, session,
 } = require('electron');
 const isDev = require('electron-is-dev');
 const defaultMenu = require('electron-default-menu');
 const { store } = require('./store');
 const pkg = require('../package.json');
-const registerSettingsHandlers = require('./settings');
+const registerSettingsHandlers = require('./ipc/settings');
+const registerContractHandlers = require('./ipc/contracts');
+const regsisterLocalTerraHandlers = require('./ipc/localTerra');
 
 const {
   BROWSER_WINDOW_WIDTH,
   BROWSER_WINDOW_HEIGHT,
-} = require('./constants');
+} = require('../src/constants');
 
 const {
   txWs,
   blockWs,
   stopLocalTerra,
   startLocalTerra,
-  downloadLocalTerra,
   subscribeToLocalTerraEvents,
   parseTxDescriptionAndMsg,
-  getSmartContractRefs,
   setDockIconDisplay,
   isDockerRunning,
   shutdown,
-  getSmartContractData,
-  setupLocalTerraStatusHandler,
-} = require('./utils');
+} = require('./utils/localTerra');
 
-const {
-  showLocalTerraAlreadyExistsDialog,
-  showTxOccuredNotif,
-  showSmartContractDialog,
-  showStartDockerDialog,
-} = require('./messages');
+const { showTxOccuredNotif, showStartDockerDialog } = require('./utils/messages');
 
 // Store in an object so values are passed by reference.
 const globals = {
   localTerraProcess: undefined,
+  localTerraisRunning: undefined,
 };
 
 let tray = null;
@@ -117,54 +111,8 @@ async function init() {
   });
 
   registerSettingsHandlers(win, globals);
-
-  ipcMain.handle('InstallLocalTerra', async () => {
-    let localTerraPath;
-    try {
-      localTerraPath = await downloadLocalTerra();
-      startLocalTerra(localTerraPath);
-      globals.localTerraProcess = await subscribeToLocalTerraEvents(win);
-      store.setLocalTerraPath(localTerraPath);
-    } catch (e) {
-      await showLocalTerraAlreadyExistsDialog();
-      throw Error('LocalTerra already exists under the default path');
-    }
-  });
-
-  ipcMain.handle('ToggleLocalTerraStatus', async (_, localTerraStatus) => {
-    console.log('toggle called with: ', localTerraStatus)
-    const localTerraPath = store.getLocalTerraPath();
-
-    if (localTerraStatus) {
-      startLocalTerra(localTerraPath);
-      globals.localTerraProcess = await subscribeToLocalTerraEvents(win);
-    } else {
-      stopLocalTerra(globals.localTerraProcess);
-    }
-    return localTerraStatus;
-  });
-
-  ipcMain.handle('ImportSavedContracts', async () => {
-    let contracts = store.getContracts();
-    if (!contracts.length) {
-      const contractData = getSmartContractData();
-      contracts = store.importContracts(contractData);
-    }
-    return contracts;
-  });
-
-  ipcMain.handle('ImportNewContracts', async () => {
-    const { filePaths } = await showSmartContractDialog();
-    if (!filePaths.length) {
-      return store.getContracts();
-    }
-    const [projectDir] = filePaths;
-    const contractRefs = getSmartContractRefs(projectDir);
-    const contracts = store.importContracts(contractRefs);
-    return contracts;
-  });
-
-  setupLocalTerraStatusHandler(win);
+  regsisterLocalTerraHandlers(win, globals);
+  registerContractHandlers();
 
   // Catch window close and hide the window instead.
   win.on('close', (event) => {
@@ -175,8 +123,6 @@ async function init() {
     }
     return false;
   });
-
-  ipcMain.handle('DeleteAllContractRefs', () => store.deleteAllContracts());
 
   app.on('window-all-closed', async () => {
     await stopLocalTerra(globals.localTerraProcess);

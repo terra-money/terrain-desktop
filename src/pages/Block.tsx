@@ -1,7 +1,7 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { useBlocks } from '../package/hooks';
+import { useBlocks } from '../hooks';
 import { BlockView } from '../components';
 
 const BLOCKS_HEADER = [{
@@ -28,7 +28,7 @@ export default function BlocksPage() {
 
   const handleToggleFilter = () => setFilter(!filter);
 
-  const getFilteredBlocks = () => data.blocks.filter(({ block }) => block.data.txs!.length > 0);
+  const getFilteredBlocks = () => data.blocks.filter(({ block } : {block: any}) => block.data.txs!.length > 0);
 
   const toggleEventDetails = (index: number) => {
     data.blocks[index].hasEventsOpenInUi = !data.blocks[index].hasEventsOpenInUi;

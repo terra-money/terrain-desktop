@@ -4,6 +4,7 @@ import { Virtuoso } from 'react-virtuoso';
 import { FaTrash } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { SelectWallet, ContractView } from '../components';
+import { IMPORT_SAVED_CONTRACTS, DELETE_CONTRACT_REFS, IMPORT_NEW_CONTRACTS } from '../constants';
 
 const CONTRACTS_HEADER = [{
   title: 'Contract Name',
@@ -23,18 +24,18 @@ export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
   const [walletName, setWalletName] = React.useState('test1');
 
-  async function handleNewContractsImport() {
+  const handleNewContractsImport = async () => {
     const res = await ipcRenderer.invoke('ImportNewContracts');
     setContracts(res);
-  }
+  };
 
   async function handleRefsDeletion() {
-    const res = await ipcRenderer.invoke('DeleteAllContractRefs');
+    const res = await ipcRenderer.invoke(DELETE_CONTRACT_REFS);
     setContracts(res);
   }
 
   async function importSavedContracts() {
-    const allContracts = await ipcRenderer.invoke('ImportSavedContracts');
+    const allContracts = await ipcRenderer.invoke(IMPORT_SAVED_CONTRACTS);
     setContracts(allContracts);
   }
   const handleWalletChange = (event: SelectChangeEvent) => setWalletName(event.target.value);
