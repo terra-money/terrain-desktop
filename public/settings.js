@@ -1,4 +1,6 @@
-const { app, dialog, ipcMain } = require('electron');
+const {
+  app, dialog, ipcMain,
+} = require('electron');
 const toml = require('@iarna/toml');
 const fs = require('fs');
 const path = require('path');
@@ -67,10 +69,12 @@ module.exports = (win, globals) => {
   });
 
   ipcMain.handle('promptUserRestart', async () => dialog.showMessageBox({
-    message: 'Settings which you have changed require a restart to update.  Restart the application?',
-    buttons: ['No', 'Yes'],
-    title: 'Terrarium',
     type: 'question',
+    buttons: ['Later', 'Restart Now'],
+    defaultId: 1,
+    title: 'Terrarium',
+    message: 'Restart Terrarium?',
+    detail: 'Updated settings require application restart to take effect.',
   }).then((result) => {
     if (result.response === 1) {
       shutdown(globals.localTerraProcess, win, true);
