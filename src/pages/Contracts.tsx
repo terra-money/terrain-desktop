@@ -25,7 +25,7 @@ export default function ContractsPage() {
   const [walletName, setWalletName] = React.useState('test1');
 
   const handleNewContractsImport = async () => {
-    const res = await ipcRenderer.invoke('ImportNewContracts');
+    const res = await ipcRenderer.invoke(IMPORT_NEW_CONTRACTS);
     setContracts(res);
   };
 

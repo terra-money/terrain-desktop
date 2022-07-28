@@ -1,6 +1,6 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
-import { useGetLogs } from '../hooks';
+import { useGetLogs } from '../hooks/terra';
 import LogView from '../components/LogView';
 
 export default function LogsPage() {

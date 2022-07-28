@@ -1,7 +1,7 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { useBlocks } from '../hooks';
+import { useBlocks } from '../hooks/terra';
 import { BlockView } from '../components';
 
 const BLOCKS_HEADER = [{

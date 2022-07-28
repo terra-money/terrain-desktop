@@ -3,7 +3,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { useTerra } from '../hooks';
+import { useTerra } from '../hooks/terra';
 
 const SelectWallet = ({ handleWalletChange, walletName }: any) => {
   const { wallets } = useTerra();

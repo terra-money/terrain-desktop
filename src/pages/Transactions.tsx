@@ -1,7 +1,7 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import Transaction from '../components/Transaction';
-import { useTxs } from '../hooks';
+import { useTxs } from '../hooks/terra';
 
 const TRANSACTIONS_HEADER = [{
   title: 'Hash',

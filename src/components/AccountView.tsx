@@ -1,6 +1,6 @@
 import { TxInfo, Denom } from '@terra-money/terra.js';
 import React, { useEffect, useState } from 'react';
-import { useTerraBlockUpdate, useLocalTerraStarted } from '../hooks';
+import { useTerraBlockUpdate, useLocalTerraStarted } from '../hooks/terra';
 import { demicrofy, nFormatter } from '../utils';
 import { KeyView } from '.';
 import { REACT_APP_FINDER_URL } from '../constants';
