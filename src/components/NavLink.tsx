@@ -3,7 +3,9 @@ import React from 'react';
 
 function NavLink(props: { to: any, children: any, className: string }) {
   const resolved = useResolvedPath(props.to);
+  console.log('resolved', resolved);
   const match = useMatch({ path: resolved.pathname, end: true });
+  console.log('props', props);
   return (
     <Link
       {...props}

@@ -10,6 +10,11 @@ const PROMT_USER_RESTART = 'promptUserRestart';
 const GET_OPEN_AT_LOGIN = 'getOpenAtLogin';
 const SET_OPEN_AT_LOGIN = 'setOpenAtLogin';
 const GET_LOCAL_TERRA_STATUS = 'getLocalTerraStatus';
+const LOCAL_TERRA_PATH_CONFIGURED = 'localTerraPathConfigured';
+const LOCAL_TERRA_IS_RUNNING = 'localTerraIsRunning';
+const TX = 'Tx';
+const NEW_BLOCK = 'NewBlock';
+const NEW_LOG = 'NewLog';
 
 const LOCAL_TERRA_WS = 'ws://localhost:26657/websocket';
 const REACT_APP_FINDER_URL = 'https://finder.terra.money/localterra';
@@ -62,6 +67,8 @@ module.exports = {
   DEFAULT_BLOCKTIME,
   TWOHUNDREDMS_BLOCKTIME,
   ONESECOND_BLOCKTIME,
+  LOCAL_TERRA_PATH_CONFIGURED,
+  LOCAL_TERRA_IS_RUNNING,
   INSTALL_LOCAL_TERRA,
   TOGGLE_LOCAL_TERRA,
   IMPORT_SAVED_CONTRACTS,
@@ -72,4 +79,7 @@ module.exports = {
   BROWSER_WINDOW_HEIGHT,
   REACT_APP_FINDER_URL,
   REACT_APP_DOCS_URL,
+  TX,
+  NEW_BLOCK,
+  NEW_LOG,
 };

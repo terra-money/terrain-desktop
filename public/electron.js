@@ -13,6 +13,7 @@ const regsisterLocalTerraHandlers = require('./ipc/localTerra');
 const {
   BROWSER_WINDOW_WIDTH,
   BROWSER_WINDOW_HEIGHT,
+  LOCAL_TERRA_PATH_CONFIGURED,
 } = require('../src/constants');
 
 const {
@@ -137,7 +138,7 @@ async function init() {
   win.webContents.once('dom-ready', async () => {
     const localTerraPath = await store.getLocalTerraPath();
     if (localTerraPath) {
-      win.webContents.send('LocalTerraPath', true);
+      win.webContents.send(LOCAL_TERRA_PATH_CONFIGURED, true);
       startLocalTerra(localTerraPath);
       globals.localTerraProcess = await subscribeToLocalTerraEvents(win);
     }

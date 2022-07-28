@@ -7,7 +7,9 @@ const {
 } = require('../utils/localTerra');
 const { store } = require('../store');
 const { showLocalTerraAlreadyExistsDialog } = require('../utils/messages');
-const { INSTALL_LOCAL_TERRA, TOGGLE_LOCAL_TERRA, GET_LOCAL_TERRA_STATUS } = require('../../src/constants');
+const {
+  INSTALL_LOCAL_TERRA, TOGGLE_LOCAL_TERRA, GET_LOCAL_TERRA_STATUS, LOCAL_TERRA_IS_RUNNING,
+} = require('../../src/constants');
 
 // Register IPC handlers relating to localTerra and contracts importing.
 module.exports = (win, globals) => {
@@ -24,10 +26,9 @@ module.exports = (win, globals) => {
     }
   });
 
-  ipcMain.on(GET_LOCAL_TERRA_STATUS, () => win.webContents.send('LocalTerraRunning', globals.isLocalTerraRunning));
+  ipcMain.on(GET_LOCAL_TERRA_STATUS, () => win.webContents.send(LOCAL_TERRA_IS_RUNNING, globals.isLocalTerraRunning));
 
   ipcMain.handle(TOGGLE_LOCAL_TERRA, async (_, localTerraStatus) => {
-    console.log('toggle called with: ', localTerraStatus);
     const localTerraPath = store.getLocalTerraPath();
 
     if (localTerraStatus) {

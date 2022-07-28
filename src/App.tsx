@@ -18,7 +18,9 @@ function App() {
   const { terra } = useTerraBlockUpdate();
   const latestHeight = useGetLatestHeight();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
+
   const hasStartedLocalTerra = useLocalTerraStarted();
+
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -50,8 +52,7 @@ function App() {
   const toggleLocalTerra = async () => {
     setIsLoading(true);
     ipcRenderer.invoke(TOGGLE_LOCAL_TERRA, !hasStartedLocalTerra.get());
-    // We're not started or stopped.
-    hasStartedLocalTerra.set(null);
+    hasStartedLocalTerra.set(null); // We're not started or stopped.
   };
 
   return (

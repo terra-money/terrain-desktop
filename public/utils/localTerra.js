@@ -10,7 +10,9 @@ const exec = util.promisify(require('child_process').exec);
 const { store } = require('../store');
 const { setDockIconDisplay } = require('./misc');
 
-const { LOCAL_TERRA_GIT, LOCAL_TERRA_WS } = require('../../src/constants');
+const {
+  LOCAL_TERRA_GIT, LOCAL_TERRA_WS, LOCAL_TERRA_IS_RUNNING, LOCAL_TERRA_PATH_CONFIGURED, NEW_LOG,
+} = require('../../src/constants');
 
 const txWs = new WebSocketClient(LOCAL_TERRA_WS);
 const blockWs = new WebSocketClient(LOCAL_TERRA_WS);
@@ -30,13 +32,13 @@ const validateLocalTerraPath = (url) => {
 };
 
 const downloadLocalTerra = async () => {
-  const LOCAL_TERRA_PATH = path.join(app.getPath('appData'), 'LocalTerra');
-  if (fs.existsSync(LOCAL_TERRA_PATH)) {
-    throw Error(`LocalTerra already exists under the path '${LOCAL_TERRA_PATH}'`);
+  const localTerraPath = path.join(app.getPath('appData'), 'LocalTerra');
+  if (fs.existsSync(localTerraPath)) {
+    throw Error(`LocalTerra already exists under the path '${localTerraPath}'`);
   } else {
     await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, { cwd: app.getPath('appData') });
   }
-  return LOCAL_TERRA_PATH;
+  return localTerraPath;
 };
 
 const startLocalTerra = (localTerraPath) => exec('docker compose up -d --wait', { cwd: localTerraPath });
@@ -48,13 +50,13 @@ const subscribeToLocalTerraEvents = async (win) => {
   localTerraProcess.stdout.on('data', (data) => {
     if (win.isDestroyed()) return;
 
-    win.webContents.send('NewLogs', data.toString());
+    win.webContents.send(NEW_LOG, data.toString());
     if (!isLocalTerraRunning) {
       txWs.start();
       blockWs.start();
       isLocalTerraRunning = true;
-      win.webContents.send('LocalTerraRunning', true);
-      win.webContents.send('LocalTerraPath', true);
+      win.webContents.send(LOCAL_TERRA_IS_RUNNING, true);
+      win.webContents.send(LOCAL_TERRA_PATH_CONFIGURED, true);
       showLocalTerraStartNotif();
     }
   });
@@ -64,7 +66,7 @@ const subscribeToLocalTerraEvents = async (win) => {
   localTerraProcess.on('close', () => {
     if (win.isDestroyed()) return;
     isLocalTerraRunning = false;
-    win.webContents.send('LocalTerraRunning', false);
+    win.webContents.send(LOCAL_TERRA_IS_RUNNING, false);
   });
   return localTerraProcess;
 };

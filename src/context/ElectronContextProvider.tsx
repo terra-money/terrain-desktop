@@ -3,7 +3,9 @@ import { ipcRenderer } from 'electron';
 import { useEffect } from 'react';
 import { TerrariumTx } from '../models/TerrariumTx';
 import { TerrariumBlockInfo, TerrariumBlocks } from '../models';
-import { MAX_LOG_LENGTH } from '../constants';
+import {
+  MAX_LOG_LENGTH, LOCAL_TERRA_IS_RUNNING, LOCAL_TERRA_PATH_CONFIGURED, NEW_LOG, TX, NEW_BLOCK,
+} from '../constants';
 
 export const localTerraStarted = createState<boolean | null>(null);
 export const localTerraPathConfigured = createState<boolean>(!!window.store.getLocalTerraPath());
@@ -13,35 +15,35 @@ export const logsState = createState<string[]>([]);
 
 export const StateListeners = () => {
   useEffect(() => {
-    ipcRenderer.on('NewBlock', ((_: any, block: TerrariumBlockInfo) => {
+    ipcRenderer.on(NEW_BLOCK, ((_: any, block: TerrariumBlockInfo) => {
       const bHeight = Number(block.block.header.height);
       blockState.latestHeight.set(bHeight);
       blockState.blocks.merge([{ ...block }]);
     }));
 
-    ipcRenderer.on('Tx', (_: any, tx: TerrariumTx) => {
+    ipcRenderer.on(TX, (_: any, tx: TerrariumTx) => {
       txState.merge([{ ...tx }]);
     });
 
-    ipcRenderer.on('NewLogs', (async (_: any, log: string) => {
+    ipcRenderer.on(NEW_LOG, (async (_: any, log: string) => {
       if (logsState.length >= MAX_LOG_LENGTH) logsState.set((p) => p.slice(1).concat(log));
       else logsState.merge([log]);
     }));
 
-    ipcRenderer.on('LocalTerraRunning', ((_: any, isLocalTerraRunning: boolean) => {
+    ipcRenderer.on(LOCAL_TERRA_IS_RUNNING, ((_: any, isLocalTerraRunning: boolean) => {
       localTerraStarted.set(isLocalTerraRunning);
     }));
 
-    ipcRenderer.on('LocalTerraPath', ((_: any, isLocalTerraPathConfigured: boolean) => {
+    ipcRenderer.on(LOCAL_TERRA_PATH_CONFIGURED, ((_: any, isLocalTerraPathConfigured: boolean) => {
       localTerraPathConfigured.set(isLocalTerraPathConfigured);
     }));
 
     return () => {
-      ipcRenderer.removeAllListeners('NewBlock');
-      ipcRenderer.removeAllListeners('Tx');
-      ipcRenderer.removeAllListeners('NewLogs');
-      ipcRenderer.removeAllListeners('LocalTerraRunning');
-      ipcRenderer.removeAllListeners('LocalTerraPath');
+      ipcRenderer.removeAllListeners(NEW_BLOCK);
+      ipcRenderer.removeAllListeners(TX);
+      ipcRenderer.removeAllListeners(NEW_BLOCK);
+      ipcRenderer.removeAllListeners(LOCAL_TERRA_IS_RUNNING);
+      ipcRenderer.removeAllListeners(LOCAL_TERRA_PATH_CONFIGURED);
     };
   }, [blockState, txState, logsState, localTerraPathConfigured, localTerraStarted]);
 
