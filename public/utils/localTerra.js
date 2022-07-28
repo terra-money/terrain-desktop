@@ -17,7 +17,7 @@ const blockWs = new WebSocketClient(LOCAL_TERRA_WS);
 
 let isLocalTerraRunning = false;
 
-function validateLocalTerraPath(url) {
+const validateLocalTerraPath = (url) => {
   try {
     const dockerComposePath = path.join(url, 'docker-compose.yml');
     const dockerComposeYml = fs.readFileSync(dockerComposePath, 'utf8');
@@ -27,9 +27,9 @@ function validateLocalTerraPath(url) {
   } catch (e) {
     return false;
   }
-}
+};
 
-async function downloadLocalTerra() {
+const downloadLocalTerra = async () => {
   const LOCAL_TERRA_PATH = path.join(app.getPath('appData'), 'LocalTerra');
   if (fs.existsSync(LOCAL_TERRA_PATH)) {
     throw Error(`LocalTerra already exists under the path '${LOCAL_TERRA_PATH}'`);
@@ -37,11 +37,11 @@ async function downloadLocalTerra() {
     await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, { cwd: app.getPath('appData') });
   }
   return LOCAL_TERRA_PATH;
-}
+};
 
 const startLocalTerra = (localTerraPath) => exec('docker compose up -d --wait', { cwd: localTerraPath });
 
-async function subscribeToLocalTerraEvents(win) {
+const subscribeToLocalTerraEvents = async (win) => {
   const localTerraPath = await store.getLocalTerraPath();
   const localTerraProcess = spawn('docker', ['compose', 'logs', '-f'], { cwd: localTerraPath });
 
@@ -67,9 +67,9 @@ async function subscribeToLocalTerraEvents(win) {
     win.webContents.send('LocalTerraRunning', false);
   });
   return localTerraProcess;
-}
+};
 
-async function stopLocalTerra(localTerraProcess) {
+const stopLocalTerra = async (localTerraProcess) => {
   const localTerraPath = await store.getLocalTerraPath();
   if (localTerraProcess.killed) {
     console.log('process already killed');
@@ -82,7 +82,7 @@ async function stopLocalTerra(localTerraProcess) {
 
   isLocalTerraRunning = false;
   showLocalTerraStopNotif();
-}
+};
 
 const shutdown = async (localTerraProcess, win, restart = false) => {
   win.hide();

@@ -2,15 +2,15 @@ const path = require('path');
 const fs = require('fs');
 const { showNoTerrainRefsDialog } = require('./messages');
 
+const BAKED_REFS_PATH = path.join(__dirname, '..', 'contracts');
+
 const mergeSchemaArrs = (schema) => (schema.oneOf && schema.anyOf && [...schema.oneOf, ...schema.anyOf]) || schema.anyOf || schema.oneOf;
 
 const getContractSchemas = (projectDir, contractName) => {
   try { // if projectDir is null, it will look for pre-baked contracts in pub/contracts dir
     const parsedSchemas = [];
-    const schemaDir = projectDir ? path.join(projectDir, 'contracts', contractName, 'schema') : path.join(__dirname, '..', 'contracts', contractName);
-    console.log('schemaDir', schemaDir);
+    const schemaDir = projectDir ? path.join(projectDir, 'contracts', contractName, 'schema') : path.join(BAKED_REFS_PATH, contractName);
     const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file.endsWith('query_msg.json') || file.endsWith('execute_msg.json'));
-    console.log('schemas', schemas);
     schemas.forEach((file) => {
       const schema = JSON.parse(fs.readFileSync(path.join(schemaDir, file), 'utf8'));
       schema.msgType = schema.title.toLowerCase().includes('execute') ? 'execute' : 'query';
@@ -21,7 +21,6 @@ const getContractSchemas = (projectDir, contractName) => {
     });
     return parsedSchemas;
   } catch (e) {
-    console.log('e', e);
     return null;
   }
 };
@@ -35,7 +34,7 @@ const validateRefsPath = (refsPath) => {
   }
 };
 
-function getContractDataFromRefs(projectDir, refsPath) {
+const getContractDataFromRefs = (projectDir, refsPath) => {
   try {
     const refsData = fs.readFileSync(refsPath, 'utf8');
     const { localterra } = JSON.parse(refsData);
@@ -53,13 +52,11 @@ function getContractDataFromRefs(projectDir, refsPath) {
   } catch {
     showNoTerrainRefsDialog();
   }
-}
+};
 const getSmartContractData = (projectDir = null) => {
-  const p = path.join(projectDir || path.join(__dirname, '..', 'contracts'), 'refs.terrain.json');
-  console.log('p', p);
-
-  if (validateRefsPath(p)) {
-    return getContractDataFromRefs(projectDir, p);
+  const refsPath = path.join(projectDir || BAKED_REFS_PATH, 'refs.terrain.json');
+  if (validateRefsPath(refsPath)) {
+    return getContractDataFromRefs(projectDir, refsPath);
   }
   showNoTerrainRefsDialog();
 };

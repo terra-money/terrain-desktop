@@ -11,7 +11,6 @@ module.exports = () => {
   ipcMain.handle(DELETE_CONTRACT_REFS, () => store.deleteAllContracts());
 
   ipcMain.handle(IMPORT_SAVED_CONTRACTS, () => {
-    console.log('IMPORT_SAVED_CONTRACTS', IMPORT_SAVED_CONTRACTS);
     let contracts = store.getContracts();
     console.log('contracts', contracts);
     if (!contracts.length) {
@@ -21,8 +20,8 @@ module.exports = () => {
     return contracts;
   });
 
-  ipcMain.handle(IMPORT_NEW_CONTRACTS, () => {
-    const { filePaths } = showSmartContractDialog();
+  ipcMain.handle(IMPORT_NEW_CONTRACTS, async () => {
+    const { filePaths } = await showSmartContractDialog();
     if (!filePaths.length) {
       return store.getContracts();
     }

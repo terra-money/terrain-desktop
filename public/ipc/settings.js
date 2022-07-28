@@ -70,8 +70,8 @@ module.exports = (win, globals) => {
     fs.writeFileSync(configPath, toml.stringify(parsedConfig));
   });
 
-  ipcMain.handle(PROMT_USER_RESTART, () => {
-    const { response } = showPromptUserRestartDialog();
+  ipcMain.handle(PROMT_USER_RESTART, async () => {
+    const { response } = await showPromptUserRestartDialog();
 
     if (response === 1) {
       shutdown(globals.localTerraProcess, win, true);
