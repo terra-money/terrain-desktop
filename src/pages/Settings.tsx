@@ -17,6 +17,7 @@ export default function Settings() {
   const [openAtLogin, setOpenAtLogin] = useState(false);
   const [localTerraPath, setLocalTerraPath] = useState('');
   const [blocktime, setBlocktime] = useState('');
+  const [blocktimeSelect, setBlocktimeSelect] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   const saveSettings = async (data: FieldValues) => {
@@ -24,21 +25,23 @@ export default function Settings() {
     window.store.setLocalTerraPath(data.localTerraPath);
     window.store.setBlocktime(data.blocktime);
     if (localTerraPath !== data.localTerraPath || blocktime !== data.blocktime) {
-      await ipcRenderer.invoke('PromptUserRestart');
+      await ipcRenderer.invoke('promptUserRestart');
     }
+    setBlocktimeSelect(blocktime);
     navigate('/');
   };
 
   useEffect(() => {
     const updateCurrentSettings = () => {
-      const currentOpenAtLogin = window.store.getOpenAtLogin();
-      setOpenAtLogin(currentOpenAtLogin);
+      window.store.getOpenAtLogin().then((res: boolean) => setOpenAtLogin(res));
 
       const currentLocalTerraPath = window.store.getLocalTerraPath();
       setLocalTerraPath(currentLocalTerraPath);
 
-      const currentBlocktime = window.store.getBlocktime();
-      setBlocktime(currentBlocktime);
+      ipcRenderer.invoke('getBlocktime').then((res) => {
+        setBlocktimeSelect(res);
+        setBlocktime(res);
+      });
 
       setIsLoading(false);
     };
@@ -105,7 +108,7 @@ export default function Settings() {
                 control={(
                   <>
                     <Button onClick={async () => {
-                      const newPath = await ipcRenderer.invoke('SetLocalTerraPath');
+                      const newPath = await ipcRenderer.invoke('setLocalTerraPath');
                       resetField('localTerraPath', { defaultValue: newPath });
                     }}
                     >
@@ -127,7 +130,7 @@ export default function Settings() {
                 labelPlacement="start"
                 control={(
                   <div className="pl-4">
-                    <Select size="small" defaultValue={blocktime} {...register('blocktime')}>
+                    <Select size="small" value={blocktimeSelect} {...register('blocktimeSelect')} onChange={(e) => setBlocktimeSelect(e.target.value)}>
                       <MenuItem value="default">Default (5 seconds)</MenuItem>
                       <MenuItem value="1s">1 second</MenuItem>
                       <MenuItem value="200ms">200 milliseconds</MenuItem>

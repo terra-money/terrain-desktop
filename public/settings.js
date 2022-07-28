@@ -18,7 +18,7 @@ const {
 
 // Register IPC handlers relating to the settings page.
 module.exports = (win, globals) => {
-  ipcMain.handle('SetLocalTerraPath', async (save = true) => {
+  ipcMain.handle('setLocalTerraPath', async (save = true) => {
     const { filePaths } = await showPathSelectionDialog();
     const isValid = validateLocalTerraPath(filePaths[0]);
 
@@ -35,7 +35,7 @@ module.exports = (win, globals) => {
     return filePaths[0];
   });
 
-  ipcMain.handle('GetBlocktime', async () => {
+  ipcMain.handle('getBlocktime', async () => {
     const localTerraPath = store.getLocalTerraPath();
     const parsedConfig = toml.parse(fs.readFileSync(path.join(localTerraPath, 'config/config.toml')));
     switch (parsedConfig.consensus.timeout_commit) {
@@ -66,7 +66,7 @@ module.exports = (win, globals) => {
     fs.writeFileSync(configPath, toml.stringify(parsedConfig));
   });
 
-  ipcMain.handle('PromptUserRestart', async () => dialog.showMessageBox({
+  ipcMain.handle('promptUserRestart', async () => dialog.showMessageBox({
     message: 'Settings which you have changed require a restart to update.  Restart the application?',
     buttons: ['No', 'Yes'],
     title: 'Terrarium',
@@ -79,6 +79,6 @@ module.exports = (win, globals) => {
     console.error(`stderr: ${err}`);
   }));
 
-  ipcMain.handle('GetOpenAtLogin', () => app.getLoginItemSettings().openAtLogin);
-  ipcMain.handle('SetOpenAtLogin', (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
+  ipcMain.handle('getOpenAtLogin', () => app.getLoginItemSettings().openAtLogin);
+  ipcMain.handle('setOpenAtLogin', (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
 };
