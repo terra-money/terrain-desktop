@@ -5,7 +5,7 @@ import { demicrofy, nFormatter } from '../utils';
 import { KeyView } from '.';
 import { REACT_APP_FINDER_URL } from '../constants';
 
-function AccountView({ wallet } : { wallet : any }) {
+const AccountView = ({ wallet } : { wallet : any }) => {
   const { accAddress, mnemonic } = wallet.key;
 
   const [balance, setBalance] = useState(0.00);
@@ -77,6 +77,6 @@ function AccountView({ wallet } : { wallet : any }) {
       </div>
     </div>
   );
-}
+};
 
 export default React.memo(AccountView);

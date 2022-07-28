@@ -23,11 +23,11 @@ const {
   startLocalTerra,
   subscribeToLocalTerraEvents,
   parseTxDescriptionAndMsg,
-  setDockIconDisplay,
   isDockerRunning,
   shutdown,
 } = require('./utils/localTerra');
 
+const { setDockIconDisplay } = require('./utils/misc');
 const { showTxOccuredNotif, showStartDockerDialog } = require('./utils/messages');
 
 // Store in an object so values are passed by reference.

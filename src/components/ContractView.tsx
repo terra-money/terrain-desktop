@@ -7,7 +7,7 @@ import { REACT_APP_FINDER_URL } from '../constants';
 import ContractMethodsView from './ContractMethodsView';
 import { truncate } from '../utils';
 
-function ContractView(props: ContractViewProps) {
+const ContractView = (props: ContractViewProps) => {
   const { walletName } = props;
   const {
     name, codeId, address, path, schemas,
@@ -45,5 +45,5 @@ function ContractView(props: ContractViewProps) {
       )}
     </ul>
   );
-}
+};
 export default React.memo(ContractView);
