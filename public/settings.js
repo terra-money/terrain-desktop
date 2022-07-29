@@ -20,7 +20,7 @@ const {
 
 // Register IPC handlers relating to the settings page.
 module.exports = (win, globals) => {
-  ipcMain.handle('setLocalTerraPath', async (save = true) => {
+  ipcMain.handle('setLocalTerraPath', async (_, save = true) => {
     const { filePaths } = await showPathSelectionDialog();
     const isValid = validateLocalTerraPath(filePaths[0]);
 
@@ -29,7 +29,7 @@ module.exports = (win, globals) => {
       // eslint-disable-next-line no-param-reassign
       globals.localTerraProcess = startLocalTerra(filePaths[0]);
       await subscribeToLocalTerraEvents(globals.localTerraProcess, win);
-    } else {
+    } else if (!isValid) {
       await showWrongDirectoryDialog();
       throw Error(`LocalTerra does not exist under the path '${globals.localTerraPath}'`);
     }

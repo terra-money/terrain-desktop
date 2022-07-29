@@ -15,36 +15,34 @@ import {
 
 export default function Settings() {
   const navigate = useNavigate();
-  const { register, handleSubmit, resetField } = useForm();
+  const { register, handleSubmit, resetField, reset } = useForm();
   const [openAtLogin, setOpenAtLogin] = useState(false);
   const [localTerraPath, setLocalTerraPath] = useState('');
   const [blocktime, setBlocktime] = useState('');
-  const [blocktimeSelect, setBlocktimeSelect] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   const saveSettings = async (data: FieldValues) => {
     window.store.setOpenAtLogin(data.openAtLogin);
 
-    if ((localTerraPath !== data.localTerraPath || blocktime !== data.blocktime) && data.blocktime) {
+    if (localTerraPath !== data.localTerraPath || blocktime !== data.blocktime) {
       window.store.setLocalTerraPath(data.localTerraPath);
       window.store.setBlocktime(data.blocktime);
       await ipcRenderer.invoke('promptUserRestart');
     }
-    setBlocktimeSelect(blocktime);
+
     navigate('/');
   };
 
   useEffect(() => {
-    const updateCurrentSettings = () => {
-      window.store.getOpenAtLogin().then((res: boolean) => setOpenAtLogin(res));
+    const updateCurrentSettings = async () => {
+      const currentOpenAtLogin = await window.store.getOpenAtLogin();
+      setOpenAtLogin(currentOpenAtLogin);
 
       const currentLocalTerraPath = window.store.getLocalTerraPath();
       setLocalTerraPath(currentLocalTerraPath);
 
-      ipcRenderer.invoke('getBlocktime').then((res) => {
-        setBlocktimeSelect(res);
-        setBlocktime(res);
-      });
+      const currentBlockTime = await ipcRenderer.invoke('getBlocktime');
+      setBlocktime(currentBlockTime);
 
       setIsLoading(false);
     };
@@ -112,9 +110,8 @@ export default function Settings() {
                 <Select
                   {...register('blocktime')}
                   size="medium"
-                  value={blocktimeSelect}
-                  onChange={(e) => setBlocktimeSelect(e.target.value)}
                   label="Block Time"
+                  defaultValue={blocktime}
                 >
                   <MenuItem value="default">Default (5 seconds)</MenuItem>
                   <MenuItem value="1s">1 second</MenuItem>
@@ -131,7 +128,7 @@ export default function Settings() {
                   InputProps={{
                     endAdornment: (
                       <Button onClick={async () => {
-                        const newPath = await ipcRenderer.invoke('setLocalTerraPath');
+                        const newPath = await ipcRenderer.invoke('setLocalTerraPath', false);
                         resetField('localTerraPath', { defaultValue: newPath });
                       }}
                       >
@@ -154,7 +151,10 @@ export default function Settings() {
               Save
             </button>
             <button
-              onClick={() => navigate('/')}
+              onClick={() => {
+                reset();
+                navigate('/');
+              }}
               data-modal-toggle="top-left-modal"
               type="button"
               className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200
