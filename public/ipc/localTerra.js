@@ -13,6 +13,7 @@ const {
 
 // Register IPC handlers relating to localTerra and contracts importing.
 module.exports = (win, globals) => {
+  console.log('globals in ipc/localTerra', globals);
   ipcMain.handle(INSTALL_LOCAL_TERRA, async () => {
     let localTerraPath;
     try {
@@ -26,10 +27,15 @@ module.exports = (win, globals) => {
     }
   });
 
-  ipcMain.on(GET_LOCAL_TERRA_STATUS, () => win.webContents.send(LOCAL_TERRA_IS_RUNNING, globals.isLocalTerraRunning));
+  ipcMain.on(GET_LOCAL_TERRA_STATUS, () => {
+    console.log('localTerraisRunning event in electron', globals.localTerraisRunning);
+    win.webContents.send(LOCAL_TERRA_IS_RUNNING, globals.isLocalTerraRunning);
+  });
 
   ipcMain.handle(TOGGLE_LOCAL_TERRA, async (_, localTerraStatus) => {
     const localTerraPath = store.getLocalTerraPath();
+    console.log('localTerraPath in TOGGLE_LOCAL_TERRA', localTerraPath);
+    console.log('localTerraStatus in TOGGLE_LOCAL_TERRA', localTerraStatus);
 
     if (localTerraStatus) {
       startLocalTerra(localTerraPath);

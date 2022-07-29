@@ -31,6 +31,7 @@ export const StateListeners = () => {
     }));
 
     ipcRenderer.on(LOCAL_TERRA_IS_RUNNING, ((_: any, isLocalTerraRunning: boolean) => {
+      console.log('LOCAL_TERRA_IS_RUNNING in state listener', isLocalTerraRunning);
       localTerraStarted.set(isLocalTerraRunning);
     }));
 

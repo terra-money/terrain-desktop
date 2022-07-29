@@ -18,7 +18,6 @@ function App() {
   const { terra } = useTerraBlockUpdate();
   const latestHeight = useGetLatestHeight();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
-
   const hasStartedLocalTerra = useLocalTerraStarted();
 
   const [isLoading, setIsLoading] = useState(false);

@@ -50,8 +50,11 @@ const subscribeToLocalTerraEvents = async (win) => {
   localTerraProcess.stdout.on('data', (data) => {
     if (win.isDestroyed()) return;
 
+    console.log('isLocalTerraRunning in subscribeToLocalTerraEvents', isLocalTerraRunning);
+
     win.webContents.send(NEW_LOG, data.toString());
     if (!isLocalTerraRunning) {
+      console.log('INSIDE !isLocalTerraRunning IF');
       txWs.start();
       blockWs.start();
       isLocalTerraRunning = true;

@@ -12,7 +12,6 @@ module.exports = () => {
 
   ipcMain.handle(IMPORT_SAVED_CONTRACTS, () => {
     let contracts = store.getContracts();
-    console.log('contracts', contracts);
     if (!contracts.length) {
       const contractData = getSmartContractData();
       contracts = store.importContracts(contractData);

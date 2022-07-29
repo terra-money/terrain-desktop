@@ -14,6 +14,8 @@ const {
   BROWSER_WINDOW_WIDTH,
   BROWSER_WINDOW_HEIGHT,
   LOCAL_TERRA_PATH_CONFIGURED,
+  NEW_BLOCK,
+  TX,
 } = require('../src/constants');
 
 const {
@@ -101,7 +103,8 @@ async function init() {
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
   }
 
-  if (!(await isDockerRunning())) {
+  const isRunning = await isDockerRunning();
+  if (!isRunning) {
     await showStartDockerDialog();
     app.quit();
   }
@@ -135,27 +138,29 @@ async function init() {
     app.quit();
   });
 
-  win.webContents.once('dom-ready', async () => {
-    const localTerraPath = await store.getLocalTerraPath();
-    if (localTerraPath) {
-      win.webContents.send(LOCAL_TERRA_PATH_CONFIGURED, true);
-      startLocalTerra(localTerraPath);
-      globals.localTerraProcess = await subscribeToLocalTerraEvents(win);
-    }
+  // win.webContents.once('dom-ready', async () => {
+  const localTerraPath = await store.getLocalTerraPath();
+  console.log('localTerraPath in dom-ready', localTerraPath);
+  if (localTerraPath) {
+    win.webContents.send(LOCAL_TERRA_PATH_CONFIGURED, true);
+    startLocalTerra(localTerraPath);
+    globals.localTerraProcess = await subscribeToLocalTerraEvents(win);
+    console.log('globals in dom-ready', globals);
+  }
 
-    txWs.subscribeTx({}, async ({ value }) => {
-      const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
-      win.webContents.send('Tx', { description, msg, ...value });
-      showTxOccuredNotif(description);
-    });
-
-    blockWs.subscribe('NewBlock', {}, ({ value }) => {
-      win.webContents.send('NewBlock', value);
-    });
-
-    win.show();
-    win.focus();
+  txWs.subscribeTx({}, async ({ value }) => {
+    const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
+    win.webContents.send(TX, { description, msg, ...value });
+    showTxOccuredNotif(description);
   });
+
+  blockWs.subscribe(NEW_BLOCK, {}, ({ value }) => {
+    win.webContents.send(NEW_BLOCK, value);
+  });
+
+  win.show();
+  win.focus();
+  // });
 }
 
 app.on('ready', init);
