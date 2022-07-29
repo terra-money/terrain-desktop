@@ -15,7 +15,12 @@ import {
 
 export default function Settings() {
   const navigate = useNavigate();
-  const { register, handleSubmit, resetField, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    resetField,
+    reset,
+  } = useForm();
   const [openAtLogin, setOpenAtLogin] = useState(false);
   const [localTerraPath, setLocalTerraPath] = useState('');
   const [blocktime, setBlocktime] = useState('');
