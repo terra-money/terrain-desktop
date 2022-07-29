@@ -13,7 +13,7 @@ import logo from './assets/terra-logo.svg';
 import useNav from './hooks/routes';
 
 function App() {
-  const { element: routes, menu } = useNav();
+  const { routes, menu } = useNav();
   const navigate = useNavigate();
   const { terra } = useTerraBlockUpdate();
   const latestHeight = useGetLatestHeight();
@@ -31,8 +31,7 @@ function App() {
 
   useEffect(() => {
     if (!isLocalTerraPathConfigured.get()) navigate('/onboard');
-    else navigate('/');
-  }, [isLocalTerraPathConfigured]);
+  }, []);
 
   useEffect(() => {
     if (hasStartedLocalTerra.get() === null) setIsLoading(true);
