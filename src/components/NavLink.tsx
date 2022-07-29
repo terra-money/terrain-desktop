@@ -1,7 +1,7 @@
 import { Link, useMatch, useResolvedPath } from 'react-router-dom';
 import React from 'react';
 
-function NavLink(props: { to: any, children: any, className: string }) {
+const NavLink = (props: { to: any, children: any, className: string }) => {
   const resolved = useResolvedPath(props.to);
   const match = useMatch({ path: resolved.pathname, end: true });
   return (
@@ -12,6 +12,6 @@ function NavLink(props: { to: any, children: any, className: string }) {
       } space-x-1 items-center rounded-md mt-2`}
     />
   );
-}
+};
 
 export default React.memo(NavLink);

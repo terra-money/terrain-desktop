@@ -2,17 +2,15 @@ import React from 'react';
 import { MsgExecuteContract } from '@terra-money/terra.js';
 import Form from '@rjsf/material-ui';
 import { Button } from '@mui/material';
-import { useTerra } from '../package/hooks';
+import { useTerra } from '../hooks/terra';
 
-function ObjectFieldTemplate(props: any) {
-  return (
-    <div className="py-4">
-      <div className="text-xl">{props.title}</div>
-      {props.description}
-      {props.properties.map((element: any) => <div key={element.key} className="property-wrapper">{element.content}</div>)}
-    </div>
-  );
-}
+const ObjectFieldTemplate = (props: any) => (
+  <div className="py-4">
+    <div className="text-xl">{props.title}</div>
+    {props.description}
+    {props.properties.map((element: any) => <div key={element.key} className="property-wrapper">{element.content}</div>)}
+  </div>
+);
 
 const ContractMethodsView = ({ schemas, contractAddress, walletName }: any) => {
   const { terra, wallets } = useTerra();

@@ -1,43 +1,45 @@
-const {
-  app, dialog, ipcMain,
-} = require('electron');
+const { app, ipcMain } = require('electron');
 const toml = require('@iarna/toml');
 const fs = require('fs');
 const path = require('path');
-const { store } = require('./store');
-const { DEFAULT_BLOCKTIME, ONESECOND_BLOCKTIME, TWOHUNDREDMS_BLOCKTIME } = require('./constants');
+const { store } = require('../store');
+const {
+  DEFAULT_BLOCKTIME, ONESECOND_BLOCKTIME, TWOHUNDREDMS_BLOCKTIME,
+  SET_LOCAL_TERRA_PATH, GET_BLOCKTIME, SET_BLOCKTIME, PROMT_USER_RESTART,
+} = require('../../src/constants');
 const {
   startLocalTerra,
   subscribeToLocalTerraEvents,
   validateLocalTerraPath,
   shutdown,
-} = require('./utils');
+} = require('../utils/localTerra');
 
 const {
   showPathSelectionDialog,
   showWrongDirectoryDialog,
-} = require('./messages');
+  showPromptUserRestartDialog,
+} = require('../utils/messages');
 
 // Register IPC handlers relating to the settings page.
 module.exports = (win, globals) => {
-  ipcMain.handle('setLocalTerraPath', async (_, save = true) => {
+  ipcMain.handle(SET_LOCAL_TERRA_PATH, async (save = true) => {
     const { filePaths } = await showPathSelectionDialog();
     const isValid = validateLocalTerraPath(filePaths[0]);
 
     if (isValid && save) {
       store.setLocalTerraPath(filePaths[0]);
       // eslint-disable-next-line no-param-reassign
-      globals.localTerraProcess = startLocalTerra(filePaths[0]);
-      await subscribeToLocalTerraEvents(globals.localTerraProcess, win);
-    } else if (!isValid) {
+      await startLocalTerra(filePaths[0]);
+      globals.localTerra.process = await subscribeToLocalTerraEvents(win);
+    } else {
       await showWrongDirectoryDialog();
-      throw Error(`LocalTerra does not exist under the path '${globals.localTerraPath}'`);
+      throw Error(`LocalTerra does not exist under the path '${filePaths[0]}'`);
     }
 
     return filePaths[0];
   });
 
-  ipcMain.handle('getBlocktime', async () => {
+  ipcMain.handle(GET_BLOCKTIME, () => {
     const localTerraPath = store.getLocalTerraPath();
     const parsedConfig = toml.parse(fs.readFileSync(path.join(localTerraPath, 'config/config.toml')));
     switch (parsedConfig.consensus.timeout_commit) {
@@ -48,7 +50,7 @@ module.exports = (win, globals) => {
     }
   });
 
-  ipcMain.handle('setBlocktime', async (_, blocktime) => {
+  ipcMain.handle(SET_BLOCKTIME, (_, blocktime) => {
     const localTerraPath = store.getLocalTerraPath();
     const configPath = path.join(localTerraPath, 'config/config.toml');
     const parsedConfig = toml.parse(fs.readFileSync(configPath, 'utf8'));
@@ -68,22 +70,13 @@ module.exports = (win, globals) => {
     fs.writeFileSync(configPath, toml.stringify(parsedConfig));
   });
 
-  ipcMain.handle('promptUserRestart', async () => dialog.showMessageBox({
-    type: 'question',
-    buttons: ['Restart', 'Later'],
-    defaultId: 0,
-    title: 'Terrarium',
-    message: 'Restart Terrarium?',
-    detail: 'Updated settings require application restart to take effect.',
-    icon: path.join(__dirname, '..', 'src', 'assets', 'terra-logo.png'),
-  }).then((result) => {
-    if (result.response === 0) {
-      shutdown(globals.localTerraProcess, win, true);
-    }
-  }).catch((err) => {
-    console.error(`stderr: ${err}`);
-  }));
+  ipcMain.handle(PROMT_USER_RESTART, async () => {
+    const { response } = await showPromptUserRestartDialog();
 
-  ipcMain.handle('getOpenAtLogin', () => app.getLoginItemSettings().openAtLogin);
-  ipcMain.handle('setOpenAtLogin', (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
+    if (response === 1) {
+      shutdown(win, true);
+    }
+    ipcMain.handle('getOpenAtLogin', () => app.getLoginItemSettings().openAtLogin);
+    ipcMain.handle('setOpenAtLogin', (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
+  });
 };

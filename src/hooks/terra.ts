@@ -1,10 +1,12 @@
 import { LocalTerra, Wallet } from '@terra-money/terra.js';
 import { useContext, useEffect, useState } from 'react';
-import { Downgraded, useState as useStateHook } from '@hookstate/core';
+import { useState as useStateHook } from '@hookstate/core';
 import { ipcRenderer } from 'electron';
 import { TerraContext } from '../components/Provider';
-import { ITerraHook, ITerraHookBlockUpdate } from '../interface/ITerraHook';
-import ElectronContext from '../../context/ElectronContextProvider';
+import { ITerraHook, ITerraHookBlockUpdate } from '../models/TerraHook';
+import {
+  localTerraStarted, localTerraPathConfigured, logsState, blockState, txState,
+} from '../context/ElectronContextProvider';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
@@ -51,36 +53,21 @@ export function useTerraBlockUpdate() {
   return hook;
 }
 
-export const useBlocks = () => {
-  const { blockState } = useContext(ElectronContext);
-  return blockState.attach(Downgraded);
-};
+export const useBlocks = () => useStateHook(blockState);
 
 export const useGetLatestHeight = () => {
-  const { blockState } = useContext(ElectronContext);
-  const { latestHeight } = blockState.attach(Downgraded).get();
+  const blocks = useBlocks();
+  const { latestHeight } = blocks.get();
   return latestHeight || 0;
 };
 
-export const useGetLogs = () => {
-  const { logsState } = useContext(ElectronContext);
-  return logsState.attach(Downgraded).get();
-};
+export const useGetLogs = () => useStateHook(logsState).get();
 
-export const useTxs = () => {
-  const { txState } = useContext(ElectronContext);
-  return txState.attach(Downgraded);
-};
+export const useTxs = () => useStateHook(txState);
 
-export const useLocalTerraPathConfigured = () => {
-  const { localTerraPathConfigured } = useContext(ElectronContext);
-  return localTerraPathConfigured.attach(Downgraded).get();
-};
+export const useLocalTerraPathConfigured = () => useStateHook(localTerraPathConfigured);
 
-export const useLocalTerraStarted = () => {
-  const { localTerraStarted } = useContext(ElectronContext);
-  return useStateHook(localTerraStarted);
-};
+export const useLocalTerraStarted = () => useStateHook(localTerraStarted);
 
 export function useGetTxFromHeight(height?: number) {
   const terra = useContext(TerraContext) as LocalTerra;
