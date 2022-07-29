@@ -48,13 +48,23 @@ const downloadLocalTerra = async () => {
 };
 
 const startLocalTerra = (localTerraPath) => {
-  exec('docker compose up -d --wait', { cwd: localTerraPath });
+  exec('docker compose up -d --wait', {
+    cwd: localTerraPath,
+    env: {
+      PATH: `${process.env.PATH}:/usr/local/bin/`,
+    },
+  });
   return waitOn({ resources: ['http://localhost:26657'] });
 };
 
 const subscribeToLocalTerraEvents = async (win) => {
   const localTerraPath = await store.getLocalTerraPath();
-  const localTerraProcess = spawn('docker', ['compose', 'logs', '-f'], { cwd: localTerraPath });
+  const localTerraProcess = spawn('docker', ['compose', 'logs', '-f'], {
+    cwd: localTerraPath,
+    env: {
+      PATH: `${process.env.PATH}:/usr/local/bin/`,
+    },
+  });
 
   txWs = new WebSocketClient(LOCAL_TERRA_WS);
   blockWs = new WebSocketClient(LOCAL_TERRA_WS);
@@ -104,7 +114,12 @@ const stopLocalTerra = async () => {
   txWs.destroy();
   blockWs.destroy();
 
-  await exec('docker compose stop', { cwd: localTerraPath });
+  await exec('docker compose stop', {
+    cwd: localTerraPath,
+    env: {
+      PATH: `${process.env.PATH}:/usr/local/bin/`,
+    },
+  });
 
   globals.localTerra.isRunning = false;
   showLocalTerraStopNotif();
@@ -122,7 +137,11 @@ const shutdown = async (win, restart = false) => {
 };
 const isDockerRunning = async () => {
   try {
-    await exec('docker ps');
+    await exec('docker ps', {
+      env: {
+        PATH: `${process.env.PATH}:/usr/local/bin/`,
+      },
+    });
     return true;
   } catch (err) {
     return false;
