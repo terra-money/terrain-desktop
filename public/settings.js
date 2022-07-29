@@ -29,7 +29,7 @@ module.exports = (win, globals) => {
       // eslint-disable-next-line no-param-reassign
       globals.localTerraProcess = startLocalTerra(filePaths[0]);
       await subscribeToLocalTerraEvents(globals.localTerraProcess, win);
-    } else if (!isValid) {
+    } else if (!isValid && typeof globals.localTerraPath !== 'undefined') {
       await showWrongDirectoryDialog();
       throw Error(`LocalTerra does not exist under the path '${globals.localTerraPath}'`);
     }
