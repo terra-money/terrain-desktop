@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "homepage": "./",
   "main": "public/electron.js",
+  "engines": {
+    "node": "^16"
+  },
   "scripts": {
     "start": "BROWSER=none react-app-rewired start",
     "forge-start": "electron-forge start",
@@ -48,6 +51,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-virtuoso": "^2.14.0",
+    "semver": "^7.3.7",
     "tree-kill": "^1.2.2",
     "wait-on": "^6.0.1"
   },
