@@ -24,6 +24,7 @@ export default function Settings() {
 
   const saveSettings = async (data: FieldValues) => {
     window.store.setOpenAtLogin(data.openAtLogin);
+
     if ((localTerraPath !== data.localTerraPath || blocktime !== data.blocktime) && data.blocktime) {
       window.store.setLocalTerraPath(data.localTerraPath);
       window.store.setBlocktime(data.blocktime);

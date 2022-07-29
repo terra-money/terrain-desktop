@@ -70,13 +70,14 @@ module.exports = (win, globals) => {
 
   ipcMain.handle('promptUserRestart', async () => dialog.showMessageBox({
     type: 'question',
-    buttons: ['Later', 'Restart Now'],
-    defaultId: 1,
+    buttons: ['Restart', 'Later'],
+    defaultId: 0,
     title: 'Terrarium',
     message: 'Restart Terrarium?',
     detail: 'Updated settings require application restart to take effect.',
+    icon: path.join(__dirname, 'terrarium_logo.png'),
   }).then((result) => {
-    if (result.response === 1) {
+    if (result.response === 0) {
       shutdown(globals.localTerraProcess, win, true);
     }
   }).catch((err) => {
