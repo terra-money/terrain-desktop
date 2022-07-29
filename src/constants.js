@@ -6,7 +6,7 @@ const DELETE_CONTRACT_REFS = 'deleteContractRefs';
 const SET_LOCAL_TERRA_PATH = 'setLocalTerraPath';
 const GET_BLOCKTIME = 'getBlocktime';
 const SET_BLOCKTIME = 'setBlocktime';
-const PROMT_USER_RESTART = 'promptUserRestart';
+const PROMPT_USER_RESTART = 'promptUserRestart';
 const GET_OPEN_AT_LOGIN = 'getOpenAtLogin';
 const SET_OPEN_AT_LOGIN = 'setOpenAtLogin';
 const GET_LOCAL_TERRA_STATUS = 'getLocalTerraStatus';
@@ -23,6 +23,7 @@ const LOCAL_TERRA_GIT = 'https://github.com/terra-money/LocalTerra.git';
 
 const BROWSER_WINDOW_WIDTH = 1200;
 const MAX_LOG_LENGTH = 500;
+const MAX_BLOCKS_LENGTH = 500;
 const BROWSER_WINDOW_HEIGHT = 720;
 
 const DEFAULT_BLOCKTIME = {
@@ -54,6 +55,7 @@ const ONESECOND_BLOCKTIME = {
   timeout_precommit_delta: '1s',
   timeout_commit: '1s',
 };
+
 module.exports = {
   GET_LOCAL_TERRA_STATUS,
   SET_OPEN_AT_LOGIN,
@@ -62,7 +64,7 @@ module.exports = {
   IMPORT_NEW_CONTRACTS,
   GET_BLOCKTIME,
   DELETE_CONTRACT_REFS,
-  PROMT_USER_RESTART,
+  PROMPT_USER_RESTART,
   GET_OPEN_AT_LOGIN,
   DEFAULT_BLOCKTIME,
   TWOHUNDREDMS_BLOCKTIME,
@@ -74,6 +76,7 @@ module.exports = {
   IMPORT_SAVED_CONTRACTS,
   LOCAL_TERRA_WS,
   MAX_LOG_LENGTH,
+  MAX_BLOCKS_LENGTH,
   LOCAL_TERRA_GIT,
   BROWSER_WINDOW_WIDTH,
   BROWSER_WINDOW_HEIGHT,
