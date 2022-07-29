@@ -75,7 +75,7 @@ module.exports = (win, globals) => {
     title: 'Terrarium',
     message: 'Restart Terrarium?',
     detail: 'Updated settings require application restart to take effect.',
-    icon: path.join(__dirname, 'terrarium_logo.png'),
+    icon: path.join(__dirname, '..', 'src', 'assets', 'terra-logo.png'),
   }).then((result) => {
     if (result.response === 0) {
       shutdown(globals.localTerraProcess, win, true);
