@@ -46,13 +46,23 @@ async function downloadLocalTerra() {
   if (fs.existsSync(LOCAL_TERRA_PATH)) {
     throw Error(`LocalTerra already exists under the path '${LOCAL_TERRA_PATH}'`);
   } else {
-    await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, { cwd: app.getPath('appData') });
+    await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, {
+      cwd: app.getPath('appData'),
+      env: {
+        PATH: `${process.env.PATH}:/usr/local/bin/`,
+      },
+    });
   }
   return LOCAL_TERRA_PATH;
 }
 
 function startLocalTerra(localTerraPath) {
-  return spawn('docker-compose', ['up'], { cwd: localTerraPath });
+  return spawn('docker-compose', ['up'], {
+    cwd: localTerraPath,
+    env: {
+      PATH: `${process.env.PATH}:/usr/local/bin/`,
+    },
+  });
 }
 
 const mergeSchemaArrs = (schema) => (schema.oneOf && schema.anyOf && [...schema.oneOf, ...schema.anyOf]) || schema.anyOf || schema.oneOf;
@@ -168,7 +178,11 @@ const setDockIconDisplay = (state, win) => {
 
 const isDockerRunning = async () => {
   try {
-    await exec('docker ps');
+    await exec('docker ps', {
+      env: {
+        PATH: `${process.env.PATH}:/usr/local/bin/`,
+      },
+    });
     return true;
   } catch (err) {
     return false;
