@@ -29,11 +29,11 @@ module.exports = (win, globals) => {
     if (isValid && save) {
       store.setLocalTerraPath(filePaths[0]);
       // eslint-disable-next-line no-param-reassign
-      globals.localTerraProcess = startLocalTerra(filePaths[0]);
-      await subscribeToLocalTerraEvents(globals.localTerraProcess, win);
+      await startLocalTerra(filePaths[0]);
+      globals.localTerra.process = await subscribeToLocalTerraEvents(win);
     } else {
       await showWrongDirectoryDialog();
-      throw Error(`LocalTerra does not exist under the path '${globals.localTerraPath}'`);
+      throw Error(`LocalTerra does not exist under the path '${filePaths[0]}'`);
     }
 
     return filePaths[0];
@@ -74,7 +74,7 @@ module.exports = (win, globals) => {
     const { response } = await showPromptUserRestartDialog();
 
     if (response === 1) {
-      shutdown(globals.localTerraProcess, win, true);
+      shutdown(win, true);
     }
     ipcMain.handle('getOpenAtLogin', () => app.getLoginItemSettings().openAtLogin);
     ipcMain.handle('setOpenAtLogin', (_, status) => app.setLoginItemSettings({ openAtLogin: status }));

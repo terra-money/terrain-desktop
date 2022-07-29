@@ -5,19 +5,25 @@ const { WebSocketClient } = require('@terra-money/terra.js');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
-const { showLocalTerraStartNotif, showLocalTerraStopNotif } = require('./messages');
+const waitOn = require('wait-on');
 const exec = util.promisify(require('child_process').exec);
+const { showLocalTerraStartNotif, showLocalTerraStopNotif, showTxOccuredNotif } = require('./messages');
 const { store } = require('../store');
-const { setDockIconDisplay } = require('./misc');
+const { setDockIconDisplay, parseTxDescriptionAndMsg } = require('./misc');
+const globals = require('./globals');
 
 const {
-  LOCAL_TERRA_GIT, LOCAL_TERRA_WS, LOCAL_TERRA_IS_RUNNING, LOCAL_TERRA_PATH_CONFIGURED, NEW_LOG,
+  LOCAL_TERRA_GIT,
+  LOCAL_TERRA_WS,
+  LOCAL_TERRA_IS_RUNNING,
+  LOCAL_TERRA_PATH_CONFIGURED,
+  NEW_LOG,
+  NEW_BLOCK,
+  TX,
 } = require('../../src/constants');
 
-const txWs = new WebSocketClient(LOCAL_TERRA_WS);
-const blockWs = new WebSocketClient(LOCAL_TERRA_WS);
-
-let isLocalTerraRunning = false;
+let txWs = new WebSocketClient(LOCAL_TERRA_WS);
+let blockWs = new WebSocketClient(LOCAL_TERRA_WS);
 
 const validateLocalTerraPath = (url) => {
   try {
@@ -41,23 +47,37 @@ const downloadLocalTerra = async () => {
   return localTerraPath;
 };
 
-const startLocalTerra = (localTerraPath) => exec('docker compose up -d --wait', { cwd: localTerraPath });
+const startLocalTerra = (localTerraPath) => {
+  exec('docker compose up -d --wait', { cwd: localTerraPath });
+  return waitOn({ resources: ['http://localhost:26657'] });
+};
 
 const subscribeToLocalTerraEvents = async (win) => {
   const localTerraPath = await store.getLocalTerraPath();
   const localTerraProcess = spawn('docker', ['compose', 'logs', '-f'], { cwd: localTerraPath });
 
-  localTerraProcess.stdout.on('data', (data) => {
+  txWs = new WebSocketClient(LOCAL_TERRA_WS);
+  blockWs = new WebSocketClient(LOCAL_TERRA_WS);
+
+  localTerraProcess.stdout.on('data', async (data) => {
     if (win.isDestroyed()) return;
 
-    console.log('isLocalTerraRunning in subscribeToLocalTerraEvents', isLocalTerraRunning);
-
     win.webContents.send(NEW_LOG, data.toString());
-    if (!isLocalTerraRunning) {
-      console.log('INSIDE !isLocalTerraRunning IF');
+    if (!globals.localTerra.isRunning) {
+      txWs.subscribeTx({}, async ({ value }) => {
+        const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
+        win.webContents.send(TX, { description, msg, ...value });
+        showTxOccuredNotif(description);
+      });
+
+      blockWs.subscribe(NEW_BLOCK, {}, ({ value }) => {
+        win.webContents.send(NEW_BLOCK, value);
+      });
+
       txWs.start();
       blockWs.start();
-      isLocalTerraRunning = true;
+
+      globals.localTerra.isRunning = true;
       win.webContents.send(LOCAL_TERRA_IS_RUNNING, true);
       win.webContents.send(LOCAL_TERRA_PATH_CONFIGURED, true);
       showLocalTerraStartNotif();
@@ -66,17 +86,18 @@ const subscribeToLocalTerraEvents = async (win) => {
   localTerraProcess.stderr.on('data', (data) => {
     console.error(`stderr: ${data}`);
   });
+
   localTerraProcess.on('close', () => {
     if (win.isDestroyed()) return;
-    isLocalTerraRunning = false;
+    globals.localTerra.isRunning = false;
     win.webContents.send(LOCAL_TERRA_IS_RUNNING, false);
   });
   return localTerraProcess;
 };
 
-const stopLocalTerra = async (localTerraProcess) => {
+const stopLocalTerra = async () => {
   const localTerraPath = await store.getLocalTerraPath();
-  if (localTerraProcess.killed) {
+  if (globals.localTerra.process.killed) {
     console.log('process already killed');
     return;
   }
@@ -85,15 +106,15 @@ const stopLocalTerra = async (localTerraProcess) => {
 
   await exec('docker compose stop', { cwd: localTerraPath });
 
-  isLocalTerraRunning = false;
+  globals.localTerra.isRunning = false;
   showLocalTerraStopNotif();
 };
 
-const shutdown = async (localTerraProcess, win, restart = false) => {
+const shutdown = async (win, restart = false) => {
   win.hide();
   setDockIconDisplay(false, win);
   app.isQuitting = true;
-  await stopLocalTerra(localTerraProcess);
+  await stopLocalTerra();
   if (restart) {
     app.relaunch();
   }

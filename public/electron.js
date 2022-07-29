@@ -9,34 +9,21 @@ const pkg = require('../package.json');
 const registerSettingsHandlers = require('./ipc/settings');
 const registerContractHandlers = require('./ipc/contracts');
 const regsisterLocalTerraHandlers = require('./ipc/localTerra');
-
 const {
   BROWSER_WINDOW_WIDTH,
   BROWSER_WINDOW_HEIGHT,
   LOCAL_TERRA_PATH_CONFIGURED,
-  NEW_BLOCK,
-  TX,
 } = require('../src/constants');
-
 const {
-  txWs,
-  blockWs,
   stopLocalTerra,
   startLocalTerra,
   subscribeToLocalTerraEvents,
-  parseTxDescriptionAndMsg,
   isDockerRunning,
   shutdown,
 } = require('./utils/localTerra');
-
+const globals = require('./utils/globals');
 const { setDockIconDisplay } = require('./utils/misc');
-const { showTxOccuredNotif, showStartDockerDialog } = require('./utils/messages');
-
-// Store in an object so values are passed by reference.
-const globals = {
-  localTerraProcess: undefined,
-  localTerraisRunning: undefined,
-};
+const { showStartDockerDialog } = require('./utils/messages');
 
 let tray = null;
 
@@ -74,7 +61,7 @@ async function init() {
     { type: 'separator' },
     {
       label: 'Quit',
-      click: () => shutdown(globals.localTerraProcess, win),
+      click: () => shutdown(win),
     },
   ]);
 
@@ -98,7 +85,7 @@ async function init() {
     appMenu[0].submenu[8] = new MenuItem({
       label: `Quit ${app.getName()}`,
       accelerator: 'Command+Q',
-      click: () => shutdown(globals.localTerraProcess, win),
+      click: () => shutdown(win),
     });
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
   }
@@ -114,8 +101,8 @@ async function init() {
     return { action: 'deny' };
   });
 
-  registerSettingsHandlers(win, globals);
-  regsisterLocalTerraHandlers(win, globals);
+  registerSettingsHandlers(win);
+  regsisterLocalTerraHandlers(win);
   registerContractHandlers();
 
   // Catch window close and hide the window instead.
@@ -129,38 +116,26 @@ async function init() {
   });
 
   app.on('window-all-closed', async () => {
-    await stopLocalTerra(globals.localTerraProcess);
+    await stopLocalTerra();
     app.quit();
   });
 
   process.on('SIGINT', async () => { // catch ctrl+c event
-    await stopLocalTerra(globals.localTerraProcess);
+    await stopLocalTerra();
     app.quit();
   });
 
-  // win.webContents.once('dom-ready', async () => {
-  const localTerraPath = await store.getLocalTerraPath();
-  console.log('localTerraPath in dom-ready', localTerraPath);
-  if (localTerraPath) {
-    win.webContents.send(LOCAL_TERRA_PATH_CONFIGURED, true);
-    startLocalTerra(localTerraPath);
-    globals.localTerraProcess = await subscribeToLocalTerraEvents(win);
-    console.log('globals in dom-ready', globals);
-  }
+  win.webContents.once('dom-ready', async () => {
+    const localTerraPath = await store.getLocalTerraPath();
+    if (localTerraPath) {
+      win.webContents.send(LOCAL_TERRA_PATH_CONFIGURED, true);
+      await startLocalTerra(localTerraPath);
+      globals.localTerra.process = await subscribeToLocalTerraEvents(win);
+    }
 
-  txWs.subscribeTx({}, async ({ value }) => {
-    const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
-    win.webContents.send(TX, { description, msg, ...value });
-    showTxOccuredNotif(description);
+    win.show();
+    win.focus();
   });
-
-  blockWs.subscribe(NEW_BLOCK, {}, ({ value }) => {
-    win.webContents.send(NEW_BLOCK, value);
-  });
-
-  win.show();
-  win.focus();
-  // });
 }
 
 app.on('ready', init);
