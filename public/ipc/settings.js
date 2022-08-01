@@ -20,8 +20,10 @@ const {
   showPromptUserRestartDialog,
 } = require('../utils/messages');
 
+const globals = require('../utils/globals');
+
 // Register IPC handlers relating to the settings page.
-module.exports = (win, globals) => {
+module.exports = (win) => {
   ipcMain.handle(SET_LOCAL_TERRA_PATH, async (save = true) => {
     const { filePaths } = await showPathSelectionDialog();
     const isValid = validateLocalTerraPath(filePaths[0]);

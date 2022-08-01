@@ -1,4 +1,4 @@
-const INSTALL_LOCAL_TERRA = 'installLocalTerra';
+const INSTALL_LOCAL_TERRA = 'InstallLocalTerra';
 const TOGGLE_LOCAL_TERRA = 'toggleLocalTerra';
 const IMPORT_SAVED_CONTRACTS = 'importSavedContracts';
 const IMPORT_NEW_CONTRACTS = 'importNewContracts';

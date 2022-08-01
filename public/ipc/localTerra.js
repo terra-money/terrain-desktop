@@ -18,7 +18,6 @@ module.exports = (win) => {
     let localTerraPath;
     try {
       localTerraPath = await downloadLocalTerra();
-      await startLocalTerra(localTerraPath);
       globals.localTerra.process = await subscribeToLocalTerraEvents(win);
       store.setLocalTerraPath(localTerraPath);
     } catch (e) {
