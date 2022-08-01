@@ -31,9 +31,9 @@ module.exports = (win) => {
     if (isValid && save) {
       store.setLocalTerraPath(filePaths[0]);
       // eslint-disable-next-line no-param-reassign
-      await startLocalTerra(filePaths[0]);
-      globals.localTerra.process = await subscribeToLocalTerraEvents(win);
-    } else {
+      globals.localTerraProcess = startLocalTerra(filePaths[0]);
+      await subscribeToLocalTerraEvents(globals.localTerraProcess, win);
+    } else if (!isValid && typeof globals.localTerraPath !== 'undefined') {
       await showWrongDirectoryDialog();
       throw Error(`LocalTerra does not exist under the path '${filePaths[0]}'`);
     }

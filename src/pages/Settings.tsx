@@ -134,7 +134,9 @@ export default function Settings() {
                     endAdornment: (
                       <Button onClick={async () => {
                         const newPath = await ipcRenderer.invoke('setLocalTerraPath', false);
-                        resetField('localTerraPath', { defaultValue: newPath });
+                        if (newPath) {
+                          resetField('localTerraPath', { defaultValue: newPath });
+                        }
                       }}
                       >
                         Browse
