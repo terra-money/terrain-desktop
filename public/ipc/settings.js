@@ -4,8 +4,15 @@ const fs = require('fs');
 const path = require('path');
 const { store } = require('../store');
 const {
-  DEFAULT_BLOCKTIME, ONESECOND_BLOCKTIME, TWOHUNDREDMS_BLOCKTIME,
-  SET_LOCAL_TERRA_PATH, GET_BLOCKTIME, SET_BLOCKTIME, PROMT_USER_RESTART,
+  DEFAULT_BLOCKTIME,
+  ONESECOND_BLOCKTIME,
+  TWOHUNDREDMS_BLOCKTIME,
+  SET_LOCAL_TERRA_PATH,
+  GET_BLOCKTIME,
+  SET_BLOCKTIME,
+  PROMPT_USER_RESTART,
+  GET_OPEN_AT_LOGIN,
+  SET_OPEN_AT_LOGIN,
 } = require('../../src/constants');
 const {
   startLocalTerra,
@@ -23,7 +30,11 @@ const {
 const globals = require('../utils/globals');
 
 // Register IPC handlers relating to the settings page.
+
 module.exports = (win) => {
+  ipcMain.handle(GET_OPEN_AT_LOGIN, () => app.getLoginItemSettings().openAtLogin);
+  ipcMain.handle(SET_OPEN_AT_LOGIN, (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
+
   ipcMain.handle(SET_LOCAL_TERRA_PATH, async (save = true) => {
     const { filePaths } = await showPathSelectionDialog();
     const isValid = validateLocalTerraPath(filePaths[0]);
@@ -72,13 +83,11 @@ module.exports = (win) => {
     fs.writeFileSync(configPath, toml.stringify(parsedConfig));
   });
 
-  ipcMain.handle(PROMT_USER_RESTART, async () => {
+  ipcMain.handle(PROMPT_USER_RESTART, async () => {
     const { response } = await showPromptUserRestartDialog();
 
     if (response === 1) {
       shutdown(win, true);
     }
-    ipcMain.handle('getOpenAtLogin', () => app.getLoginItemSettings().openAtLogin);
-    ipcMain.handle('setOpenAtLogin', (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
   });
 };
