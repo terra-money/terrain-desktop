@@ -33,32 +33,43 @@ function AccountView({ wallet } : { wallet : any }) {
   }, [txInfos]);
 
   return (
-    <div className="flex text-left justify-between px-4 py-2 border-b border-b-blue-900">
+    <div
+      className="flex text-left justify-between items-center px-4 py-3 m-4 border-2 rounded-2xl border-blue-600"
+      style={{
+        background: '#ffffffe0',
+        boxShadow: '0px 0px 6px 1px #9ca3af73',
+      }}
+    >
       {open && <KeyView mnemonic={mnemonic} handleClose={handleClose} />}
       <a
         href={`${REACT_APP_FINDER_URL}/address/${accAddress}`}
         target="_blank"
         rel="noreferrer"
       >
-        <div className="flex w-[570px]">
+        <div className="flex w-[470px]">
           <div>
-            <p className="text-xs font-bold text-blue-600 uppercase">Address</p>
-            <p className="text-2xl">{accAddress}</p>
+            <p className="text-[18px] font-bold  tracking-wide text-blue-600">
+              {accAddress}
+            </p>
           </div>
         </div>
       </a>
-      <div className="flex gap-20">
-        <div className="ml-6">
-          <p className="text-xs font-bold text-blue-600 uppercase">Luna</p>
-          <p className="text-xl text-blue-900">{nFormatter(balance)}</p>
+      <div className="flex lg:gap-8 xl:gap-24">
+        <div className="ml-6 w-[50px]">
+          <p className="text-xl font-bold text-blue-600">
+            {nFormatter(balance)}
+          </p>
         </div>
         <div>
-          <p className="text-xs font-bold text-blue-600 uppercase">TX Count</p>
-          <p className="text-xs font-bold text-blue-600 uppercase">
+          <p className="text-xl font-bold text-blue-600 uppercase w-[92px]">
             {txInfos.length}
           </p>
         </div>
-        <button type="button" onClick={handleOpen} className="text-blue-500">
+        <button
+          type="button"
+          onClick={handleOpen}
+          className="text-blue-600 ml-2.5"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
