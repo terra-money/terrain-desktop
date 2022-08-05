@@ -34,7 +34,7 @@ function AccountView({ wallet } : { wallet : any }) {
 
   return (
     <div
-      className="flex text-left justify-between items-center px-4 py-3 m-4 border-2 rounded-2xl border-blue-600"
+      className="flex text-left justify-between items-center px-4 py-3 my-3 mx-4 border-2 rounded-2xl border-blue-600"
       style={{
         background: '#ffffffe0',
         boxShadow: '0px 0px 6px 1px #9ca3af73',
@@ -48,7 +48,7 @@ function AccountView({ wallet } : { wallet : any }) {
       >
         <div className="flex w-[470px]">
           <div>
-            <p className="text-[18px] font-bold  tracking-wide text-blue-600">
+            <p className="text-[18px] font-bold  tracking-wide text-blue-700 hover:text-blue-500 hover:underline">
               {accAddress}
             </p>
           </div>
@@ -56,19 +56,19 @@ function AccountView({ wallet } : { wallet : any }) {
       </a>
       <div className="flex lg:gap-8 xl:gap-24">
         <div className="ml-6 w-[50px]">
-          <p className="text-xl font-bold text-blue-600">
+          <p className="text-xl font-bold text-blue-700">
             {nFormatter(balance)}
           </p>
         </div>
         <div>
-          <p className="text-xl font-bold text-blue-600 uppercase w-[92px]">
+          <p className="text-xl font-bold text-blue-700 uppercase w-[92px]">
             {txInfos.length}
           </p>
         </div>
         <button
           type="button"
           onClick={handleOpen}
-          className="text-blue-600 ml-2.5"
+          className="text-blue-700 hover:text-blue-500 ml-2.5"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

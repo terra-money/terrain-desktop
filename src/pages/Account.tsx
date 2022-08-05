@@ -26,7 +26,7 @@ export default function AccountsPage() {
         </div>
       </div>
       <Virtuoso
-        className="flex flex-col w-full"
+        className="flex flex-col w-full mt-1"
         followOutput
         initialTopMostItemIndex={accounts.length}
         data={accounts}
