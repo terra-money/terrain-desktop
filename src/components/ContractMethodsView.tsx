@@ -6,10 +6,16 @@ import { useTerra } from '../package/hooks';
 
 function ObjectFieldTemplate(props: any) {
   return (
-    <div className="py-4">
-      <div className="text-xl">{props.title}</div>
+    <div className="py-6">
+      <div className="text-2xl capitalize text-blue-700 font-semibold">
+        {props.title}
+      </div>
       {props.description}
-      {props.properties.map((element: any) => <div key={element.key} className="property-wrapper">{element.content}</div>)}
+      {props.properties.map((element: any) => (
+        <div key={element.key} className="property-wrapper">
+          {element.content}
+        </div>
+      ))}
     </div>
   );
 }
@@ -45,10 +51,14 @@ const ContractMethodsView = ({ schemas, contractAddress, walletName }: any) => {
           schema={schema}
           ObjectFieldTemplate={ObjectFieldTemplate}
           key={schema.required[0]}
-          className="border-t-2 mb-2 border-blue-900"
-          onSubmit={schema.msgType === 'execute' ? executeContract : queryContract}
+          className="border-t-2 mb-8 border-blue-900 first:border-none"
+          onSubmit={
+            schema.msgType === 'execute' ? executeContract : queryContract
+          }
         >
-          <Button variant="contained" type="submit">{schema.msgType}</Button>
+          <Button variant="contained" type="submit">
+            {schema.msgType}
+          </Button>
         </Form>
       ))}
       {contractRes && (

@@ -18,11 +18,14 @@ function ContractView(props: ContractViewProps) {
   const toggleContractRow = () => setOpen(!open);
 
   return (
-    <ul className="divide-y divide-solid bg-white rounded-2xl m-2">
+    <ul
+      className="divide-y divide-solid bg-white rounded-2xl m-2"
+      style={{ boxShadow: 'rgb(156 163 175 / 45%) 0px 0px 6px 1px' }}
+    >
       <li className="flex justify-between items-center">
-        <div className="bg-blue-200 p-4 py-8 rounded-tl-lg rounded-bl-lg text-white">
+        <div className="bg-blue-200 p-4 py-8 w-44 rounded-tl-lg rounded-bl-lg text-white">
           <a
-            className="flex items-center text-blue-800"
+            className="flex items-center text-blue-800 hover:underline hover:text-blue-900"
             target="_blank"
             href={contractHref}
             rel="noreferrer"
@@ -31,19 +34,21 @@ function ContractView(props: ContractViewProps) {
             <ExternalLinkIcon />
           </a>
         </div>
-        <div className="p-4 w-90 overflow-auto">{path}</div>
-        <div className="p-4">{codeId}</div>
-        <div className="p-4 whitespace-nowrap">
-          {truncate(address, [15, 15])}
-        </div>
-        {schemas && (
-          <div className="p-4">
-            <KeyboardArrowDownIcon
-              className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
-              onClick={toggleContractRow}
-            />
+        <div className="p-4 w-96 overflow-auto">{path || '" "'}</div>
+        <div className="p-4 w-24">{codeId}</div>
+        <div className="flex">
+          <div className="p-4 whitespace-nowrap">
+            {truncate(address, [15, 15])}
           </div>
-        )}
+          {schemas && (
+            <div className="p-4">
+              <KeyboardArrowDownIcon
+                className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
+                onClick={toggleContractRow}
+              />
+            </div>
+          )}
+        </div>
       </li>
       {schemas && (
         <Collapse
