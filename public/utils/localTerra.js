@@ -42,7 +42,13 @@ const downloadLocalTerra = async () => {
   if (fs.existsSync(localTerraPath)) {
     throw Error(`LocalTerra already exists under the path '${localTerraPath}'`);
   } else {
-    await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, { cwd: app.getPath('appData') });
+    await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, {
+      cwd: app.getPath('appData'),
+      env: {
+        PATH: `${process.env.PATH}:/usr/local/bin/`,
+      },
+    });
+    await startLocalTerra(localTerraPath);
   }
   return localTerraPath;
 };

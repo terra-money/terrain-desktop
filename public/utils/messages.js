@@ -35,7 +35,7 @@ const showWrongDirectoryDialog = async () => dialog.showMessageBox({
 
 const showLocalTerraAlreadyExistsDialog = async () => dialog.showMessageBox({
   message: `LocalTerra already exists in the default installation folder '${app.getPath('appData')}/LocalTerra'. 
-    Delete the exsisting LocalTerra directory to continue with the installation or select it to start Terrarium.`,
+    Delete the existing LocalTerra directory to continue with the installation or select it to start Terrarium.`,
   title: 'Terrarium',
   type: 'warning',
 });
