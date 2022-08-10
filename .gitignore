@@ -6,4 +6,5 @@ dist-ssr
 .vscode/launch.json
 src/index.css
 build
+extensions
 out

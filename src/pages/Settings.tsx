@@ -3,45 +3,51 @@ import { useNavigate } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import { useForm, FieldValues } from 'react-hook-form';
 import {
-  Checkbox,
-  FormControlLabel,
-  Select,
-  MenuItem,
-  Input,
   Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
 } from '@mui/material';
 
 export default function Settings() {
   const navigate = useNavigate();
-  const { register, handleSubmit, resetField } = useForm();
+  const {
+    register,
+    handleSubmit,
+    resetField,
+    reset,
+  } = useForm();
   const [openAtLogin, setOpenAtLogin] = useState(false);
   const [localTerraPath, setLocalTerraPath] = useState('');
   const [blocktime, setBlocktime] = useState('');
-  const [blocktimeSelect, setBlocktimeSelect] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   const saveSettings = async (data: FieldValues) => {
     window.store.setOpenAtLogin(data.openAtLogin);
-    window.store.setLocalTerraPath(data.localTerraPath);
-    window.store.setBlocktime(data.blocktime);
+
     if (localTerraPath !== data.localTerraPath || blocktime !== data.blocktime) {
+      window.store.setLocalTerraPath(data.localTerraPath);
+      window.store.setBlocktime(data.blocktime);
       await ipcRenderer.invoke('promptUserRestart');
     }
-    setBlocktimeSelect(blocktime);
+
     navigate('/');
   };
 
   useEffect(() => {
-    const updateCurrentSettings = () => {
-      window.store.getOpenAtLogin().then((res: boolean) => setOpenAtLogin(res));
+    const updateCurrentSettings = async () => {
+      const currentOpenAtLogin = await window.store.getOpenAtLogin();
+      setOpenAtLogin(currentOpenAtLogin);
 
       const currentLocalTerraPath = window.store.getLocalTerraPath();
       setLocalTerraPath(currentLocalTerraPath);
 
-      ipcRenderer.invoke('getBlocktime').then((res) => {
-        setBlocktimeSelect(res);
-        setBlocktime(res);
-      });
+      const currentBlockTime = await ipcRenderer.invoke('getBlocktime');
+      setBlocktime(currentBlockTime);
 
       setIsLoading(false);
     };
@@ -93,53 +99,52 @@ export default function Settings() {
           <div className="p-6 space-y-6">
             <form>
               <FormControlLabel
-                labelPlacement="start"
+                labelPlacement="end"
                 control={(
                   <Checkbox
-                    defaultChecked={openAtLogin}
                     {...register('openAtLogin')}
+                    defaultChecked={openAtLogin}
                   />
                 )}
                 label="Open Terrarium at startup"
               />
               <br />
-              <FormControlLabel
-                labelPlacement="start"
-                control={(
-                  <>
-                    <Button onClick={async () => {
-                      const newPath = await ipcRenderer.invoke('setLocalTerraPath');
-                      resetField('localTerraPath', { defaultValue: newPath });
-                    }}
-                    >
-                      Browse
-
-                    </Button>
-                    <Input
-                      className="pl-4"
-                      defaultValue={localTerraPath}
-                      {...register('localTerraPath')}
-                    />
-
-                  </>
-                )}
-                label="Path to LocalTerra"
-              />
               <br />
-              <FormControlLabel
-                labelPlacement="start"
-                control={(
-                  <div className="pl-4">
-                    <Select size="small" value={blocktimeSelect} {...register('blocktimeSelect')} onChange={(e) => setBlocktimeSelect(e.target.value)}>
-                      <MenuItem value="default">Default (5 seconds)</MenuItem>
-                      <MenuItem value="1s">1 second</MenuItem>
-                      <MenuItem value="200ms">200 milliseconds</MenuItem>
-                    </Select>
-                  </div>
-                )}
-                label="Time between Terra blocks"
-              />
-
+              <FormControl sx={{ minWidth: 190 }}>
+                <InputLabel>Block Time</InputLabel>
+                <Select
+                  {...register('blocktime')}
+                  size="medium"
+                  label="Block Time"
+                  defaultValue={blocktime}
+                >
+                  <MenuItem value="default">Default (5 seconds)</MenuItem>
+                  <MenuItem value="1s">1 second</MenuItem>
+                  <MenuItem value="200ms">200 milliseconds</MenuItem>
+                </Select>
+              </FormControl>
+              <br />
+              <br />
+              <FormControl sx={{ minWidth: 400 }}>
+                <TextField
+                  {...register('localTerraPath')}
+                  label="LocalTerra Path"
+                  defaultValue={localTerraPath}
+                  InputProps={{
+                    endAdornment: (
+                      <Button onClick={async () => {
+                        const newPath = await ipcRenderer.invoke('setLocalTerraPath', false);
+                        if (newPath) {
+                          resetField('localTerraPath', { defaultValue: newPath });
+                        }
+                      }}
+                      >
+                        Browse
+                      </Button>
+                    ),
+                  }}
+                />
+              </FormControl>
             </form>
           </div>
           <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
@@ -153,7 +158,10 @@ export default function Settings() {
               Save
             </button>
             <button
-              onClick={() => navigate('/')}
+              onClick={() => {
+                reset();
+                navigate('/');
+              }}
               data-modal-toggle="top-left-modal"
               type="button"
               className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200

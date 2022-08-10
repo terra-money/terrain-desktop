@@ -1,10 +1,13 @@
 import { LocalTerra, Wallet } from '@terra-money/terra.js';
 import { useContext, useEffect, useState } from 'react';
-import { Downgraded, useState as useStateHook } from '@hookstate/core';
+import { useState as useStateHook } from '@hookstate/core';
 import { ipcRenderer } from 'electron';
 import { TerraContext } from '../components/Provider';
-import { ITerraHook, ITerraHookBlockUpdate } from '../interface/ITerraHook';
-import { localTerraStarted, localTerraPathConfigured, logsState, blockState, txState } from '../../context/ElectronContextProvider';
+import { ITerraHook, ITerraHookBlockUpdate } from '../models/TerraHook';
+import {
+  localTerraStarted, localTerraPathConfigured, logsState, blockState, txState,
+} from '../context/ElectronContextProvider';
+import { TX } from '../constants';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
@@ -30,25 +33,14 @@ export function useTerraBlockUpdate() {
         const { from_address: add } = tx.msg;
         if (add === address) { cb(add); }
       };
-      ipcRenderer.on('Tx', listener);
+      ipcRenderer.on(TX, listener);
       return () => {
-        ipcRenderer.removeListener('Tx', listener);
+        ipcRenderer.removeListener(TX, listener);
       };
     },
   };
-  const [hook, setHook] = useState(hookExport);
 
-  useEffect(() => {
-    const listener = () => {
-      setHook({ ...hook });
-    };
-    ipcRenderer.on('NewBlock', listener);
-
-    return () => {
-      ipcRenderer.removeListener('NewBlock', listener);
-    };
-  }, []);
-  return hook;
+  return hookExport;
 }
 
 export const useBlocks = () => useStateHook(blockState);

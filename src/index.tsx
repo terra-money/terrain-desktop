@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import './styleHolder.css';
 import App from './App';
-import { Provider } from './package';
+import { Provider } from './components';
 import { StateListeners } from './context/ElectronContextProvider';
 
 const root = createRoot(document.getElementById('root') as HTMLElement);

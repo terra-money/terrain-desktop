@@ -3,33 +3,35 @@ import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import { NavLink } from './components';
+import { GET_LOCAL_TERRA_STATUS, TOGGLE_LOCAL_TERRA } from './constants';
+
 import {
   useTerraBlockUpdate, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
-} from './package/hooks';
+} from './hooks/terra';
 import { parseSearchUrl } from './utils';
 import logo from './assets/terra-logo.svg';
-import useNav from './package/hooks/routes';
+import useNav from './hooks/routes';
 
 function App() {
-  const { element: routes, menu } = useNav();
+  const { routes, menu } = useNav();
   const navigate = useNavigate();
   const { terra } = useTerraBlockUpdate();
   const latestHeight = useGetLatestHeight();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
+
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   // retrigger LocalTerraRunning ipc event.
   useEffect(() => {
-    ipcRenderer.send('getLocalTerraStatus');
+    ipcRenderer.send(GET_LOCAL_TERRA_STATUS);
   }, []);
 
   useEffect(() => {
     if (!isLocalTerraPathConfigured.get()) navigate('/onboard');
-    else navigate('/');
-  }, [isLocalTerraPathConfigured]);
+  }, []);
 
   useEffect(() => {
     if (hasStartedLocalTerra.get() === null) setIsLoading(true);
@@ -47,9 +49,8 @@ function App() {
 
   const toggleLocalTerra = async () => {
     setIsLoading(true);
-    ipcRenderer.invoke('ToggleLocalTerraStatus', !hasStartedLocalTerra.get());
-    // We're not started or stopped.
-    hasStartedLocalTerra.set(null);
+    ipcRenderer.invoke(TOGGLE_LOCAL_TERRA, !hasStartedLocalTerra.get());
+    hasStartedLocalTerra.set(null); // We're not started or stopped.
   };
 
   return (
