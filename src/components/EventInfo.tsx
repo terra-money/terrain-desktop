@@ -12,11 +12,15 @@ function EventInfo(props: EventInfoType) {
 
   return (
     <>
-      <h3>{props.title}</h3>
+      <h3 className="text-2xl font-medium mb-4">{props.title}</h3>
       <List>
         {events.map((event, index) => (
-          <ListItem className="overflow-auto" style={{ alignItems: 'start' }} key={index}>
-            <div className="text-blue-800 w-40">
+          <ListItem
+            className="overflow-auto ml-4"
+            style={{ alignItems: 'start', flexDirection: 'column' }}
+            key={index}
+          >
+            <div className="text-blue-800 w-40 text-lg mb-2 mt-2">
               <h4>
                 [
                 {index}
@@ -26,8 +30,13 @@ function EventInfo(props: EventInfoType) {
             </div>
             <div>
               {event.attributes.map((attribute, _index) => (
-                <div key={_index}>
-                  <span style={{ minWidth: '60px' }} className="mr-2 min-w-60 inline-block">{attribute.key}</span>
+                <div key={_index} className="ml-6">
+                  <span
+                    style={{ minWidth: '60px' }}
+                    className="mr-2 min-w-60 inline-block text-terra-mid-blue"
+                  >
+                    {attribute.key}
+                  </span>
                   <span>{attribute.value}</span>
                 </div>
               ))}

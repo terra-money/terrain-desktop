@@ -18,12 +18,12 @@ function ContractView(props: ContractViewProps) {
   const toggleContractRow = () => setOpen(!open);
 
   return (
-    <ul
-      className="divide-y divide-solid bg-white rounded-2xl m-2"
-      style={{ boxShadow: 'rgb(156 163 175 / 45%) 0px 0px 6px 1px' }}
-    >
-      <li className="flex justify-between items-center">
-        <div className="bg-blue-200 p-4 py-8 w-44 rounded-tl-lg rounded-bl-lg text-white">
+    <ul className="m-2">
+      <li
+        className="bg-white flex justify-between items-center rounded-2xl border-2 border-blue-200"
+        style={{ boxShadow: 'rgb(156 163 175 / 45%) 0px 0px 6px 1px' }}
+      >
+        <div className="bg-blue-200 p-5 py-8 w-44 rounded-l-xl">
           <a
             className="flex items-center text-blue-800 hover:underline hover:text-blue-900"
             target="_blank"
@@ -51,24 +51,26 @@ function ContractView(props: ContractViewProps) {
         </div>
       </li>
       {schemas && (
-        <Collapse
-          in={open}
-          timeout="auto"
-          className={`
-            ${
-              open
-                ? 'px-16 py-8'
-                : 'hidden'
-            }
-
-          `}
+        <li
+          className={`bg-white ${
+            open ? 'border-2 border-blue-200 rounded-2xl' : ''
+          }`}
+          style={{ boxShadow: 'rgb(156 163 175 / 45%) 0px 0px 6px 1px' }}
         >
-          <ContractMethodsView
-            walletName={walletName}
-            schemas={schemas}
-            contractAddress={address}
-          />
-        </Collapse>
+          <Collapse
+            in={open}
+            timeout="auto"
+            className={`
+              ${open ? 'px-16 py-8' : 'hidden'}
+            `}
+          >
+            <ContractMethodsView
+              walletName={walletName}
+              schemas={schemas}
+              contractAddress={address}
+            />
+          </Collapse>
+        </li>
       )}
     </ul>
   );
