@@ -25,7 +25,13 @@ export default function TransactionsPage() {
   const txs = getTxs();
 
   if (txs.length === 0) {
-    return <h1>There are no transactions yet.</h1>;
+    return (
+      <div className="flex w-full items-center justify-center">
+        <h1 className="text-2xl font-bold text-blue-800 uppercase">
+          There are no transactions yet.
+        </h1>
+      </div>
+    );
   }
 
   const toggleEventDetails = (index: number) => {
