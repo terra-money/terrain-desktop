@@ -27,17 +27,25 @@ function Transaction(props: TransactionType) {
   const percentGasUsed = 100 * (Number(result.gas_used) / Number(result.gas_wanted));
 
   return (
-    <ul className="divide-y divide-solid">
-      <li className="flex justify-between items-center">
-        <div className="bg-blue-200 p-4 w-40">
-          <a className="flex items-center text-blue-800" target="_blank" href={txHref} rel="noreferrer">
+    <ul className="m-2">
+      <li
+        className="flex justify-between items-center rounded-2xl border-2 border-blue-200"
+        style={{ boxShadow: 'rgb(156 163 175 / 45%) 0px 0px 6px 1px' }}
+      >
+        <div className="bg-blue-200 p-5 w-52 rounded-l-xl">
+          <a
+            className="flex items-center text-blue-800"
+            target="_blank"
+            href={txHref}
+            rel="noreferrer"
+          >
             <div className="mr-2">{truncate(txhash)}</div>
             <ExternalLinkIcon />
           </a>
         </div>
-        <div className="p-4 w-90 overflow-auto">{props.data.msg['@type']}</div>
+        <div className="p-4 w-96 overflow-auto">{props.data.msg['@type']}</div>
         <div className="p-4">{height}</div>
-        <div className="p-4 text-ellipsis overflow-hidden whitespace-nowrap">
+        <div className="p-4 pl-10 text-ellipsis overflow-hidden whitespace-nowrap">
           {result.gas_wanted}
           /
           {result.gas_used}
@@ -53,7 +61,12 @@ function Transaction(props: TransactionType) {
         </div>
       </li>
 
-      <li>
+      <li
+        className={`rounded-2xl ${
+          open ? 'border-2 border-blue-200 rounded-2xl' : ''
+        }`}
+        style={{ boxShadow: 'rgb(156 163 175 / 45%) 0px 0px 6px 1px' }}
+      >
         <Collapse in={open} timeout="auto" unmountOnExit className="px-16 py-8">
           <EventInfo title="Events" events={result.events} />
         </Collapse>
