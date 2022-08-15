@@ -142,7 +142,6 @@ const shutdown = async (win, restart = false) => {
     }
     app.exit();
   } catch (err) {
-    console.log('err', err);
     app.exit();
   }
 };
