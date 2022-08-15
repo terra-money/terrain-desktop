@@ -132,15 +132,20 @@ const stopLocalTerra = async () => {
 };
 
 const shutdown = async (win, restart = false) => {
-  win.hide();
-  setDockIconDisplay(false, win);
-  app.isQuitting = true;
-  await stopLocalTerra();
-  if (restart) {
-    app.relaunch();
+  try {
+    win.hide();
+    setDockIconDisplay(false, win);
+    app.isQuitting = true;
+    await stopLocalTerra();
+    if (restart) {
+      app.relaunch();
+    }
+    app.exit();
+  } catch (err) {
+    app.exit();
   }
-  app.exit();
 };
+
 const isDockerRunning = async () => {
   try {
     await exec('docker ps', {
