@@ -13,7 +13,7 @@ type TransactionType = {
   onToggleEventDetails: (index: number) => void,
 }
 
-function Transaction(props: TransactionType) {
+const Transaction = (props: TransactionType) => {
   const { txhash, result, height } = props.data.TxResult;
   const txHref = `${REACT_APP_FINDER_URL}/tx/${txhash}`;
 
@@ -60,6 +60,6 @@ function Transaction(props: TransactionType) {
       </li>
     </ul>
   );
-}
+};
 
 export default React.memo(Transaction);

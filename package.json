@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "homepage": "./",
   "main": "public/electron.js",
+  "engines": {
+    "node": "^16"
+  },
   "scripts": {
     "start": "BROWSER=none react-app-rewired start",
     "forge-start": "electron-forge start",
@@ -21,7 +24,8 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
-    "@hookstate/core": "^4.0.0-rc.4",
+    "@hookstate/core": "^3.0.13",
+    "@hookstate/devtools": "^3.0.2",
     "@iarna/toml": "^2.2.5",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
@@ -47,6 +51,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-virtuoso": "^2.14.0",
+    "semver": "^7.3.7",
     "tree-kill": "^1.2.2",
     "wait-on": "^6.0.1"
   },
