@@ -2,7 +2,8 @@ import React, { useEffect, useState, memo } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
-import { NavLink } from './components';
+import { Modal } from '@material-ui/core';
+import { NavLink, SettingsModal } from './components';
 import {
   useTerraBlockUpdate, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
 } from './package/hooks';
@@ -11,7 +12,8 @@ import logo from './assets/terra-logo.svg';
 import useNav from './package/hooks/routes';
 
 function App() {
-  const { element: routes, menu } = useNav();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalComponent, setModalComponent] = useState(<></>);
   const navigate = useNavigate();
   const { terra } = useTerraBlockUpdate();
   const latestHeight = useGetLatestHeight();
@@ -20,6 +22,18 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const handleToggleOpen = (modalName: any) => {
+    setModalComponent(modalName);
+    setIsModalOpen(true);
+  };
+
+  const handleToggleClose = () => setIsModalOpen(false);
+
+  const { element: routes, menu } = useNav({
+    handleToggleClose,
+    handleToggleOpen,
+  });
 
   useEffect(() => {
     if (!isLocalTerraPathConfigured) navigate('/onboard');
@@ -98,11 +112,37 @@ function App() {
             />
           </div>
           <ul className={`py-2 mt-2 ${open ? '' : ''}`}>
-            {menu.map((menuItem, index) => (
-              <NavLink
-                key={menuItem.name}
-                to={menuItem.path}
-                className={`${menuItem.name}
+            {menu.map((menuItem, index) => {
+              if (menuItem.name === 'Settings') {
+                return (
+                  <button
+                    type="button"
+                    onClick={() => handleToggleOpen(
+                      <SettingsModal handleToggleClose={handleToggleClose} />,
+                    )}
+                    className={`flex ${menuItem.name}
+                      ${open ? 'px-3' : 'justify-center'}
+                      px-8 h-16 absolute bottom-0 left-0 w-full rounded-none space-x-1 items-center rounded-md mt-2 text-blue-200
+                      `}
+                  >
+                    <div className={`float-left ${open ? 'mr-2' : 'block'}`}>
+                      {menuItem.icon}
+                    </div>
+                    <div
+                      className={`text-base font-medium items-center cursor-pointer ${
+                        !open && 'hidden'
+                      }`}
+                    >
+                      <p>{menuItem.name}</p>
+                    </div>
+                  </button>
+                );
+              }
+              return (
+                <NavLink
+                  key={menuItem.name}
+                  to={menuItem.path}
+                  className={`${menuItem.name}
                 ${open ? 'px-3' : 'justify-center'}
                 ${
                   index === menu.length - 1
@@ -110,24 +150,25 @@ function App() {
                     : 'h-12'
                 }
                 `}
-              >
-                <div className={`float-left ${open ? 'mr-2' : 'block'}`}>
-                  {menuItem.icon}
-                </div>
-                <div
-                  className={`text-base font-medium flex-1 items-center cursor-pointer ${
-                    !open && 'hidden'
-                  }`}
                 >
-                  <p>{menuItem.name}</p>
-                </div>
-              </NavLink>
-            ))}
+                  <div className={`float-left ${open ? 'mr-2' : 'block'}`}>
+                    {menuItem.icon}
+                  </div>
+                  <div
+                    className={`text-base font-medium flex-1 items-center cursor-pointer ${
+                      !open && 'hidden'
+                    }`}
+                  >
+                    <p>{menuItem.name}</p>
+                  </div>
+                </NavLink>
+              );
+            })}
           </ul>
         </div>
 
         <div className="flex-auto bg-gray-background w-full h-screen overflow-hidden">
-          <header className="top-header flex justify-between p-6 pl-12 bg-white overflow-x-auto">
+          <header className="bg-white shadow-md z-50 relative flex justify-between p-6 pl-12 bg-white overflow-x-auto">
             <ul className="flex flex-row w-full gap-20 items-center font-medium">
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-2xl text-terra-mid-blue">{latestHeight}</p>
@@ -171,6 +212,17 @@ function App() {
             {routes}
           </main>
         </div>
+        <Modal
+          open={isModalOpen}
+          onClose={() => handleToggleClose()}
+          disablePortal
+          disableEnforceFocus
+          disableAutoFocus
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          {isModalOpen ? modalComponent : <></>}
+        </Modal>
       </div>
     </div>
   );

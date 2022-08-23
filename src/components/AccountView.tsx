@@ -2,31 +2,37 @@ import { TxInfo, Denom } from '@terra-money/terra.js';
 import React, { useEffect, useState } from 'react';
 import { useTerraBlockUpdate, useLocalTerraStarted } from '../package';
 import { demicrofy, nFormatter } from '../utils';
-import { KeyView } from '.';
 import { REACT_APP_FINDER_URL } from '../constants';
+import { KeyViewModal } from '.';
 
-function AccountView({ wallet } : { wallet : any }) {
+function AccountView({
+  wallet,
+  handleToggleClose,
+  handleToggleOpen,
+}: {
+  wallet: any;
+  handleToggleClose: Function;
+  handleToggleOpen: Function;
+}) {
   const { accAddress, mnemonic } = wallet.key;
 
-  const [balance, setBalance] = useState(0.00);
+  const [balance, setBalance] = useState(0.0);
   const { getBalance, listenToAccountTx } = useTerraBlockUpdate();
   const [txInfos, setTxInfos] = useState([]);
-  const [open, setOpen] = useState(false);
   const hasStartedLocalTerra = useLocalTerraStarted();
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     if (!hasStartedLocalTerra.get()) return;
     getBalance(accAddress).then((coins: any) => {
-      const { amount } = coins.find(({ denom } : { denom: Denom }) => denom === 'uluna');
+      const { amount } = coins.find(
+        ({ denom }: { denom: Denom }) => denom === 'uluna',
+      );
       setBalance(demicrofy(Number(amount)));
     });
   }, [hasStartedLocalTerra]);
 
   useEffect(() => {
-    listenToAccountTx(accAddress, (tx : TxInfo) => {
+    listenToAccountTx(accAddress, (tx: TxInfo) => {
       const nTx = [...txInfos, tx];
       setTxInfos(nTx as never[]);
     });
@@ -34,13 +40,8 @@ function AccountView({ wallet } : { wallet : any }) {
 
   return (
     <div
-      className="flex text-left justify-between items-center px-4 py-3 my-3 mx-4 border-2 rounded-2xl border-blue-600"
-      style={{
-        background: '#ffffffe0',
-        boxShadow: '0px 0px 6px 1px #9ca3af73',
-      }}
+      className="bg-white shadow-account flex text-left justify-between items-center px-4 py-3 my-3 mx-4 border-2 rounded-2xl border-blue-600"
     >
-      {open && <KeyView mnemonic={mnemonic} handleClose={handleClose} />}
       <a
         href={`${REACT_APP_FINDER_URL}/address/${accAddress}`}
         target="_blank"
@@ -67,7 +68,12 @@ function AccountView({ wallet } : { wallet : any }) {
         </div>
         <button
           type="button"
-          onClick={handleOpen}
+          onClick={() => handleToggleOpen(
+            <KeyViewModal
+              mnemonic={mnemonic}
+              handleClose={handleToggleClose}
+            />,
+          )}
           className="text-blue-700 hover:text-blue-500 ml-2.5"
         >
           <svg

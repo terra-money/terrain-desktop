@@ -3,18 +3,20 @@ import { Virtuoso } from 'react-virtuoso';
 import { AccountView } from '../components';
 import { useTerra } from '../package';
 
-export default function AccountsPage() {
+export default function AccountsPage({
+  handleToggleClose,
+  handleToggleOpen,
+}: {
+  handleToggleClose: Function;
+  handleToggleOpen: Function;
+}) {
   const { getTestAccounts } = useTerra();
   const accounts = getTestAccounts();
 
   return (
     <div className="flex flex-col w-full">
       <div
-        className="flex flex-row w-full text-left justify-between items-center px-4 py-5 text-blue-600"
-        style={{
-          background: '#ffffffe0',
-          boxShadow: '0px 1px 4px 0px rgb(50 50 50 / 75%)',
-        }}
+        className="bg-white shadow-nav flex flex-row w-full text-left justify-between items-center px-4 py-5 text-blue-600"
       >
         <div className="text-lg font-bold  uppercase min-w-[480px] ml-[15px]">
           Address
@@ -31,7 +33,12 @@ export default function AccountsPage() {
         initialTopMostItemIndex={accounts.length}
         data={accounts}
         itemContent={(index, account) => (
-          <AccountView wallet={account} key={account.key.accAddress} />
+          <AccountView
+            wallet={account}
+            key={account.key.accAddress}
+            handleToggleClose={handleToggleClose}
+            handleToggleOpen={handleToggleOpen}
+          />
         )}
       />
     </div>

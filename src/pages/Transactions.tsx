@@ -41,13 +41,7 @@ export default function TransactionsPage() {
 
   return (
     <div className="flex flex-col w-full">
-      <div
-        className="flex flex-row w-full text-left items-center px-4 justify-between text-blue-600 font-bold z-50"
-        style={{
-          background: '#ffffffe0',
-          boxShadow: '0px 1px 4px 0px rgb(50 50 50 / 75%)',
-        }}
-      >
+      <div className="bg-white shadow-nav flex flex-row w-full text-left items-center px-4 justify-between text-blue-600 font-bold z-50">
         {TRANSACTIONS_HEADER.map((header, index) => (
           <div key={index} className={`text-lg uppercase ${header.className}`}>
             {header.title}

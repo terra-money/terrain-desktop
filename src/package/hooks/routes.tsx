@@ -16,7 +16,13 @@ import { ReactComponent as ContractsIcon } from '../../assets/icons/menu/contrac
 import { ReactComponent as LogsIcon } from '../../assets/icons/menu/logs.svg';
 import { ReactComponent as CogIcon } from '../../assets/icons/menu/cog.svg';
 
-const useNav = () => {
+const useNav = ({
+  handleToggleClose,
+  handleToggleOpen,
+}: {
+  handleToggleClose: Function;
+  handleToggleOpen: Function;
+}) => {
   const menu = [
     {
       name: 'Contracts',
@@ -28,7 +34,12 @@ const useNav = () => {
       name: 'Accounts',
       icon: <AccountsIcon />,
       path: '/accounts',
-      element: <AccountsPage />,
+      element: (
+        <AccountsPage
+          handleToggleClose={handleToggleClose}
+          handleToggleOpen={handleToggleOpen}
+        />
+      ),
     },
     {
       name: 'Blocks',

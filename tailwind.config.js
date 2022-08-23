@@ -1,8 +1,5 @@
 module.exports = {
-  content: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    './public/index.html',
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   mode: 'jit',
   purge: ['./public/index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: false, // or 'media' or 'class'
@@ -20,6 +17,11 @@ module.exports = {
         'is-connected-green': '#26BF0E',
         'is-loading-grey': '#ededf2',
       },
+    },
+    boxShadow: {
+      nav: '0px 1px 4px 0px rgb(50 50 50 / 75%)',
+      account: '0px 0px 6px 1px #9ca3af73',
+      md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
     },
   },
   variants: {

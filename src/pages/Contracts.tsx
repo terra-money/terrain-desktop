@@ -54,10 +54,9 @@ export default function ContractsPage() {
   return (
     <div className="flex flex-col w-full">
       <div
-        className="flex flex-row w-full text-left items-center px-4 py-5 gap-8 text-blue-600"
+        className="flex flex-row w-full text-left items-center px-4 py-5 gap-8 text-blue-600 shadow-nav"
         style={{
           background: '#ffffffe0',
-          boxShadow: '0px 1px 4px 0px rgb(50 50 50 / 75%)',
         }}
       >
         <SelectWallet
@@ -83,10 +82,9 @@ export default function ContractsPage() {
         </Tooltip>
       </div>
       <div
-        className="bg-gray-background flex justify-between text-blue-600 z-50"
+        className="bg-gray-background flex justify-between text-blue-600 z-50 shadow-nav"
         style={{
           background: '#ffffffe0',
-          boxShadow: '0px 1px 4px 0px rgb(50 50 50 / 75%)',
         }}
       >
         {CONTRACTS_HEADER.map((header, index) => (

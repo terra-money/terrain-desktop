@@ -40,19 +40,13 @@ export default function BlocksPage() {
       <FormControlLabel
         control={<Checkbox checked={filter} onChange={handleToggleFilter} />}
         label="Filter Empty Blocks"
-        className="flex flex-row w-full text-left items-center px-4 py-2"
+        className="bg-white flex flex-row w-full text-left items-center px-4 py-2 shadow-nav"
         style={{
-          background: '#ffffffe0',
           margin: '0px',
-          boxShadow: '0px 1px 4px 0px rgb(50 50 50 / 75%)',
         }}
       />
       <div
-        className="flex flex-row w-full text-left items-center px-4 justify-between text-blue-600 font-bold z-50"
-        style={{
-          background: '#ffffffe0',
-          boxShadow: '0px 1px 4px 0px rgb(50 50 50 / 75%)',
-        }}
+        className="bg-white flex flex-row w-full text-left items-center px-4 justify-between text-blue-600 font-bold z-50 shadow-nav"
       >
         {BLOCKS_HEADER.map((header, index) => (
           <div key={index} className={`text-lg uppercase ${header.className}`}>
