@@ -9,16 +9,16 @@ const BLOCKS_HEADER = [{
   className: 'w-32 p-4',
 }, {
   title: 'Time',
-  className: 'w-80 p-4',
+  className: 'w-64 p-4 pl-24',
 }, {
   title: 'Transactions',
-  className: 'p-4',
+  className: 'p-4 pl-32 pr-2',
 }, {
   title: 'Gas used',
-  className: 'p-4',
+  className: 'p-4 pl-1',
 }, {
   title: '',
-  className: 'm-8',
+  className: 'm-14 mt-4',
 }];
 
 export default function BlocksPage() {
@@ -37,21 +37,23 @@ export default function BlocksPage() {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="bg-gray-background flex justify-between mt-2">
-        {BLOCKS_HEADER.map((header, index) => (
-          <div key={index} className={header.className}>
-            {header.title}
-          </div>
-        ))}
-      </div>
       <FormControlLabel
         control={<Checkbox checked={filter} onChange={handleToggleFilter} />}
         label="Filter Empty Blocks"
-        className="bg-white"
+        className="bg-white flex flex-row w-full text-left items-center px-4 py-2 shadow-nav"
         style={{
           margin: '0px',
         }}
       />
+      <div
+        className="bg-white flex flex-row w-full text-left items-center px-4 justify-between text-blue-600 font-bold z-50 shadow-nav"
+      >
+        {BLOCKS_HEADER.map((header, index) => (
+          <div key={index} className={`text-lg uppercase ${header.className}`}>
+            {header.title}
+          </div>
+        ))}
+      </div>
       <div className="bg-white" style={{ flexGrow: 1 }}>
         <Virtuoso
           className="flex flex-col w-full"

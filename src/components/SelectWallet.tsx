@@ -15,8 +15,13 @@ const SelectWallet = ({ handleWalletChange, walletName }: any) => {
         label="wallet"
         value={walletName}
         onChange={handleWalletChange}
+        className="custom-select"
       >
-        {Object.keys(wallets).map((name: any) => (<MenuItem value={name}>{name}</MenuItem>))}
+        {Object.keys(wallets).map((name: any) => (
+          <MenuItem value={name}>
+            {name}
+          </MenuItem>
+        ))}
       </Select>
     </FormControl>
   );

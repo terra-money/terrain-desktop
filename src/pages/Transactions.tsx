@@ -5,19 +5,19 @@ import { useTxs } from '../hooks/terra';
 
 const TRANSACTIONS_HEADER = [{
   title: 'Hash',
-  className: 'w-40 p-4',
+  className: 'w-52 p-4',
 }, {
   title: 'Type',
-  className: 'w-90 p-4',
+  className: 'w-96 p-4',
 }, {
   title: 'Block',
-  className: 'p-4',
+  className: 'p-4 pl-3',
 }, {
   title: 'Gas Requested / Used ',
   className: 'p-4',
 }, {
   title: '',
-  className: 'm-8',
+  className: 'm-4',
 }];
 
 export default function TransactionsPage() {
@@ -25,7 +25,13 @@ export default function TransactionsPage() {
   const txs = getTxs();
 
   if (txs.length === 0) {
-    return <h1>There are no transactions yet.</h1>;
+    return (
+      <div className="flex w-full items-center justify-center">
+        <h1 className="text-2xl font-bold text-blue-800 uppercase">
+          There are no transactions yet.
+        </h1>
+      </div>
+    );
   }
 
   const toggleEventDetails = (index: number) => {
@@ -35,9 +41,11 @@ export default function TransactionsPage() {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="bg-gray-background flex justify-between">
+      <div className="bg-white shadow-nav flex flex-row w-full text-left items-center px-4 justify-between text-blue-600 font-bold z-50">
         {TRANSACTIONS_HEADER.map((header, index) => (
-          <div key={index} className={header.className}>{header.title}</div>
+          <div key={index} className={`text-lg uppercase ${header.className}`}>
+            {header.title}
+          </div>
         ))}
       </div>
       <div className="bg-white" style={{ flexGrow: 1 }}>

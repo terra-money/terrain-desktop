@@ -1,24 +1,32 @@
 import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
-import { FaTrash } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import { SelectWallet, ContractView } from '../components';
 import { IMPORT_SAVED_CONTRACTS, DELETE_CONTRACT_REFS, IMPORT_NEW_CONTRACTS } from '../constants';
 
-const CONTRACTS_HEADER = [{
-  title: 'Contract Name',
-  className: 'w-40 p-4',
-}, {
-  title: 'Path',
-  className: 'w-90 p-4',
-}, {
-  title: 'Code ID',
-  className: 'p-4',
-}, {
-  title: 'Contract Address',
-  className: 'p-4',
-}];
+const CONTRACTS_HEADER = [
+  {
+    title: 'Contract Name',
+    className: 'w-48 p-4',
+  },
+  {
+    title: 'Path',
+    className: 'w-96 p-4 pl-2.5',
+  },
+  {
+    title: 'Code ID',
+    className: 'p-4',
+  },
+  {
+    title: 'Contract Address',
+    className: 'w-56 p-4 pl-3 mr-36',
+  },
+];
 
 export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
@@ -46,22 +54,47 @@ export default function ContractsPage() {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-row justify-items-end my-3 mx-3 h-19">
+      <div
+        className="flex flex-row w-full text-left items-center px-4 py-5 gap-8 text-blue-600 shadow-nav"
+        style={{
+          background: '#ffffffe0',
+        }}
+      >
+        <SelectWallet
+          walletName={walletName}
+          handleWalletChange={handleWalletChange}
+        />
         <button
           type="button"
           onClick={handleNewContractsImport}
-          className="grow px-5 rounded-lg text-white bg-terra-dark-blue"
+          className="main-button flex items-center grow gap-2.5 py-3.5 px-5 rounded-lg text-white bg-terra-dark-blue"
         >
+          <FaPlus className="flex-none w-3 text-white" />
           Add Contracts
         </button>
-        <button type="button" onClick={handleRefsDeletion}>
-          <FaTrash className="flex-none w-15 text-terra-dark-blue mx-5" />
-        </button>
-        <SelectWallet walletName={walletName} handleWalletChange={handleWalletChange} />
+        <Tooltip
+          title="Delete All Contracts"
+          placement="left"
+          style={{ marginLeft: 'auto' }}
+        >
+          <IconButton type="button" onClick={() => handleRefsDeletion}>
+            <DeleteIcon className="flex-none text-terra-dark-blue" />
+          </IconButton>
+        </Tooltip>
       </div>
-      <div className="bg-gray-background flex justify-between">
+      <div
+        className="bg-gray-background flex justify-between text-blue-600 z-50 shadow-nav"
+        style={{
+          background: '#ffffffe0',
+        }}
+      >
         {CONTRACTS_HEADER.map((header, index) => (
-          <div key={index} className={header.className}>{header.title}</div>
+          <div
+            key={index}
+            className={`text-lg font-bold uppercase ${header.className}`}
+          >
+            {header.title}
+          </div>
         ))}
       </div>
       <div className="bg-white rounded-lg" />
@@ -70,7 +103,9 @@ export default function ContractsPage() {
           followOutput
           className="flex flex-col w-full"
           data={contracts}
-          itemContent={(index, data) => <ContractView walletName={walletName} data={data} key={index} />}
+          itemContent={(index, data) => (
+            <ContractView walletName={walletName} data={data} key={index} />
+          )}
         />
       )}
     </div>

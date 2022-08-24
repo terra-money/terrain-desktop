@@ -3,7 +3,7 @@ import '@hookstate/devtools';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './index.css';
-import './styleHolder.css';
+import './styleOverrides.css';
 import App from './App';
 import { Provider } from './components';
 import { StateListeners } from './context/ElectronContextProvider';
