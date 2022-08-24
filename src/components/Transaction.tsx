@@ -28,13 +28,10 @@ function Transaction(props: TransactionType) {
 
   return (
     <ul className="m-2">
-      <li
-        className="flex justify-between items-center rounded-2xl border-2 border-blue-200"
-        style={{ boxShadow: 'rgb(156 163 175 / 45%) 0px 0px 6px 1px' }}
-      >
+      <li className="flex justify-between items-center shadow-row rounded-2xl border-2 border-blue-200">
         <div className="bg-blue-200 p-5 w-52 rounded-l-xl">
           <a
-            className="flex items-center text-blue-800"
+            className="flex items-center text-blue-700 font-semibold hover:text-blue-500 hover:underline"
             target="_blank"
             href={txHref}
             rel="noreferrer"
@@ -62,10 +59,9 @@ function Transaction(props: TransactionType) {
       </li>
 
       <li
-        className={`rounded-2xl ${
+        className={`rounded-2xl shadow-row ${
           open ? 'border-2 border-blue-200 rounded-2xl' : ''
         }`}
-        style={{ boxShadow: 'rgb(156 163 175 / 45%) 0px 0px 6px 1px' }}
       >
         <Collapse in={open} timeout="auto" unmountOnExit className="px-16 py-8">
           <EventInfo title="Events" events={result.events} />

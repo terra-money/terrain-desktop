@@ -19,13 +19,10 @@ function ContractView(props: ContractViewProps) {
 
   return (
     <ul className="m-2">
-      <li
-        className="bg-white flex justify-between items-center rounded-2xl border-2 border-blue-200"
-        style={{ boxShadow: 'rgb(156 163 175 / 45%) 0px 0px 6px 1px' }}
-      >
+      <li className="bg-white flex justify-between items-center shadow-row rounded-2xl border-2 border-blue-200">
         <div className="bg-blue-200 p-5 py-8 w-44 rounded-l-xl">
           <a
-            className="flex items-center text-blue-800 hover:underline hover:text-blue-900"
+            className="flex items-center text-blue-700 font-semibold hover:text-blue-500 hover:underline"
             target="_blank"
             href={contractHref}
             rel="noreferrer"
@@ -53,9 +50,8 @@ function ContractView(props: ContractViewProps) {
       {schemas && (
         <li
           className={`bg-white ${
-            open ? 'border-2 border-blue-200 rounded-2xl' : ''
+            open ? 'border-2 border-blue-200 rounded-2xl shadow-row' : ''
           }`}
-          style={{ boxShadow: 'rgb(156 163 175 / 45%) 0px 0px 6px 1px' }}
         >
           <Collapse
             in={open}

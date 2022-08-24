@@ -20,7 +20,7 @@ module.exports = {
     },
     boxShadow: {
       nav: '0px 1px 4px 0px rgb(50 50 50 / 75%)',
-      account: '0px 0px 6px 1px #9ca3af73',
+      row: 'rgb(156 163 175 / 45%) 0px 0px 5px 1px',
       md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
     },
   },
