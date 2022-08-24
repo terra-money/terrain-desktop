@@ -13,7 +13,7 @@ export default function Onboard() {
 
   const onSetLocalTerraPath = async () => {
     try {
-      await ipcRenderer.invoke('SetLocalTerraPath');
+      await ipcRenderer.invoke('setLocalTerraPath');
       navigate('/');
     } catch (e: any) {
       console.log(e);

@@ -7,7 +7,7 @@ type EventInfoType = {
   title: string
 }
 
-function EventInfo(props: EventInfoType) {
+const EventInfo = (props: EventInfoType) => {
   const events = EventUtils.parseEventsAttributes(props.events);
 
   return (
@@ -47,6 +47,6 @@ function EventInfo(props: EventInfoType) {
       </List>
     </>
   );
-}
+};
 
 export default React.memo(EventInfo);

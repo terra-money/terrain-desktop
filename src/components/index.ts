@@ -7,3 +7,4 @@ export { default as NavLink } from './NavLink';
 export { default as SelectWallet } from './SelectWallet';
 export { default as KeyViewModal } from './Modals/KeyViewModal';
 export { default as SettingsModal } from './Modals/SettingsModal';
+export { default as Provider } from './Provider';

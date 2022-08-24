@@ -1,7 +1,7 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { AccountView } from '../components';
-import { useTerra } from '../package';
+import { useTerra } from '../hooks/terra';
 
 export default function AccountsPage({
   handleToggleClose,

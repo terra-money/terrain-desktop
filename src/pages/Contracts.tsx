@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { SelectWallet, ContractView } from '../components';
+import { IMPORT_SAVED_CONTRACTS, DELETE_CONTRACT_REFS, IMPORT_NEW_CONTRACTS } from '../constants';
 
 const CONTRACTS_HEADER = [
   {
@@ -31,18 +32,18 @@ export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
   const [walletName, setWalletName] = React.useState('test1');
 
-  async function handleNewContractsImport() {
-    const res = await ipcRenderer.invoke('ImportNewContracts');
+  const handleNewContractsImport = async () => {
+    const res = await ipcRenderer.invoke(IMPORT_NEW_CONTRACTS);
     setContracts(res);
-  }
+  };
 
   async function handleRefsDeletion() {
-    const res = await ipcRenderer.invoke('DeleteAllContractRefs');
+    const res = await ipcRenderer.invoke(DELETE_CONTRACT_REFS);
     setContracts(res);
   }
 
   async function importSavedContracts() {
-    const allContracts = await ipcRenderer.invoke('ImportSavedContracts');
+    const allContracts = await ipcRenderer.invoke(IMPORT_SAVED_CONTRACTS);
     setContracts(allContracts);
   }
   const handleWalletChange = (event: SelectChangeEvent) => setWalletName(event.target.value);

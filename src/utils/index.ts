@@ -3,7 +3,7 @@ import { REACT_APP_FINDER_URL, REACT_APP_DOCS_URL } from '../constants';
 
 function isValidTerraAddress(address: string) {
   try {
-    const { prefix: decodedPrefix } = bech32.decode(address); // throw error if checksum is invalid
+    const { prefix: decodedPrefix } = bech32.decode(address);
     return decodedPrefix === 'terra';
   } catch {
     return false;

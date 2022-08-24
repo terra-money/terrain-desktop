@@ -2,7 +2,7 @@ import React from 'react';
 import { MsgExecuteContract } from '@terra-money/terra.js';
 import Form from '@rjsf/material-ui';
 import { Button } from '@mui/material';
-import { useTerra } from '../package/hooks';
+import { useTerra } from '../hooks/terra';
 
 function ObjectFieldTemplate(props: any) {
   return (
