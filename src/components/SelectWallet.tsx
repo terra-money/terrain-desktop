@@ -18,7 +18,7 @@ const SelectWallet = ({ handleWalletChange, walletName }: any) => {
         className="custom-select"
       >
         {Object.keys(wallets).map((name: any) => (
-          <MenuItem value={name}>
+          <MenuItem key={name} value={name}>
             {name}
           </MenuItem>
         ))}

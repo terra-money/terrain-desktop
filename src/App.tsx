@@ -124,6 +124,7 @@ function App() {
               if (menuItem.name === 'Settings') {
                 return (
                   <button
+                    key={menuItem.name}
                     type="button"
                     onClick={() => handleToggleOpen(
                       <SettingsModal handleToggleClose={handleToggleClose} />,

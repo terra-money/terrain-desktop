@@ -38,7 +38,9 @@ export default function ContractsPage() {
   };
 
   async function handleRefsDeletion() {
+    console.log('CALLED');
     const res = await ipcRenderer.invoke(DELETE_CONTRACT_REFS);
+    console.log('res', res);
     setContracts(res);
   }
 
