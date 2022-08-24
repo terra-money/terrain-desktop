@@ -68,7 +68,7 @@ function App() {
           } duration-300 relative`}
         >
           <BsArrowLeftShort
-            className={`bg-white text-terra-dark-blue text-3xl rounded-full absolute -right-4 top-8 border border-terra-dark-blue cursor-pointer ${
+            className={`bg-white text-terra-dark-blue text-3xl rounded-full absolute -right-4 top-8 border border-terra-dark-blue cursor-pointer z-50 ${
               !open && 'rotate-180'
             }`}
             onClick={() => setOpen(!open)}
@@ -97,6 +97,7 @@ function App() {
             }`}
           >
             <BsSearch
+              onClick={() => setOpen(true)}
               className={`text-white text-lg block cursor-pointer ${
                 open && 'mr-2 float-left'
               }`}
@@ -129,7 +130,7 @@ function App() {
                       {menuItem.icon}
                     </div>
                     <div
-                      className={`text-base font-medium items-center cursor-pointer ${
+                      className={`text-white text-base font-medium items-center cursor-pointer ${
                         !open && 'hidden'
                       }`}
                     >
@@ -168,7 +169,7 @@ function App() {
         </div>
 
         <div className="flex-auto bg-gray-background w-full h-screen overflow-hidden">
-          <header className="bg-white shadow-md z-50 relative flex justify-between p-6 pl-12 bg-white overflow-x-auto">
+          <header className="bg-white shadow-md z-40 relative flex justify-between p-6 pl-12 bg-white overflow-x-auto">
             <ul className="flex flex-row w-full gap-20 items-center font-medium">
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-2xl text-terra-mid-blue">{latestHeight}</p>
