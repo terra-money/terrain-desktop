@@ -18,13 +18,13 @@ export default function AccountsPage({
       <div
         className="bg-white shadow-nav flex flex-row w-full text-left justify-between items-center px-4 py-5 text-blue-600"
       >
-        <div className="text-lg font-bold  uppercase min-w-[480px] ml-[15px]">
+        <div className="text-lg font-bold  uppercase min-w-[470px] ml-[15px]">
           Address
         </div>
         <div className="flex lg:gap-8 xl:gap-24">
           <div className="ml-6 text-lg font-bold uppercase">Luna</div>
-          <div className="text-lg font-bold uppercase">Tx Count</div>
-          <div className="text-lg font-bold uppercase mr-[15px]">Key</div>
+          <div className="text-lg font-bold uppercase ml-[-15px]">Tx Count</div>
+          <div className="text-lg font-bold uppercase mr-[15px] ml-[45px]">Key</div>
         </div>
       </div>
       <Virtuoso
