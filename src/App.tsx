@@ -36,6 +36,7 @@ function App() {
     handleToggleClose,
     handleToggleOpen,
   });
+
   // retrigger LocalTerraRunning ipc event.
   useEffect(() => {
     ipcRenderer.send(GET_LOCAL_TERRA_STATUS);
