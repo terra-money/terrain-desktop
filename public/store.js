@@ -66,7 +66,6 @@ class TerrariumStore extends Store {
   }
 
   deleteAllContracts() {
-    console.log('DELETE CONTRACTS CALLEd');
     this.contracts = [];
     return this.setContracts();
   }

@@ -4,7 +4,6 @@ import { Virtuoso } from 'react-virtuoso';
 import { FaPlus } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
 import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { SelectWallet, ContractView } from '../components';
 import { IMPORT_SAVED_CONTRACTS, DELETE_CONTRACT_REFS, IMPORT_NEW_CONTRACTS } from '../constants';
@@ -38,9 +37,7 @@ export default function ContractsPage() {
   };
 
   async function handleRefsDeletion() {
-    console.log('CALLED');
     const res = await ipcRenderer.invoke(DELETE_CONTRACT_REFS);
-    console.log('res', res);
     setContracts(res);
   }
 
@@ -58,9 +55,7 @@ export default function ContractsPage() {
     <div className="flex flex-col w-full">
       <div
         className="flex flex-row w-full text-left items-center px-4 py-5 gap-8 text-blue-600 shadow-nav"
-        style={{
-          background: '#ffffffe0',
-        }}
+        style={{ background: '#ffffffe0' }}
       >
         <SelectWallet
           walletName={walletName}
@@ -74,15 +69,15 @@ export default function ContractsPage() {
           <FaPlus className="flex-none w-3 text-white" />
           Add Contracts
         </button>
-        <Tooltip
-          title="Delete All Contracts"
-          placement="left"
-          style={{ marginLeft: 'auto' }}
-        >
-          <IconButton type="button" onClick={() => handleRefsDeletion}>
+        <button onClick={handleRefsDeletion} type="button">
+          <Tooltip
+            title="Delete All Contracts"
+            placement="left"
+            style={{ marginLeft: 'auto' }}
+          >
             <DeleteIcon className="flex-none text-terra-dark-blue" />
-          </IconButton>
-        </Tooltip>
+          </Tooltip>
+        </button>
       </div>
       <div
         className="bg-gray-background flex justify-between text-blue-600 z-50 shadow-nav"
