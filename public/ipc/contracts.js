@@ -1,7 +1,7 @@
 const { ipcMain } = require('electron');
 const { getSmartContractData } = require('../utils/contracts');
 const { store } = require('../store');
-const { showSmartContractDialog } = require('../utils/messages');
+const { showSmartContractDialog, showMissingSchemaDialog } = require('../utils/messages');
 
 const {
   DELETE_CONTRACT_REFS, IMPORT_NEW_CONTRACTS, IMPORT_SAVED_CONTRACTS,
@@ -27,6 +27,9 @@ module.exports = () => {
     const [projectDir] = filePaths;
     const contractRefs = getSmartContractData(projectDir);
     const contracts = store.importContracts(contractRefs);
+    contracts.forEach((contract) => {
+      if (!contract.schemas) showMissingSchemaDialog();
+    });
     return contracts;
   });
 };

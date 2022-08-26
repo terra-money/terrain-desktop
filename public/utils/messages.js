@@ -14,6 +14,7 @@ const showPathSelectionDialog = async () => dialog.showOpenDialog({
   type: 'info',
   properties: ['openDirectory'],
 });
+
 const showSmartContractDialog = async () => dialog.showOpenDialog({
   message: 'Select your project directory. It must contain a refs.terrain.json file.',
   title: 'Terrarium',
@@ -23,6 +24,12 @@ const showSmartContractDialog = async () => dialog.showOpenDialog({
 
 const showStartDockerDialog = async () => dialog.showMessageBox({
   message: 'Start Docker then try opening Terrarium again.',
+  title: 'Terrarium',
+  type: 'warning',
+});
+
+const showMissingSchemaDialog = async () => dialog.showMessageBox({
+  message: 'Some schemas were missing from your terrain project directory. Run `cargo schema` in your contract folder and re-import access contract methods.',
   title: 'Terrarium',
   type: 'warning',
 });
@@ -70,4 +77,5 @@ module.exports = {
   showLocalTerraAlreadyExistsDialog,
   showNoTerrainRefsDialog,
   showStartDockerDialog,
+  showMissingSchemaDialog,
 };
