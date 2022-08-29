@@ -23,9 +23,6 @@ const ContractMethodsView = ({
   schemas, query, execute, address,
 }: any) => {
   const handleSubmit = (schema: any) => ({ formData }: any) => {
-    console.log('schema', schema);
-    console.log('address', address);
-    console.log('formData', formData);
     if (schema.msgType === 'query') query(formData, address);
     else execute(formData, address);
   };
