@@ -22,8 +22,8 @@ function ObjectFieldTemplate(props: any) {
 const ContractMethodsView = ({
   schemas, query, execute, address,
 }: any) => {
-  const handleSubmit = (schema: any) => ({ formData }: any) => {
-    if (schema.msgType === 'query') query(formData, address);
+  const handleSubmit = (msgType: string) => ({ formData }: any) => {
+    if (msgType === 'query') query(formData, address);
     else execute(formData, address);
   };
 
@@ -35,7 +35,7 @@ const ContractMethodsView = ({
           ObjectFieldTemplate={ObjectFieldTemplate}
           key={schema.required[0]}
           className="border-t-2 mb-8 border-blue-900 first:border-none"
-          onSubmit={handleSubmit(schema)}
+          onSubmit={handleSubmit(schema.msgType)}
         >
           <Button variant="contained" type="submit">
             {schema.msgType}
