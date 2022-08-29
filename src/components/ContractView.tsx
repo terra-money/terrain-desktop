@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Collapse } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { KeyboardArrowDown as KeyboardArrowDownIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { ContractViewProps } from '../models/Contract';
 import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
 import { REACT_APP_FINDER_URL } from '../constants';
@@ -8,9 +8,9 @@ import ContractMethodsView from './ContractMethodsView';
 import { truncate } from '../utils';
 
 const ContractView = (props: ContractViewProps) => {
-  const { walletName } = props;
+  const { walletName, handleDeleteContract } = props;
   const {
-    name, codeId, address, path, schemas,
+    name, codeId, address, schemas,
   } = props.data;
   const contractHref = `${REACT_APP_FINDER_URL}/address/${address}`;
   const [open, setOpen] = useState(false);
@@ -31,12 +31,18 @@ const ContractView = (props: ContractViewProps) => {
             <ExternalLinkIcon />
           </a>
         </div>
-        <div className="p-4 w-96 overflow-auto">{path || '" "'}</div>
         <div className="p-4 w-24">{codeId}</div>
         <div className="flex">
-          <div className="p-4 whitespace-nowrap">
+          <div className="p-4 truncate">
             {truncate(address, [15, 15])}
           </div>
+          <button
+            type="button"
+            onClick={() => handleDeleteContract(codeId)}
+            className="text-blue"
+          >
+            <DeleteIcon className="w-3 text-blue" />
+          </button>
           {schemas && (
             <div className="p-4">
               <KeyboardArrowDownIcon

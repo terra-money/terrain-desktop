@@ -12,6 +12,7 @@ import {
   Select,
   TextField,
 } from '@mui/material';
+import { PROMPT_USER_RESTART, GET_BLOCKTIME, SET_LOCAL_TERRA_PATH } from '../constants';
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export default function Settings() {
     if (localTerraPath !== data.localTerraPath || blocktime !== data.blocktime) {
       window.store.setLocalTerraPath(data.localTerraPath);
       window.store.setBlocktime(data.blocktime);
-      await ipcRenderer.invoke('promptUserRestart');
+      await ipcRenderer.invoke(PROMPT_USER_RESTART);
     }
 
     navigate('/');
@@ -46,7 +47,7 @@ export default function Settings() {
       const currentLocalTerraPath = window.store.getLocalTerraPath();
       setLocalTerraPath(currentLocalTerraPath);
 
-      const currentBlockTime = await ipcRenderer.invoke('getBlocktime');
+      const currentBlockTime = await ipcRenderer.invoke(GET_BLOCKTIME);
       setBlocktime(currentBlockTime);
 
       setIsLoading(false);
@@ -133,7 +134,7 @@ export default function Settings() {
                   InputProps={{
                     endAdornment: (
                       <Button onClick={async () => {
-                        const newPath = await ipcRenderer.invoke('setLocalTerraPath', false);
+                        const newPath = await ipcRenderer.invoke(SET_LOCAL_TERRA_PATH, false);
                         if (newPath) {
                           resetField('localTerraPath', { defaultValue: newPath });
                         }

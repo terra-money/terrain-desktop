@@ -3,26 +3,22 @@ import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { FaPlus } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Tooltip from '@mui/material/Tooltip';
 import { SelectWallet, ContractView } from '../components';
-import { IMPORT_SAVED_CONTRACTS, DELETE_CONTRACT_REFS, IMPORT_NEW_CONTRACTS } from '../constants';
+import {
+  IMPORT_SAVED_CONTRACTS, IMPORT_NEW_CONTRACTS, DELETE_CONTRACT,
+} from '../constants';
 
 const CONTRACTS_HEADER = [
   {
-    title: 'Contract Name',
+    title: 'Name',
     className: 'w-48 p-4',
-  },
-  {
-    title: 'Path',
-    className: 'w-96 p-4 pl-2.5',
   },
   {
     title: 'Code ID',
     className: 'p-4',
   },
   {
-    title: 'Contract Address',
+    title: 'Address',
     className: 'w-56 p-4 pl-3 mr-36',
   },
 ];
@@ -36,15 +32,16 @@ export default function ContractsPage() {
     setContracts(res);
   };
 
-  async function handleRefsDeletion() {
-    const res = await ipcRenderer.invoke(DELETE_CONTRACT_REFS);
+  const handleDeleteContract = async (codeId: string) => {
+    const res = await ipcRenderer.invoke(DELETE_CONTRACT, codeId);
     setContracts(res);
-  }
+  };
 
   async function importSavedContracts() {
     const allContracts = await ipcRenderer.invoke(IMPORT_SAVED_CONTRACTS);
     setContracts(allContracts);
   }
+
   const handleWalletChange = (event: SelectChangeEvent) => setWalletName(event.target.value);
 
   useEffect(() => {
@@ -69,15 +66,6 @@ export default function ContractsPage() {
           <FaPlus className="flex-none w-3 text-white" />
           Add Contracts
         </button>
-        <button onClick={handleRefsDeletion} type="button">
-          <Tooltip
-            title="Delete All Contracts"
-            placement="left"
-            style={{ marginLeft: 'auto' }}
-          >
-            <DeleteIcon className="flex-none text-terra-dark-blue" />
-          </Tooltip>
-        </button>
       </div>
       <div
         className="bg-gray-background flex justify-between text-blue-600 z-50 shadow-nav"
@@ -101,7 +89,7 @@ export default function ContractsPage() {
           className="flex flex-col w-full"
           data={contracts}
           itemContent={(index, data) => (
-            <ContractView walletName={walletName} data={data} key={index} />
+            <ContractView walletName={walletName} handleDeleteContract={handleDeleteContract} data={data} key={index} />
           )}
         />
       )}

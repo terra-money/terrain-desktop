@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as TerraLogo } from '../assets/terra-logo.svg';
+import { SET_LOCAL_TERRA_PATH, INSTALL_LOCAL_TERRA } from '../constants';
 
 export default function Onboard() {
   const [isDockerInstalled, setIsDockerInstalled] = useState(false);
@@ -13,7 +14,7 @@ export default function Onboard() {
 
   const onSetLocalTerraPath = async () => {
     try {
-      await ipcRenderer.invoke('setLocalTerraPath');
+      await ipcRenderer.invoke(SET_LOCAL_TERRA_PATH);
       navigate('/');
     } catch (e: any) {
       console.log(e);
@@ -23,7 +24,7 @@ export default function Onboard() {
 
   const onLocalTerraInstall = async () => {
     try {
-      await ipcRenderer.invoke('InstallLocalTerra');
+      await ipcRenderer.invoke(INSTALL_LOCAL_TERRA);
       navigate('/');
     } catch (e: any) {
       console.log(e);

@@ -2,14 +2,14 @@ const path = require('path');
 const fs = require('fs');
 const { showNoTerrainRefsDialog } = require('./messages');
 
-const BAKED_REFS_PATH = path.join(__dirname, '..', 'contracts');
+const PRE_BAKED_REFS_PATH = path.join(__dirname, '..', 'contracts');
 
 const mergeSchemaArrs = (schema) => (schema.oneOf && schema.anyOf && [...schema.oneOf, ...schema.anyOf]) || schema.anyOf || schema.oneOf;
 
 const getContractSchemas = (projectDir, contractName) => {
   try { // if projectDir is null, it will look for pre-baked contracts in pub/contracts dir
     const parsedSchemas = [];
-    const schemaDir = projectDir ? path.join(projectDir, 'contracts', contractName, 'schema') : path.join(BAKED_REFS_PATH, contractName);
+    const schemaDir = projectDir ? path.join(projectDir, 'contracts', contractName, 'schema') : path.join(PRE_BAKED_REFS_PATH, contractName);
     const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file.endsWith('query_msg.json') || file.endsWith('execute_msg.json'));
     schemas.forEach((file) => {
       const schema = JSON.parse(fs.readFileSync(path.join(schemaDir, file), 'utf8'));
@@ -54,7 +54,7 @@ const getContractDataFromRefs = (projectDir, refsPath) => {
   }
 };
 const getSmartContractData = (projectDir = null) => {
-  const refsPath = path.join(projectDir || BAKED_REFS_PATH, 'refs.terrain.json');
+  const refsPath = path.join(projectDir || PRE_BAKED_REFS_PATH, 'refs.terrain.json');
   if (validateRefsPath(refsPath)) {
     return getContractDataFromRefs(projectDir, refsPath);
   }

@@ -60,9 +60,9 @@ class TerrariumStore extends Store {
     }
   }
 
-  deleteContract(contract) {
-    this.contracts = this.contracts.filter((name) => name !== contract);
-    this.setContracts();
+  deleteContract(_codeId) {
+    this.contracts = this.contracts.filter(({ codeId }) => codeId !== _codeId);
+    return this.setContracts();
   }
 
   deleteAllContracts() {
