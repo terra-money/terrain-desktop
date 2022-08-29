@@ -6,8 +6,9 @@ const PRE_BAKED_REFS_PATH = path.join(__dirname, '..', 'contracts');
 
 const mergeSchemaArrs = (schema) => (schema.oneOf && schema.anyOf && [...schema.oneOf, ...schema.anyOf]) || schema.anyOf || schema.oneOf;
 
+// if projectDir is null, it will look for pre-baked contracts in pub/contracts dir
 const getContractSchemas = (projectDir, contractName) => {
-  try { // if projectDir is null, it will look for pre-baked contracts in pub/contracts dir
+  try {
     const parsedSchemas = [];
     const schemaDir = projectDir ? path.join(projectDir, 'contracts', contractName, 'schema') : path.join(PRE_BAKED_REFS_PATH, contractName);
     const schemas = fs.readdirSync(schemaDir, 'utf8').filter((file) => file.endsWith('query_msg.json') || file.endsWith('execute_msg.json'));

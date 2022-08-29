@@ -3,7 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { FaPlus } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { MsgExecuteContract } from '@terra-money/terra.js';
 import { SelectWallet, ContractView } from '../components';
+import { useTerra } from '../hooks/terra';
+
 import {
   IMPORT_SAVED_CONTRACTS, IMPORT_NEW_CONTRACTS, DELETE_CONTRACT,
 } from '../constants';
@@ -25,24 +28,54 @@ const CONTRACTS_HEADER = [
 
 export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
+  const { terra, wallets } = useTerra();
   const [walletName, setWalletName] = React.useState('test1');
+  const [contractCallResponse, setContractCallResponse] = React.useState('');
+  const wallet = wallets[walletName];
 
   const handleNewContractsImport = async () => {
-    const res = await ipcRenderer.invoke(IMPORT_NEW_CONTRACTS);
-    setContracts(res);
+    const newContracts = await ipcRenderer.invoke(IMPORT_NEW_CONTRACTS);
+    setContracts(newContracts);
   };
 
   const handleDeleteContract = async (codeId: string) => {
-    const res = await ipcRenderer.invoke(DELETE_CONTRACT, codeId);
-    setContracts(res);
+    const updContracts = await ipcRenderer.invoke(DELETE_CONTRACT, codeId);
+    setContracts(updContracts);
   };
 
   async function importSavedContracts() {
-    const allContracts = await ipcRenderer.invoke(IMPORT_SAVED_CONTRACTS);
-    setContracts(allContracts);
+    const savedContracts = await ipcRenderer.invoke(IMPORT_SAVED_CONTRACTS);
+    setContracts(savedContracts);
   }
 
   const handleWalletChange = (event: SelectChangeEvent) => setWalletName(event.target.value);
+
+  const query = async (msgData: Object, address: string) => {
+    try {
+      const res = await terra.wasm.contractQuery(address, msgData) as any;
+      setContractCallResponse(res);
+    } catch (err) {
+      setContractCallResponse(JSON.stringify(err));
+    }
+  };
+
+  const execute = async (msgData: Object, address: string) => {
+    try {
+      const execMsg = await wallet.createAndSignTx({
+        msgs: [
+          new MsgExecuteContract(
+            wallet.key.accAddress,
+            address,
+            msgData,
+          ),
+        ],
+      });
+      const res = await terra.tx.broadcast(execMsg) as any;
+      setContractCallResponse(res);
+    } catch (err) {
+      setContractCallResponse(JSON.stringify(err));
+    }
+  };
 
   useEffect(() => {
     importSavedContracts();
@@ -82,14 +115,21 @@ export default function ContractsPage() {
           </div>
         ))}
       </div>
-      <div className="bg-white rounded-lg" />
+      {contractCallResponse && (JSON.stringify(contractCallResponse, null, 2))}
       {contracts && (
         <Virtuoso
           followOutput
           className="flex flex-col w-full"
           data={contracts}
           itemContent={(index, data) => (
-            <ContractView walletName={walletName} handleDeleteContract={handleDeleteContract} data={data} key={index} />
+            <ContractView
+              walletName={walletName}
+              handleDeleteContract={handleDeleteContract}
+              query={query}
+              execute={execute}
+              data={data}
+              key={index}
+            />
           )}
         />
       )}

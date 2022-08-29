@@ -8,7 +8,9 @@ import ContractMethodsView from './ContractMethodsView';
 import { truncate } from '../utils';
 
 const ContractView = (props: ContractViewProps) => {
-  const { walletName, handleDeleteContract } = props;
+  const {
+    walletName, handleDeleteContract, query, execute,
+  } = props;
   const {
     name, codeId, address, schemas,
   } = props.data;
@@ -68,8 +70,10 @@ const ContractView = (props: ContractViewProps) => {
           >
             <ContractMethodsView
               walletName={walletName}
+              query={query}
+              execute={execute}
               schemas={schemas}
-              contractAddress={address}
+              address={address}
             />
           </Collapse>
         </li>
