@@ -23,7 +23,7 @@ module.exports = {
     'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'react/jsx-props-no-spreading': 0,
     camelcase: 0,
-    "no-param-reassign": 0,
+    'no-param-reassign': 0,
     'import/no-extraneous-dependencies': 0,
     'no-nested-ternary': 0,
     'react/no-array-index-key': 0,

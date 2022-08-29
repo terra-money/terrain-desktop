@@ -10,6 +10,7 @@ import {
   Input,
   Button,
 } from '@mui/material';
+import { PROMPT_USER_RESTART } from '../../constants';
 
 export default function SettingsModal({ handleToggleClose }: { handleToggleClose: Function}) {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
       localTerraPath !== data.localTerraPath
       || blocktime !== data.blocktime
     ) {
-      ipcRenderer.invoke('promptUserRestart');
+      ipcRenderer.invoke(PROMPT_USER_RESTART);
     }
     navigate('/');
   };

@@ -2,7 +2,8 @@ const INSTALL_LOCAL_TERRA = 'InstallLocalTerra';
 const TOGGLE_LOCAL_TERRA = 'toggleLocalTerra';
 const IMPORT_SAVED_CONTRACTS = 'importSavedContracts';
 const IMPORT_NEW_CONTRACTS = 'importNewContracts';
-const DELETE_CONTRACT_REFS = 'deleteContractRefs';
+const DELETE_ALL_CONTRACTS = 'deleteAllContracts';
+const DELETE_CONTRACT = 'deleteContract';
 const SET_LOCAL_TERRA_PATH = 'setLocalTerraPath';
 const GET_BLOCKTIME = 'getBlocktime';
 const SET_BLOCKTIME = 'setBlocktime';
@@ -63,7 +64,8 @@ module.exports = {
   SET_BLOCKTIME,
   IMPORT_NEW_CONTRACTS,
   GET_BLOCKTIME,
-  DELETE_CONTRACT_REFS,
+  DELETE_ALL_CONTRACTS,
+  DELETE_CONTRACT,
   PROMPT_USER_RESTART,
   GET_OPEN_AT_LOGIN,
   DEFAULT_BLOCKTIME,

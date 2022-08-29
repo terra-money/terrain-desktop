@@ -8,4 +8,5 @@
 export type ContractViewProps = {
     data: SmartContract
     walletName: string
+    handleDeleteContract: Function
 }

@@ -5,6 +5,7 @@ import { Button } from '@mui/material';
 import { useTerra } from '../hooks/terra';
 
 function ObjectFieldTemplate(props: any) {
+  if (props.properties.length === 0) { return null; }
   return (
     <div className="py-6">
       <div className="text-2xl capitalize text-blue-700 font-semibold">

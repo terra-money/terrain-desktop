@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  InputLabel, MenuItem, FormControl, Select,
+  InputLabel, FormControl, Select, MenuItem,
 } from '@mui/material';
 import { useTerra } from '../hooks/terra';
 
@@ -17,7 +17,7 @@ const SelectWallet = ({ handleWalletChange, walletName }: any) => {
         className="custom-select"
       >
         {Object.keys(wallets).map((name: any) => (
-          <MenuItem value={name}>
+          <MenuItem key={name} value={name}>
             {name}
           </MenuItem>
         ))}
