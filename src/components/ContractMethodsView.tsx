@@ -23,7 +23,7 @@ const ContractMethodsView = ({
   schemas, handleQuery, handleExecute, address,
 }: any) => {
   const handleSubmit = (msgType: string) => ({ formData }: any) => {
-    if (msgType === 'handleQuery') handleQuery(formData, address);
+    if (msgType === 'query') handleQuery(formData, address);
     else handleExecute(formData, address);
   };
 

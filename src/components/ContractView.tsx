@@ -9,7 +9,7 @@ import { truncate } from '../utils';
 
 const ContractView = (props: ContractViewProps) => {
   const {
-    walletName, handleDeleteContract, handleQuery, handleExecute, handleRefreshRefs,
+    handleDeleteContract, handleQuery, handleExecute, handleRefreshRefs,
   } = props;
   const {
     name, codeId, address, schemas, path,
@@ -75,7 +75,6 @@ const ContractView = (props: ContractViewProps) => {
             `}
           >
             <ContractMethodsView
-              walletName={walletName}
               handleQuery={handleQuery}
               handleExecute={handleExecute}
               schemas={schemas}
