@@ -1,8 +1,6 @@
 import React from 'react';
-import { MsgExecuteContract } from '@terra-money/terra.js';
 import Form from '@rjsf/material-ui';
 import { Button } from '@mui/material';
-import { useTerra } from '../hooks/terra';
 
 function ObjectFieldTemplate(props: any) {
   if (props.properties.length === 0) { return null; }
@@ -21,28 +19,12 @@ function ObjectFieldTemplate(props: any) {
   );
 }
 
-const ContractMethodsView = ({ schemas, contractAddress, walletName }: any) => {
-  const { terra, wallets } = useTerra();
-  const [contractRes, setContractRes] = React.useState(null);
-  const wallet = wallets[walletName];
-
-  const queryContract = async ({ formData }: any) => {
-    const res = await terra.wasm.contractQuery(contractAddress, formData) as any;
-    setContractRes(res);
-  };
-
-  const executeContract = async ({ formData }: any) => {
-    const execMsg = await wallet.createAndSignTx({
-      msgs: [
-        new MsgExecuteContract(
-          wallet.key.accAddress,
-          contractAddress,
-          formData,
-        ),
-      ],
-    });
-    const res = await terra.tx.broadcast(execMsg) as any;
-    setContractRes(res);
+const ContractMethodsView = ({
+  schemas, query, execute, address,
+}: any) => {
+  const handleSubmit = (msgType: string) => ({ formData }: any) => {
+    if (msgType === 'query') query(formData, address);
+    else execute(formData, address);
   };
 
   return (
@@ -53,21 +35,13 @@ const ContractMethodsView = ({ schemas, contractAddress, walletName }: any) => {
           ObjectFieldTemplate={ObjectFieldTemplate}
           key={schema.required[0]}
           className="border-t-2 mb-8 border-blue-900 first:border-none"
-          onSubmit={
-            schema.msgType === 'execute' ? executeContract : queryContract
-          }
+          onSubmit={handleSubmit(schema.msgType)}
         >
           <Button variant="contained" type="submit">
             {schema.msgType}
           </Button>
         </Form>
       ))}
-      {contractRes && (
-        <>
-          <h1>Result</h1>
-          <pre>{JSON.stringify(contractRes, null, 2)}</pre>
-        </>
-      )}
     </>
   );
 };
