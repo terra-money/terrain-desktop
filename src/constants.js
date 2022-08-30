@@ -4,6 +4,7 @@ const IMPORT_SAVED_CONTRACTS = 'importSavedContracts';
 const IMPORT_NEW_CONTRACTS = 'importNewContracts';
 const DELETE_ALL_CONTRACTS = 'deleteAllContracts';
 const DELETE_CONTRACT = 'deleteContract';
+const REFRESH_CONTRACT_REFS = 'refreshContractRefs';
 const SET_LOCAL_TERRA_PATH = 'setLocalTerraPath';
 const GET_BLOCKTIME = 'getBlocktime';
 const SET_BLOCKTIME = 'setBlocktime';
@@ -61,6 +62,7 @@ module.exports = {
   GET_LOCAL_TERRA_STATUS,
   SET_OPEN_AT_LOGIN,
   SET_LOCAL_TERRA_PATH,
+  REFRESH_CONTRACT_REFS,
   SET_BLOCKTIME,
   IMPORT_NEW_CONTRACTS,
   GET_BLOCKTIME,

@@ -20,11 +20,11 @@ function ObjectFieldTemplate(props: any) {
 }
 
 const ContractMethodsView = ({
-  schemas, query, execute, address,
+  schemas, handleQuery, handleExecute, address,
 }: any) => {
   const handleSubmit = (msgType: string) => ({ formData }: any) => {
-    if (msgType === 'query') query(formData, address);
-    else execute(formData, address);
+    if (msgType === 'query') handleQuery(formData, address);
+    else handleExecute(formData, address);
   };
 
   return (

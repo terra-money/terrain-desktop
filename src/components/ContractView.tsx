@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Collapse } from '@mui/material';
-import { KeyboardArrowDown as KeyboardArrowDownIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { KeyboardArrowDown as KeyboardArrowDownIcon, Delete as DeleteIcon, Refresh as RefreshIcon } from '@mui/icons-material';
 import { ContractViewProps } from '../models/Contract';
 import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
 import { REACT_APP_FINDER_URL } from '../constants';
@@ -9,14 +9,13 @@ import { truncate } from '../utils';
 
 const ContractView = (props: ContractViewProps) => {
   const {
-    walletName, handleDeleteContract, query, execute,
+    handleDeleteContract, handleQuery, handleExecute, handleRefreshRefs,
   } = props;
   const {
-    name, codeId, address, schemas,
+    name, codeId, address, schemas, path,
   } = props.data;
-  const contractHref = `${REACT_APP_FINDER_URL}/address/${address}`;
-  const [open, setOpen] = useState(false);
 
+  const [open, setOpen] = useState(false);
   const toggleContractRow = () => setOpen(!open);
 
   return (
@@ -26,7 +25,7 @@ const ContractView = (props: ContractViewProps) => {
           <a
             className="flex items-center text-blue-700 font-semibold hover:text-blue-500 hover:underline"
             target="_blank"
-            href={contractHref}
+            href={`${REACT_APP_FINDER_URL}/address/${address}`}
             rel="noreferrer"
           >
             <div className="mr-2">{name}</div>
@@ -44,6 +43,13 @@ const ContractView = (props: ContractViewProps) => {
             className="text-blue"
           >
             <DeleteIcon className="w-3 text-blue" />
+          </button>
+          <button
+            type="button"
+            onClick={() => handleRefreshRefs(path)}
+            className="text-blue"
+          >
+            <RefreshIcon className="w-3 text-blue" />
           </button>
           {schemas && (
             <div className="p-4">
@@ -69,9 +75,8 @@ const ContractView = (props: ContractViewProps) => {
             `}
           >
             <ContractMethodsView
-              walletName={walletName}
-              query={query}
-              execute={execute}
+              handleQuery={handleQuery}
+              handleExecute={handleExecute}
               schemas={schemas}
               address={address}
             />

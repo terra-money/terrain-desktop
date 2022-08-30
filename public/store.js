@@ -53,6 +53,12 @@ class TerrariumStore extends Store {
     return this.contracts;
   }
 
+  refreshContracts(updRefs, path) {
+    this.contracts = this.contracts.filter((contract) => contract.path !== path);
+    this.contracts = [...this.contracts, ...updRefs];
+    return this.setContracts();
+  }
+
   importContracts(contracts) {
     if (contracts) {
       this.contracts = [...this.contracts, ...contracts];
@@ -60,8 +66,8 @@ class TerrariumStore extends Store {
     }
   }
 
-  deleteContract(_codeId) {
-    this.contracts = this.contracts.filter(({ codeId }) => codeId !== _codeId);
+  deleteContract(codeId) {
+    this.contracts = this.contracts.filter((contract) => contract.codeId !== codeId);
     return this.setContracts();
   }
 

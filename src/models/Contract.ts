@@ -9,6 +9,7 @@ export type ContractViewProps = {
     data: SmartContract
     walletName: string
     handleDeleteContract: Function
-    query: Function
-    execute: Function
+    handleQuery: Function
+    handleExecute: Function
+    handleRefreshRefs: Function
 }
