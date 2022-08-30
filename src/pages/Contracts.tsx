@@ -8,7 +8,7 @@ import { SelectWallet, ContractView } from '../components';
 import { useTerra } from '../hooks/terra';
 
 import {
-  IMPORT_SAVED_CONTRACTS, IMPORT_NEW_CONTRACTS, DELETE_CONTRACT,
+  IMPORT_SAVED_CONTRACTS, IMPORT_NEW_CONTRACTS, DELETE_CONTRACT, REFRESH_CONTRACT_REFS,
 } from '../constants';
 
 const CONTRACTS_HEADER = [
@@ -43,6 +43,11 @@ export default function ContractsPage() {
     setContracts(updContracts);
   };
 
+  const handleRefreshRefs = async (path: string) => {
+    const updContracts = await ipcRenderer.invoke(REFRESH_CONTRACT_REFS, path);
+    setContracts(updContracts);
+  };
+
   async function importSavedContracts() {
     const savedContracts = await ipcRenderer.invoke(IMPORT_SAVED_CONTRACTS);
     setContracts(savedContracts);
@@ -50,7 +55,7 @@ export default function ContractsPage() {
 
   const handleWalletChange = (event: SelectChangeEvent) => setWalletName(event.target.value);
 
-  const query = async (msgData: Object, address: string) => {
+  const handleQuery = async (msgData: Object, address: string) => {
     try {
       const res = await terra.wasm.contractQuery(address, msgData) as any;
       setContractCallResponse(res);
@@ -59,7 +64,7 @@ export default function ContractsPage() {
     }
   };
 
-  const execute = async (msgData: Object, address: string) => {
+  const handleExecute = async (msgData: Object, address: string) => {
     try {
       const execMsg = await wallet.createAndSignTx({
         msgs: [
@@ -125,8 +130,9 @@ export default function ContractsPage() {
             <ContractView
               walletName={walletName}
               handleDeleteContract={handleDeleteContract}
-              query={query}
-              execute={execute}
+              handleQuery={handleQuery}
+              handleExecute={handleExecute}
+              handleRefreshRefs={handleRefreshRefs}
               data={data}
               key={index}
             />
