@@ -1,4 +1,4 @@
- interface SmartContract {
+export interface SmartContract {
     name: string
     path: string;
     address: string;

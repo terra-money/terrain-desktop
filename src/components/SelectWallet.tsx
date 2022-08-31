@@ -4,9 +4,8 @@ import {
 } from '@mui/material';
 import { useTerra } from '../hooks/terra';
 
-const SelectWallet = ({ handleWalletChange, walletName }: any) => {
+const SelectWallet = ({ handleWalletChange, walletName }: { handleWalletChange: any, walletName: string }) => {
   const { wallets } = useTerra();
-
   return (
     <FormControl sx={{ minWidth: 250 }} size="medium">
       <InputLabel id="wallet-label">Wallet</InputLabel>

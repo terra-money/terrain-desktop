@@ -7,21 +7,21 @@ import EventInfo from './EventInfo';
 import { truncate } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
 
-type TransactionType = {
+const Transaction = ({
+  data, index, onToggleEventDetails,
+}: {
   data: TerrariumTx,
   index: number,
-  onToggleEventDetails: (index: number) => void,
-}
-
-const Transaction = (props: TransactionType) => {
-  const { txhash, result, height } = props.data.TxResult;
+  onToggleEventDetails: (_index: number) => void,
+}) => {
+  const { txhash, result, height } = data.TxResult;
   const txHref = `${REACT_APP_FINDER_URL}/tx/${txhash}`;
 
-  const [open, setOpen] = React.useState(props.data.hasEventsOpenInUi);
+  const [open, setOpen] = React.useState(data.hasEventsOpenInUi);
 
   const toggleEventsRow = () => {
     setOpen(!open);
-    props.onToggleEventDetails(props.index);
+    onToggleEventDetails(index);
   };
 
   const percentGasUsed = 100 * (Number(result.gas_used) / Number(result.gas_wanted));
@@ -40,7 +40,7 @@ const Transaction = (props: TransactionType) => {
             <ExternalLinkIcon />
           </a>
         </div>
-        <div className="p-4 w-96 overflow-auto">{props.data.msg['@type']}</div>
+        <div className="p-4 w-96 overflow-auto">{data.msg['@type']}</div>
         <div className="p-4">{height}</div>
         <div className="p-4 pl-10 text-ellipsis overflow-hidden whitespace-nowrap">
           {result.gas_wanted}

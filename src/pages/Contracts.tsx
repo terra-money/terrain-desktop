@@ -33,6 +33,10 @@ export default function ContractsPage() {
   const [contractCallResponse, setContractCallResponse] = React.useState('');
   const wallet = wallets[walletName];
 
+  useEffect(() => {
+    importSavedContracts();
+  }, []);
+
   const handleNewContractsImport = async () => {
     const newContracts = await ipcRenderer.invoke(IMPORT_NEW_CONTRACTS);
     setContracts(newContracts);
@@ -48,10 +52,10 @@ export default function ContractsPage() {
     setContracts(updContracts);
   };
 
-  async function importSavedContracts() {
+  const importSavedContracts = async () => {
     const savedContracts = await ipcRenderer.invoke(IMPORT_SAVED_CONTRACTS);
     setContracts(savedContracts);
-  }
+  };
 
   const handleWalletChange = (event: SelectChangeEvent) => setWalletName(event.target.value);
 
@@ -81,10 +85,6 @@ export default function ContractsPage() {
       setContractCallResponse(JSON.stringify(err));
     }
   };
-
-  useEffect(() => {
-    importSavedContracts();
-  }, []);
 
   return (
     <div className="flex flex-col w-full">
@@ -128,7 +128,6 @@ export default function ContractsPage() {
           data={contracts}
           itemContent={(index, data) => (
             <ContractView
-              walletName={walletName}
               handleDeleteContract={handleDeleteContract}
               handleQuery={handleQuery}
               handleExecute={handleExecute}
