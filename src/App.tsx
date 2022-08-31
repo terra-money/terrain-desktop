@@ -1,8 +1,9 @@
 import React, { useEffect, useState, memo } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Modal } from '@material-ui/core';
+import { useTour } from '@reactour/tour';
 import { NavLink, SettingsModal } from './components';
 import { GET_LOCAL_TERRA_STATUS, TOGGLE_LOCAL_TERRA } from './constants';
 import {
@@ -20,6 +21,10 @@ function App() {
   const latestHeight = useGetLatestHeight();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
+
+  const { setIsOpen: openTour } = useTour();
+  const { state: navState }: any = useLocation();
+  if (navState && navState.showTour) { openTour(true); }
 
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
@@ -114,7 +119,7 @@ function App() {
               onKeyDown={handleSearch}
               type="search"
               placeholder="Search"
-              className={`text-base bg-transparent w-full text-white focus:outline-none duration-300 ${
+              className={`tour__search-bar text-base bg-transparent w-full text-white focus:outline-none duration-300 ${
                 !open && 'hidden'
               }`}
             />

@@ -45,3 +45,10 @@ export function nFormatter(num: number) {
   const item = lookup.slice().reverse().find((x: any) => num >= x.value);
   return item ? (num / item.value).toFixed(digits).replace(rx, '$1') + item.symbol : '0';
 }
+
+export const tourSteps = [
+  {
+    selector: '.tour__search-bar',
+    content: 'This is the search bar',
+  },
+];
