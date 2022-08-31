@@ -2,19 +2,16 @@ import { Divider, List, ListItem } from '@mui/material';
 import React from 'react';
 import { EventUtils, Event } from '../models/Event';
 
-type EventInfoType = {
+const EventInfo = ({ events, title }: {
   events: Event[],
   title: string
-}
-
-const EventInfo = (props: EventInfoType) => {
-  const events = EventUtils.parseEventsAttributes(props.events);
-
+}) => {
+  const eventsAtts = EventUtils.parseEventsAttributes(events);
   return (
     <>
-      <h3 className="text-2xl font-medium mb-4">{props.title}</h3>
+      <h3 className="text-2xl font-medium mb-4">{title}</h3>
       <List>
-        {events.map((event, index) => (
+        {eventsAtts.map((event, index) => (
           <ListItem
             className="overflow-auto ml-4"
             style={{ alignItems: 'start', flexDirection: 'column' }}

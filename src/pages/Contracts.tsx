@@ -128,7 +128,6 @@ export default function ContractsPage() {
           data={contracts}
           itemContent={(index, data) => (
             <ContractView
-              walletName={walletName}
               handleDeleteContract={handleDeleteContract}
               handleQuery={handleQuery}
               handleExecute={handleExecute}

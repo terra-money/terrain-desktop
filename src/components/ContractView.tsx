@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import { Collapse } from '@mui/material';
 import { KeyboardArrowDown as KeyboardArrowDownIcon, Delete as DeleteIcon, Refresh as RefreshIcon } from '@mui/icons-material';
-import { ContractViewProps } from '../models/Contract';
+import { SmartContract } from '../models/Contract';
 import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
 import { REACT_APP_FINDER_URL } from '../constants';
 import ContractMethodsView from './ContractMethodsView';
-import { truncate } from '../utils';
 
-const ContractView = (props: ContractViewProps) => {
-  const {
-    handleDeleteContract, handleQuery, handleExecute, handleRefreshRefs,
-  } = props;
+const ContractView = ({
+  handleDeleteContract, handleQuery, handleExecute, handleRefreshRefs, data,
+}:{
+    data: SmartContract
+    handleDeleteContract: Function
+    handleQuery: Function
+    handleExecute: Function
+    handleRefreshRefs: Function
+}) => {
   const {
     name, codeId, address, schemas, path,
-  } = props.data;
+  } = data;
 
   const [open, setOpen] = useState(false);
   const toggleContractRow = () => setOpen(!open);
@@ -35,7 +39,7 @@ const ContractView = (props: ContractViewProps) => {
         <div className="p-4 w-24">{codeId}</div>
         <div className="flex">
           <div className="p-4 truncate">
-            {truncate(address, [15, 15])}
+            {address}
           </div>
           <button
             type="button"

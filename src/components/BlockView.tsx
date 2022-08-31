@@ -7,13 +7,11 @@ import { TerrariumBlockInfo } from '../models';
 import { REACT_APP_FINDER_URL } from '../constants';
 import EventInfo from './EventInfo';
 
-type BlockType = {
+const BlockView = (props: {
   data: TerrariumBlockInfo,
   index: number,
   onToggleEventDetails: (index: number) => void,
-}
-
-const BlockView = (props: BlockType) => {
+}) => {
   const { height, time } = props.data.block.header;
   const { result_begin_block } = props.data;
   const blockHref = `${REACT_APP_FINDER_URL}/blocks/${height}`;
