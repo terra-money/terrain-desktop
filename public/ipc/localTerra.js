@@ -4,9 +4,10 @@ const {
   startLocalTerra,
   downloadLocalTerra,
   subscribeToLocalTerraEvents,
+  isDockerRunning,
 } = require('../utils/localTerra');
 const { store } = require('../store');
-const { showLocalTerraAlreadyExistsDialog } = require('../utils/messages');
+const { showLocalTerraAlreadyExistsDialog, showStartDockerDialog } = require('../utils/messages');
 const {
   INSTALL_LOCAL_TERRA, TOGGLE_LOCAL_TERRA, GET_LOCAL_TERRA_STATUS, LOCAL_TERRA_IS_RUNNING,
 } = require('../../src/constants');
@@ -32,6 +33,12 @@ module.exports = (win) => {
 
   ipcMain.handle(TOGGLE_LOCAL_TERRA, async (_, localTerraStatus) => {
     const localTerraPath = store.getLocalTerraPath();
+
+    // const isRunning = await isDockerRunning();
+    // if (!isRunning) {
+    //   await showStartDockerDialog();
+    //   return false;
+    // }
 
     if (localTerraStatus) {
       await startLocalTerra(localTerraPath);

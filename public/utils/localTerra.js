@@ -56,35 +56,30 @@ const downloadLocalTerra = async () => {
 };
 
 const startLocalTerra = (localTerraPath) => {
-  exec('docker compose up -d --wait', {
-    cwd: localTerraPath,
-    env: {
-      PATH: `${process.env.PATH}:/usr/local/bin/`,
-    },
-  });
-  return waitOn({ resources: ['http://localhost:26657'] });
+  try {
+    return exec('docker compose up -d', {
+      cwd: localTerraPath,
+      env: {
+        PATH: `${process.env.PATH}:/usr/local/bin/`,
+      },
+    });
+  } catch (err) {
+    console.log('ERROR HERE', err);
+    showStartDockerDialog();
+  }
 };
 
 const subscribeToLocalTerraEvents = async (win) => {
-  const isRunning = await isDockerRunning();
-  if (!isRunning) {
-    await showStartDockerDialog();
-    return;
-  }
-
   const localTerraPath = await store.getLocalTerraPath();
   const localTerraProcess = spawn('docker', ['compose', 'logs', '-f'], {
     cwd: localTerraPath,
-    env: {
-      PATH: `${process.env.PATH}:/usr/local/bin/`,
-    },
+    env: { PATH: `${process.env.PATH}:/usr/local/bin/` },
   });
-  console.log('win in subscribeToLocalTerraEvents', win);
   txWs = new WebSocketClient(LOCAL_TERRA_WS);
   blockWs = new WebSocketClient(LOCAL_TERRA_WS);
 
   localTerraProcess.stdout.on('data', async (data) => {
-    if (win.isDestroyed) { return; }
+    if (!win.webContents) { return; }
 
     win.webContents.send(NEW_LOG, data.toString());
     if (!globals.localTerra.isRunning) {
@@ -112,7 +107,7 @@ const subscribeToLocalTerraEvents = async (win) => {
   });
 
   localTerraProcess.on('close', () => {
-    if (win.isDestroyed) { return; }
+    if (!win.webContents) { return; }
     globals.localTerra.isRunning = false;
     win.webContents.send(LOCAL_TERRA_IS_RUNNING, false);
   });
@@ -151,23 +146,23 @@ const shutdown = async (win, restart = false) => {
   }
 };
 
-const isDockerRunning = async () => {
-  try {
-    await exec('docker ps', {
-      env: {
-        PATH: `${process.env.PATH}:/usr/local/bin/`,
-      },
-    });
-    return true;
-  } catch (err) {
-    return false;
-  }
-};
+// const isDockerRunning = async () => {
+//   try {
+//     await exec('docker ps', {
+//       env: {
+//         PATH: `${process.env.PATH}:/usr/local/bin/`,
+//       },
+//     });
+//     return true;
+//   } catch (err) {
+//     return false;
+//   }
+// };
 
 module.exports = {
   txWs,
   blockWs,
-  isDockerRunning,
+  // isDockerRunning,
   stopLocalTerra,
   startLocalTerra,
   downloadLocalTerra,

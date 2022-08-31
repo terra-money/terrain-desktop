@@ -23,7 +23,7 @@ const showSmartContractDialog = async () => dialog.showOpenDialog({
 });
 
 const showStartDockerDialog = async () => dialog.showMessageBox({
-  message: 'Start Docker then try starting Local Terra again.',
+  message: 'Ensure Docker is running before starting Local Terra.',
   title: 'Terrarium',
   type: 'warning',
 });
