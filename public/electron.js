@@ -18,12 +18,10 @@ const {
   stopLocalTerra,
   startLocalTerra,
   subscribeToLocalTerraEvents,
-  isDockerRunning,
   shutdown,
 } = require('./utils/localTerra');
 const globals = require('./utils/globals');
 const { setDockIconDisplay } = require('./utils/misc');
-const { showStartDockerDialog } = require('./utils/messages');
 
 let tray = null;
 
@@ -33,13 +31,14 @@ app.setAboutPanelOptions({
 });
 
 async function init() {
+  store.reset();
   store.clear();
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
     minWidth: 690,
     minHeight: 460,
-    show: false,
+    show: true,
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
@@ -47,6 +46,8 @@ async function init() {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
+
+  console.log('win', win);
 
   tray = new Tray(path.join(__dirname, 'tray.png'));
   const contextMenu = Menu.buildFromTemplate([
@@ -91,12 +92,6 @@ async function init() {
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
   }
 
-  const isRunning = await isDockerRunning();
-  if (!isRunning) {
-    await showStartDockerDialog();
-    app.quit();
-  }
-
   win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
@@ -133,10 +128,10 @@ async function init() {
       await startLocalTerra(localTerraPath);
       globals.localTerra.process = await subscribeToLocalTerraEvents(win);
     }
-
-    win.show();
-    win.focus();
   });
+
+  win.show();
+  win.focus();
 }
 
 app.on('ready', init);

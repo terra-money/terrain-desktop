@@ -7,7 +7,9 @@ const yaml = require('js-yaml');
 const util = require('util');
 const waitOn = require('wait-on');
 const exec = util.promisify(require('child_process').exec);
-const { showLocalTerraStartNotif, showLocalTerraStopNotif, showTxOccuredNotif } = require('./messages');
+const {
+  showLocalTerraStartNotif, showLocalTerraStopNotif, showTxOccuredNotif, showStartDockerDialog,
+} = require('./messages');
 const { store } = require('../store');
 const { setDockIconDisplay, parseTxDescriptionAndMsg } = require('./misc');
 const globals = require('./globals');
@@ -64,6 +66,12 @@ const startLocalTerra = (localTerraPath) => {
 };
 
 const subscribeToLocalTerraEvents = async (win) => {
+  const isRunning = await isDockerRunning();
+  if (!isRunning) {
+    await showStartDockerDialog();
+    return;
+  }
+
   const localTerraPath = await store.getLocalTerraPath();
   const localTerraProcess = spawn('docker', ['compose', 'logs', '-f'], {
     cwd: localTerraPath,
@@ -71,12 +79,12 @@ const subscribeToLocalTerraEvents = async (win) => {
       PATH: `${process.env.PATH}:/usr/local/bin/`,
     },
   });
-
+  console.log('win in subscribeToLocalTerraEvents', win);
   txWs = new WebSocketClient(LOCAL_TERRA_WS);
   blockWs = new WebSocketClient(LOCAL_TERRA_WS);
 
   localTerraProcess.stdout.on('data', async (data) => {
-    if (win.isDestroyed()) return;
+    if (win.isDestroyed) { return; }
 
     win.webContents.send(NEW_LOG, data.toString());
     if (!globals.localTerra.isRunning) {
@@ -104,7 +112,7 @@ const subscribeToLocalTerraEvents = async (win) => {
   });
 
   localTerraProcess.on('close', () => {
-    if (win.isDestroyed()) return;
+    if (win.isDestroyed) { return; }
     globals.localTerra.isRunning = false;
     win.webContents.send(LOCAL_TERRA_IS_RUNNING, false);
   });
@@ -113,10 +121,7 @@ const subscribeToLocalTerraEvents = async (win) => {
 
 const stopLocalTerra = async () => {
   const localTerraPath = await store.getLocalTerraPath();
-  if (globals.localTerra.process.killed) {
-    console.log('process already killed');
-    return;
-  }
+  if (globals.localTerra.process.killed) { return; }
   txWs.destroy();
   blockWs.destroy();
 
