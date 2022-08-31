@@ -6,19 +6,17 @@ import { SET_LOCAL_TERRA_PATH, INSTALL_LOCAL_TERRA } from '../constants';
 
 export default function Onboard() {
   const [isDockerInstalled, setIsDockerInstalled] = useState(false);
+  const [displayError, setDisplayError] = useState('');
   const navigate = useNavigate();
 
-  const handleOnChange = (e: any) => {
-    setIsDockerInstalled(e.target.checked);
-  };
+  const handleOnChange = (e: any) => setIsDockerInstalled(e.target.checked);
 
   const onSetLocalTerraPath = async () => {
     try {
       await ipcRenderer.invoke(SET_LOCAL_TERRA_PATH);
       navigate('/');
     } catch (e: any) {
-      console.log(e);
-      // TODO: Display error message on interface (incorrect path)
+      setDisplayError(`There was a problem setting the path: ${e.message || JSON.stringify(e)}`);
     }
   };
 
@@ -27,8 +25,7 @@ export default function Onboard() {
       await ipcRenderer.invoke(INSTALL_LOCAL_TERRA);
       navigate('/');
     } catch (e: any) {
-      console.log(e);
-      // TODO: Display error message on interface
+      setDisplayError(`There was a problem installing Local Terra: ${e.message || JSON.stringify(e)}`);
     }
   };
 
@@ -49,6 +46,7 @@ export default function Onboard() {
             I have Docker and Git installed
           </label>
         </div>
+        {displayError && (displayError)}
         {isDockerInstalled && (
           <>
             <button
