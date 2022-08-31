@@ -33,6 +33,7 @@ app.setAboutPanelOptions({
 });
 
 async function init() {
+  store.clear();
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
@@ -132,10 +133,10 @@ async function init() {
       await startLocalTerra(localTerraPath);
       globals.localTerra.process = await subscribeToLocalTerraEvents(win);
     }
-
-    win.show();
-    win.focus();
   });
+
+  win.show();
+  win.focus();
 }
 
 app.on('ready', init);

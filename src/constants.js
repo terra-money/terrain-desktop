@@ -1,4 +1,5 @@
-const INSTALL_LOCAL_TERRA = 'InstallLocalTerra';
+const INSTALL_LOCAL_TERRA = 'installLocalTerra';
+const CUSTOM_ERROR_DIALOG = 'customErrorDialog';
 const TOGGLE_LOCAL_TERRA = 'toggleLocalTerra';
 const IMPORT_SAVED_CONTRACTS = 'importSavedContracts';
 const IMPORT_NEW_CONTRACTS = 'importNewContracts';
@@ -69,6 +70,7 @@ module.exports = {
   DELETE_ALL_CONTRACTS,
   DELETE_CONTRACT,
   PROMPT_USER_RESTART,
+  CUSTOM_ERROR_DIALOG,
   GET_OPEN_AT_LOGIN,
   DEFAULT_BLOCKTIME,
   TWOHUNDREDMS_BLOCKTIME,

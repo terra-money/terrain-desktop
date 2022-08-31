@@ -11,6 +11,7 @@ const {
   GET_BLOCKTIME,
   SET_BLOCKTIME,
   PROMPT_USER_RESTART,
+  CUSTOM_ERROR_DIALOG,
   GET_OPEN_AT_LOGIN,
   SET_OPEN_AT_LOGIN,
 } = require('../../src/constants');
@@ -25,6 +26,7 @@ const {
   showPathSelectionDialog,
   showWrongDirectoryDialog,
   showPromptUserRestartDialog,
+  showCustomDialog,
 } = require('../utils/messages');
 
 const globals = require('../utils/globals');
@@ -61,6 +63,10 @@ module.exports = (win) => {
       default:
         return parsedConfig.consensus.timeout_commit;
     }
+  });
+
+  ipcMain.handle(CUSTOM_ERROR_DIALOG, async (_, err) => {
+    await showCustomDialog(err.message || JSON.stringify(err));
   });
 
   ipcMain.handle(SET_BLOCKTIME, (_, blocktime) => {
