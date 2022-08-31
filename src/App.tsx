@@ -177,29 +177,31 @@ function App() {
         </div>
 
         <div className="flex-auto bg-gray-background w-full h-screen overflow-hidden">
-          <header className="bg-white shadow-md z-40 relative flex justify-between p-6 pl-12 bg-white overflow-x-auto">
-            <ul className="flex flex-row w-full gap-20 items-center font-medium">
+          <header className="bg-white shadow-md z-40 relative flex justify-between p-6 lg:pl-12 bg-white overflow-x-auto">
+            <ul className="flex flex-row w-full gap-1 lg:gap-10 xl:gap-20 items-center font-medium">
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                <p className="text-2xl text-terra-mid-blue">{latestHeight}</p>
-                <p>Current Block</p>
+                <p className="text-md md:text-[15px] md:leading-7 lg:text-xl xl:text-2xl text-terra-mid-blue">
+                  {latestHeight}
+                </p>
+                <p className="md:text-md">Current Block</p>
               </li>
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                <p className="text-2xl text-terra-mid-blue">
+                <p className="text-md md:text-[15px] md:leading-7 lg:text-xl xl:text-2xl text-terra-mid-blue">
                   {terra.config.chainID}
                 </p>
-                <p>Network ID</p>
+                <p className="md:text-md">Network ID</p>
               </li>
               <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                <p className="text-2xl text-terra-mid-blue">
+                <p className="text-md md:text-[15px] md:leading-7 lg:text-xl xl:text-2xl text-terra-mid-blue">
                   {terra.config.URL}
                 </p>
-                <p>RPC Server</p>
+                <p className="md:text-md">RPC Server</p>
               </li>
               <li className="ml-auto">
                 <button
                   type="button"
                   onClick={toggleLocalTerra}
-                  className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground"
+                  className="flex items-center justify-center space-x-3 text-xs rounded-lg w-28 md:w-40 h-10 border-4 border-gray-brackground"
                 >
                   <BsCircleFill
                     className={
@@ -210,7 +212,7 @@ function App() {
                           : 'text-not-connected-red'
                     }
                   />
-                  <p className="text-terra-dark-blue text-lg font-bold">
+                  <p className="text-terra-dark-blue text-md lg:text-lg font-bold">
                     LocalTerra
                   </p>
                 </button>

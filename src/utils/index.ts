@@ -1,4 +1,5 @@
 import { bech32 } from 'bech32';
+import { useState, useEffect } from 'react';
 import { REACT_APP_FINDER_URL, REACT_APP_DOCS_URL } from '../constants';
 
 function isValidTerraAddress(address: string) {
@@ -9,6 +10,30 @@ function isValidTerraAddress(address: string) {
     return false;
   }
 }
+
+const getWindowDimensions = () => {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  return {
+    width,
+    height,
+  };
+};
+
+export const useWindowDimensions = () => {
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowDimensions(getWindowDimensions());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowDimensions;
+};
 
 export const parseSearchUrl = (searchQuery: string) => {
   if (Number(searchQuery)) {
