@@ -46,9 +46,51 @@ export function nFormatter(num: number) {
   return item ? (num / item.value).toFixed(digits).replace(rx, '$1') + item.symbol : '0';
 }
 
-export const tourSteps = [
-  {
-    selector: '.tour__search-bar',
-    content: 'This is the search bar',
-  },
-];
+export const tourProviderProps = {
+  steps: [
+    {
+      selector: '.search',
+      content: 'This is the search bar',
+    },
+    {
+      selector: '.Contracts',
+      content: 'This is the contracts page',
+    },
+    {
+      selector: '.Accounts',
+      content: 'This is the accounts page',
+    },
+    {
+      selector: '.Blocks',
+      content: 'This is the blocks page',
+    },
+    {
+      selector: '.Transactions',
+      content: 'This is the transaction page',
+    },
+    {
+      selector: '.Logs',
+      content: 'This is the logs page bar',
+    },
+    {
+      selector: '.Settings',
+      content: 'This is the settings modal',
+    },
+    {
+      selector: '.current-block',
+      content: 'This is the current-block bar',
+    },
+    {
+      selector: '.toggle-terra',
+      content: 'This is the toggle terra button',
+    },
+    {
+      selector: '.add-contracts',
+      content: 'This is the add contracts btn',
+    },
+    {
+      selector: '.contract-view',
+      content: 'This is the contract view of pre-baked contract',
+    },
+  ],
+};

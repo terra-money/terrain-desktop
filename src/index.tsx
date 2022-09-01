@@ -7,7 +7,7 @@ import './styleOverrides.css';
 import { TourProvider } from '@reactour/tour';
 import App from './App';
 import { Provider } from './components';
-import { tourSteps } from './utils';
+import { tourProviderProps } from './utils';
 import { StateListeners } from './context/ElectronContextProvider';
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
@@ -17,7 +17,7 @@ root.render(
     <StateListeners />
     <Provider>
       <BrowserRouter>
-        <TourProvider steps={tourSteps}>
+        <TourProvider {...tourProviderProps}>
           <App />
         </TourProvider>
       </BrowserRouter>

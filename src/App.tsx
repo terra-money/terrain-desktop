@@ -104,7 +104,7 @@ function App() {
             </h1>
           </div>
           <div
-            className={`flex items-center rounded-md mt-6 bg-light-white py-2 ${
+            className={`search flex items-center rounded-md mt-6 bg-light-white py-2 ${
               !open ? 'px-2.5' : 'px-4'
             }`}
           >
@@ -119,7 +119,7 @@ function App() {
               onKeyDown={handleSearch}
               type="search"
               placeholder="Search"
-              className={`tour__search-bar text-base bg-transparent w-full text-white focus:outline-none duration-300 ${
+              className={`text-base bg-transparent w-full text-white focus:outline-none duration-300 ${
                 !open && 'hidden'
               }`}
             />
@@ -184,7 +184,7 @@ function App() {
         <div className="flex-auto bg-gray-background w-full h-screen overflow-hidden">
           <header className="bg-white shadow-md z-40 relative flex justify-between p-6 pl-12 bg-white overflow-x-auto">
             <ul className="flex flex-row w-full gap-20 items-center font-medium">
-              <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <li className="current-block flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-2xl text-terra-mid-blue">{latestHeight}</p>
                 <p>Current Block</p>
               </li>
@@ -204,7 +204,7 @@ function App() {
                 <button
                   type="button"
                   onClick={toggleLocalTerra}
-                  className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground"
+                  className="flex toggle-terra items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground"
                 >
                   <BsCircleFill
                     className={

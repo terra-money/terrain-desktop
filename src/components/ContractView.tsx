@@ -24,7 +24,7 @@ const ContractView = ({
 
   return (
     <ul className="m-2">
-      <li className="bg-white flex justify-between items-center shadow-row rounded-2xl border-2 border-blue-200">
+      <li className="bg-white contract-view flex justify-between items-center shadow-row rounded-2xl border-2 border-blue-200">
         <div className="bg-blue-200 p-5 py-8 w-44 rounded-l-xl">
           <a
             className="flex items-center text-blue-700 font-semibold hover:text-blue-500 hover:underline"
