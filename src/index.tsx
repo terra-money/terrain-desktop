@@ -15,12 +15,12 @@ const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <StateListeners />
-    <Provider>
-      <BrowserRouter>
-        <TourProvider {...tourProviderProps}>
+    <TourProvider {...tourProviderProps}>
+      <Provider>
+        <BrowserRouter>
           <App />
-        </TourProvider>
-      </BrowserRouter>
-    </Provider>
+        </BrowserRouter>
+      </Provider>
+    </TourProvider>
   </React.StrictMode>,
 );

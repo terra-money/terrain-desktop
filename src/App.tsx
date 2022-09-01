@@ -22,13 +22,33 @@ function App() {
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
 
-  const { setIsOpen: openTour } = useTour();
-  const { state: navState }: any = useLocation();
-  if (navState && navState.showTour) { openTour(true); }
-
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const { setIsOpen: openTour, currentStep, steps } = useTour();
+  const { state: navState }: any = useLocation();
+
+  useEffect(() => {
+    if (navState && navState.firstOpen) {
+      openTour(true);
+      toggleLocalTerra();
+    }
+  }, [navState]);
+
+  useEffect(() => {
+    // @ts-ignore
+    if (steps[currentStep].page) navigate(steps[currentStep].page);
+  }, [currentStep]);
+
+  useEffect(() => {
+    ipcRenderer.send(GET_LOCAL_TERRA_STATUS);
+    if (!isLocalTerraPathConfigured.get()) navigate('/onboard');
+  }, []);
+
+  useEffect(() => {
+    if (hasStartedLocalTerra.get() === null) setIsLoading(true);
+    else setIsLoading(false);
+  }, [hasStartedLocalTerra, latestHeight]);
 
   const handleToggleOpen = (modalName: any) => {
     setModalComponent(modalName);
@@ -41,20 +61,6 @@ function App() {
     handleToggleClose,
     handleToggleOpen,
   });
-
-  // retrigger LocalTerraRunning ipc event.
-  useEffect(() => {
-    ipcRenderer.send(GET_LOCAL_TERRA_STATUS);
-  }, []);
-
-  useEffect(() => {
-    if (!isLocalTerraPathConfigured.get()) navigate('/onboard');
-  }, []);
-
-  useEffect(() => {
-    if (hasStartedLocalTerra.get() === null) setIsLoading(true);
-    else setIsLoading(false);
-  }, [hasStartedLocalTerra, latestHeight]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
 
@@ -228,7 +234,7 @@ function App() {
         </div>
         <Modal
           open={isModalOpen}
-          onClose={() => handleToggleClose()}
+          onClose={handleToggleClose}
           disablePortal
           disableEnforceFocus
           disableAutoFocus

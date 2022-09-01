@@ -15,7 +15,7 @@ export default function Onboard() {
   const onSetLocalTerraPath = async () => {
     try {
       await ipcRenderer.invoke(SET_LOCAL_TERRA_PATH);
-      navigate('/', { state: { showTour: true } });
+      navigate('/', { state: { firstOpen: true } });
     } catch (e: any) {
       await ipcRenderer.invoke(CUSTOM_ERROR_DIALOG, e);
     }
@@ -24,7 +24,7 @@ export default function Onboard() {
   const onLocalTerraInstall = async () => {
     try {
       await ipcRenderer.invoke(INSTALL_LOCAL_TERRA);
-      navigate('/', { state: { showTour: true } });
+      navigate('/', { state: { firstOpen: true } });
     } catch (e: any) { return e; }
   };
 
