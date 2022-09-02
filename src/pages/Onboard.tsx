@@ -46,14 +46,11 @@ export default function Onboard() {
           <FormControlLabel onChange={handleOnChangeDeps} control={<Checkbox color="default" />} label="I have Docker and Git Installed" />
           <FormControlLabel disabled={!isDockerInstalled} onChange={handleOnDocker} control={<Checkbox color="default" />} label="Docker is currently running" />
           <Button
-            sx={{ margin: 10 }}
             variant="contained"
             disabled={!(isDockerRunning && isDockerInstalled)}
             onClick={onSetLocalTerraPath}
           >
-            {' '}
             I already have LocalTerra installed
-
           </Button>
           <Button variant="contained" disabled={!(isDockerRunning && isDockerInstalled)} onClick={onLocalTerraInstall}> Install LocalTerra</Button>
         </FormGroup>

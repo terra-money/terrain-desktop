@@ -33,7 +33,6 @@ app.setAboutPanelOptions({
 });
 
 async function init() {
-  store.clear();
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
