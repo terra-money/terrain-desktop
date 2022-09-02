@@ -32,7 +32,6 @@ const {
 const globals = require('../utils/globals');
 
 // Register IPC handlers relating to the settings page.
-
 module.exports = (win) => {
   ipcMain.handle(GET_OPEN_AT_LOGIN, () => app.getLoginItemSettings().openAtLogin);
   ipcMain.handle(SET_OPEN_AT_LOGIN, (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
@@ -41,7 +40,10 @@ module.exports = (win) => {
     const { filePaths } = await showPathSelectionDialog();
     const isValid = validateLocalTerraPath(filePaths[0]);
 
-    if (isValid && save) {
+    if (!filePaths.length) {
+      await showWrongDirectoryDialog();
+      throw Error(`No directory was selected does not exist under the path '${filePaths[0]}'`);
+    } else if (isValid && save) {
       store.setLocalTerraPath(filePaths[0]);
       // eslint-disable-next-line no-param-reassign
       globals.localTerraProcess = startLocalTerra(filePaths[0]);

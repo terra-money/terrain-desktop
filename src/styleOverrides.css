@@ -10,6 +10,9 @@
   background-color: #0f40b9;
   color: white;
 }
+.MuiFormControlLabel-label	{
+  color: white;
+}
 
 .left-nav ul a svg {
   fill: rgba(191, 219, 254, 1);

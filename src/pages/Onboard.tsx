@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
+import {
+  Checkbox, FormGroup, FormControlLabel, Button,
+} from '@material-ui/core';
 import { ReactComponent as TerraLogo } from '../assets/terra-logo.svg';
 import { SET_LOCAL_TERRA_PATH, INSTALL_LOCAL_TERRA, CUSTOM_ERROR_DIALOG } from '../constants';
 
@@ -39,32 +42,21 @@ export default function Onboard() {
         <div className="block h-40 w-40 mb-4">
           <TerraLogo />
         </div>
-        <div className="flex-row text-white space-x-4">
-          <label htmlFor="dockerInstalled">
-            <input onChange={handleOnChangeDeps} id="dockerInstalled" type="checkbox" value="dockerInstalled" />
-            I have Docker and Git installed
-          </label>
-        </div>
-        {isDockerInstalled && (
-        <div className="flex-row text-white space-x-4">
-          <label htmlFor="dockerInstalled">
-            <input onChange={handleOnDocker} id="dockerInstalled" type="checkbox" value="dockerInstalled" />
-            Docker is currently running
-          </label>
-        </div>
-        )}
-        {isDockerRunning && isDockerInstalled && (
-          <>
-            <button
-              className="text-white hover:underline"
-              type="button"
-              onClick={onSetLocalTerraPath}
-            >
-              I already have LocalTerra installed
-            </button>
-            <button className="text-white hover:underline" type="button" onClick={onLocalTerraInstall}>Install LocalTerra</button>
-          </>
-        )}
+        <FormGroup>
+          <FormControlLabel onChange={handleOnChangeDeps} control={<Checkbox color="default" />} label="I have Docker and Git Installed" />
+          <FormControlLabel disabled={!isDockerInstalled} onChange={handleOnDocker} control={<Checkbox color="default" />} label="Docker is currently running" />
+          <Button
+            sx={{ margin: 10 }}
+            variant="contained"
+            disabled={!(isDockerRunning && isDockerInstalled)}
+            onClick={onSetLocalTerraPath}
+          >
+            {' '}
+            I already have LocalTerra installed
+
+          </Button>
+          <Button variant="contained" disabled={!(isDockerRunning && isDockerInstalled)} onClick={onLocalTerraInstall}> Install LocalTerra</Button>
+        </FormGroup>
       </div>
     </div>
   );

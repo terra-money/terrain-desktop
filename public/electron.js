@@ -133,10 +133,9 @@ async function init() {
       await startLocalTerra(localTerraPath);
       globals.localTerra.process = await subscribeToLocalTerraEvents(win);
     }
+    win.show();
+    win.focus();
   });
-
-  win.show();
-  win.focus();
 }
 
 app.on('ready', init);

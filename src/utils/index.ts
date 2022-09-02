@@ -54,7 +54,6 @@ export const tourProviderProps = {
       borderRadius: 5,
     }),
     controls: (base: any) => ({ ...base, marginTop: 30 }),
-
   },
   onClickMask: ({ setIsOpen }: { setIsOpen: Function }) => setIsOpen(false),
   onClickClose: ({ setIsOpen }: { setIsOpen: Function }) => setIsOpen(false),
