@@ -22,8 +22,14 @@ const showSmartContractDialog = async () => dialog.showOpenDialog({
   properties: ['openDirectory'],
 });
 
+const showCustomDialog = async (message) => dialog.showMessageBox({
+  message,
+  title: 'Terrarium',
+  type: 'warning',
+});
+
 const showStartDockerDialog = async () => dialog.showMessageBox({
-  message: 'Start Docker then try opening Terrarium again.',
+  message: 'Start Docker then re-open Terrarium.',
   title: 'Terrarium',
   type: 'warning',
 });
@@ -78,4 +84,5 @@ module.exports = {
   showNoTerrainRefsDialog,
   showStartDockerDialog,
   showMissingSchemaDialog,
+  showCustomDialog,
 };

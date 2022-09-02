@@ -2,23 +2,22 @@ import React, { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as TerraLogo } from '../assets/terra-logo.svg';
-import { SET_LOCAL_TERRA_PATH, INSTALL_LOCAL_TERRA } from '../constants';
+import { SET_LOCAL_TERRA_PATH, INSTALL_LOCAL_TERRA, CUSTOM_ERROR_DIALOG } from '../constants';
 
 export default function Onboard() {
   const [isDockerInstalled, setIsDockerInstalled] = useState(false);
+  const [isDockerRunning, setDockerIsRunning] = useState(false);
   const navigate = useNavigate();
 
-  const handleOnChange = (e: any) => {
-    setIsDockerInstalled(e.target.checked);
-  };
+  const handleOnChangeDeps = (e: any) => setIsDockerInstalled(e.target.checked);
+  const handleOnDocker = (e: any) => setDockerIsRunning(e.target.checked);
 
   const onSetLocalTerraPath = async () => {
     try {
       await ipcRenderer.invoke(SET_LOCAL_TERRA_PATH);
       navigate('/');
     } catch (e: any) {
-      console.log(e);
-      // TODO: Display error message on interface (incorrect path)
+      await ipcRenderer.invoke(CUSTOM_ERROR_DIALOG, e);
     }
   };
 
@@ -26,10 +25,7 @@ export default function Onboard() {
     try {
       await ipcRenderer.invoke(INSTALL_LOCAL_TERRA);
       navigate('/');
-    } catch (e: any) {
-      console.log(e);
-      // TODO: Display error message on interface
-    }
+    } catch (e: any) { return e; }
   };
 
   return (
@@ -45,11 +41,19 @@ export default function Onboard() {
         </div>
         <div className="flex-row text-white space-x-4">
           <label htmlFor="dockerInstalled">
-            <input onChange={handleOnChange} id="dockerInstalled" type="checkbox" value="dockerInstalled" />
+            <input onChange={handleOnChangeDeps} id="dockerInstalled" type="checkbox" value="dockerInstalled" />
             I have Docker and Git installed
           </label>
         </div>
         {isDockerInstalled && (
+        <div className="flex-row text-white space-x-4">
+          <label htmlFor="dockerInstalled">
+            <input onChange={handleOnDocker} id="dockerInstalled" type="checkbox" value="dockerInstalled" />
+            Docker is currently running
+          </label>
+        </div>
+        )}
+        {isDockerRunning && isDockerInstalled && (
           <>
             <button
               className="text-white hover:underline"

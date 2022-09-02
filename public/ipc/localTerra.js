@@ -6,9 +6,9 @@ const {
   subscribeToLocalTerraEvents,
 } = require('../utils/localTerra');
 const { store } = require('../store');
-const { showLocalTerraAlreadyExistsDialog } = require('../utils/messages');
+const { showLocalTerraAlreadyExistsDialog, showCustomDialog } = require('../utils/messages');
 const {
-  INSTALL_LOCAL_TERRA, TOGGLE_LOCAL_TERRA, GET_LOCAL_TERRA_STATUS, LOCAL_TERRA_IS_RUNNING,
+  INSTALL_LOCAL_TERRA, TOGGLE_LOCAL_TERRA, GET_LOCAL_TERRA_STATUS, LOCAL_TERRA_IS_RUNNING, CUSTOM_ERROR_DIALOG,
 } = require('../../src/constants');
 const globals = require('../utils/globals');
 
