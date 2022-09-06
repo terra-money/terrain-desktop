@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Checkbox, FormGroup, FormControlLabel, Button,
 } from '@material-ui/core';
-import { ReactComponent as TerraLogo } from '../assets/terra-logo.svg';
+import { ReactComponent as TerraLogo } from '../assets/terra-logo-base.svg';
 import { SET_LOCAL_TERRA_PATH, INSTALL_LOCAL_TERRA, CUSTOM_ERROR_DIALOG } from '../constants';
 
 export default function Onboard() {
