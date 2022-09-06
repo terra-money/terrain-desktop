@@ -1,8 +1,9 @@
 import React, { useEffect, useState, memo } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Modal } from '@material-ui/core';
+import { useTour } from '@reactour/tour';
 import { NavLink, SettingsModal } from './components';
 import { GET_LOCAL_TERRA_STATUS, TOGGLE_LOCAL_TERRA } from './constants';
 import {
@@ -24,6 +25,30 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const { setIsOpen: openTour, currentStep, steps } = useTour();
+  const { state: navState }: any = useLocation();
+
+  useEffect(() => {
+    if (navState && navState.firstOpen) {
+      openTour(true);
+      toggleLocalTerra();
+    }
+  }, [navState]);
+
+  useEffect(() => {
+    // @ts-ignore
+    if (steps[currentStep].page) navigate(steps[currentStep].page);
+  }, [currentStep]);
+
+  useEffect(() => {
+    ipcRenderer.send(GET_LOCAL_TERRA_STATUS);
+    if (!isLocalTerraPathConfigured.get()) navigate('/onboard');
+  }, []);
+
+  useEffect(() => {
+    if (hasStartedLocalTerra.get() === null) setIsLoading(true);
+    else setIsLoading(false);
+  }, [hasStartedLocalTerra, latestHeight]);
 
   const handleToggleOpen = (modalName: any) => {
     setModalComponent(modalName);
@@ -36,20 +61,6 @@ function App() {
     handleToggleClose,
     handleToggleOpen,
   });
-
-  // retrigger LocalTerraRunning ipc event.
-  useEffect(() => {
-    ipcRenderer.send(GET_LOCAL_TERRA_STATUS);
-  }, []);
-
-  useEffect(() => {
-    if (!isLocalTerraPathConfigured.get()) navigate('/onboard');
-  }, []);
-
-  useEffect(() => {
-    if (hasStartedLocalTerra.get() === null) setIsLoading(true);
-    else setIsLoading(false);
-  }, [hasStartedLocalTerra, latestHeight]);
 
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
 
@@ -99,7 +110,7 @@ function App() {
             </h1>
           </div>
           <div
-            className={`flex items-center rounded-md mt-6 bg-light-white py-2 ${
+            className={`search flex items-center rounded-md mt-6 bg-light-white py-2 ${
               !open ? 'px-2.5' : 'px-4'
             }`}
           >
@@ -179,7 +190,7 @@ function App() {
         <div className="flex-auto bg-gray-background w-full h-screen overflow-hidden">
           <header className="bg-white shadow-md z-40 relative flex justify-between p-6 pl-12 bg-white overflow-x-auto">
             <ul className="flex flex-row w-full gap-20 items-center font-medium">
-              <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <li className="current-block flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-2xl text-terra-mid-blue">{latestHeight}</p>
                 <p>Current Block</p>
               </li>
@@ -199,7 +210,7 @@ function App() {
                 <button
                   type="button"
                   onClick={toggleLocalTerra}
-                  className="flex items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground"
+                  className="flex toggle-terra items-center justify-center space-x-3 text-xs rounded-lg w-40 h-10 border-4 border-gray-brackground"
                 >
                   <BsCircleFill
                     className={
@@ -223,7 +234,7 @@ function App() {
         </div>
         <Modal
           open={isModalOpen}
-          onClose={() => handleToggleClose()}
+          onClose={handleToggleClose}
           disablePortal
           disableEnforceFocus
           disableAutoFocus
