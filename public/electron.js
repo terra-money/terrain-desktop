@@ -4,7 +4,7 @@ const {
 } = require('electron');
 const isDev = require('electron-is-dev');
 const defaultMenu = require('electron-default-menu');
-const { store } = require('./store');
+const { store } = require('./utils/store');
 const pkg = require('../package.json');
 const registerSettingsHandlers = require('./ipc/settings');
 const registerContractHandlers = require('./ipc/contracts');
@@ -47,7 +47,10 @@ async function init() {
     },
   });
 
-  tray = new Tray(path.join(__dirname, 'tray.png'));
+  const trayIconPath = path.join('../', __dirname, 'assets', 'white.svg');
+  console.log('trayIconPath', trayIconPath);
+
+  tray = new Tray(trayIconPath);
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Open',

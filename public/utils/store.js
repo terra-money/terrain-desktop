@@ -5,7 +5,7 @@ const {
   SET_BLOCKTIME,
   GET_OPEN_AT_LOGIN,
   SET_OPEN_AT_LOGIN,
-} = require('../src/constants');
+} = require('../../src/constants');
 
 class TerrariumStore extends Store {
   constructor() {

@@ -2,7 +2,7 @@ const { app, ipcMain } = require('electron');
 const toml = require('@iarna/toml');
 const fs = require('fs');
 const path = require('path');
-const { store } = require('../store');
+const { store } = require('../utils/store');
 const {
   DEFAULT_BLOCKTIME,
   ONESECOND_BLOCKTIME,

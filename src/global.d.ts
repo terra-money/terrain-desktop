@@ -1,4 +1,4 @@
-import TerrariumStore from '../public/store';
+import TerrariumStore from '../public/utils/store';
 
 export {};
 declare global {
