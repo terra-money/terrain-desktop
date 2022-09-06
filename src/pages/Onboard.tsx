@@ -33,12 +33,12 @@ export default function Onboard() {
 
   return (
     <div
-      className="flex items-center justify-center bg-terra-dark-blue h-screen"
+      className="flex items-center justify-center h-screen"
       style={{
-        position: 'fixed', top: '0', right: '0', bottom: '0', left: '0', zIndex: '10000',
+        position: 'fixed', top: '0', right: '0', bottom: '0', left: '0', zIndex: '10000', backgroundColor: 'rgba(191, 219, 254, 1)',
       }}
     >
-      <div className="flex flex-col items-center block space-x-4">
+      <div className="flex flex-col items-center justify-center block space-x-4">
         <div className="block h-40 w-40 mb-4">
           <TerraLogo />
         </div>
@@ -51,7 +51,7 @@ export default function Onboard() {
             disabled={!(isDockerRunning && isDockerInstalled)}
             onClick={onSetLocalTerraPath}
           >
-            I already have LocalTerra installed
+            Local Terra is already installed
           </Button>
           <Button variant="contained" disabled={!(isDockerRunning && isDockerInstalled)} onClick={onLocalTerraInstall}> Install LocalTerra</Button>
         </FormGroup>

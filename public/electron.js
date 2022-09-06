@@ -1,6 +1,6 @@
 const path = require('path');
 const {
-  app, shell, BrowserWindow, Menu, Tray, MenuItem, session, nativeImage,
+  app, shell, BrowserWindow, Menu, Tray, MenuItem, session,
 } = require('electron');
 const isDev = require('electron-is-dev');
 const defaultMenu = require('electron-default-menu');
@@ -33,6 +33,7 @@ app.setAboutPanelOptions({
 });
 
 async function init() {
+  store.clear();
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,

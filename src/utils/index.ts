@@ -102,7 +102,7 @@ export const tourProviderProps = {
     },
     {
       selector: '.add-contracts',
-      content: 'Click here to import contracts from your terrain project to call them from Terrarium.',
+      content: 'Click here to import contracts from your Terrain project to call them from Terrarium.',
     },
     {
       selector: '.contract-view',

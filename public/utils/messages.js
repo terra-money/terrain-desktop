@@ -9,7 +9,7 @@ const showPromptUserRestartDialog = async () => dialog.showMessageBox({
 });
 
 const showPathSelectionDialog = async () => dialog.showOpenDialog({
-  message: 'Select your LocalTerra directory.',
+  message: 'Select your Local Terra directory.',
   title: 'Terrarium',
   type: 'info',
   properties: ['openDirectory'],
@@ -41,14 +41,14 @@ const showMissingSchemaDialog = async () => dialog.showMessageBox({
 });
 
 const showWrongDirectoryDialog = async () => dialog.showMessageBox({
-  message: 'Please select a valid LocalTerra directory',
+  message: 'Please select a valid Local Terra directory',
   title: 'Terrarium',
   type: 'warning',
 });
 
 const showLocalTerraAlreadyExistsDialog = async () => dialog.showMessageBox({
-  message: `LocalTerra already exists in the default installation folder '${app.getPath('appData')}/LocalTerra'. 
-    Delete the existing LocalTerra directory to continue with the installation or select it to start Terrarium.`,
+  message: `Local Terra already exists in the default installation folder '${app.getPath('appData')}/LocalTerra'. 
+    Delete the existing Local Terra directory to continue with the installation or select it to start Terrarium.`,
   title: 'Terrarium',
   type: 'warning',
 });
