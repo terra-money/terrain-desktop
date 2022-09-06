@@ -47,7 +47,7 @@ async function init() {
     },
   });
 
-  const trayIconPath = path.join('../', __dirname, 'assets', 'white.svg');
+  const trayIconPath = path.join(__dirname, '../src', 'assets', 'tray.png');
   console.log('trayIconPath', trayIconPath);
 
   tray = new Tray(trayIconPath);
