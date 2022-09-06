@@ -43,10 +43,11 @@ export default function Onboard() {
           <TerraLogo />
         </div>
         <FormGroup>
-          <FormControlLabel onChange={handleOnChangeDeps} control={<Checkbox color="default" />} label="I have Docker and Git Installed" />
-          <FormControlLabel disabled={!isDockerInstalled} onChange={handleOnDocker} control={<Checkbox color="default" />} label="Docker is currently running" />
+          <FormControlLabel onChange={handleOnChangeDeps} control={<Checkbox color="primary" />} label="I have Docker and Git Installed" />
+          <FormControlLabel disabled={!isDockerInstalled} onChange={handleOnDocker} control={<Checkbox color="primary" />} label="Docker is currently running" />
           <Button
             variant="contained"
+            style={{ marginBottom: 10 }}
             disabled={!(isDockerRunning && isDockerInstalled)}
             onClick={onSetLocalTerraPath}
           >

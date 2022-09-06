@@ -1,6 +1,6 @@
 const path = require('path');
 const {
-  app, shell, BrowserWindow, Menu, Tray, MenuItem, session,
+  app, shell, BrowserWindow, Menu, Tray, MenuItem, session, nativeImage,
 } = require('electron');
 const isDev = require('electron-is-dev');
 const defaultMenu = require('electron-default-menu');
@@ -47,10 +47,7 @@ async function init() {
     },
   });
 
-  const trayIconPath = path.join(__dirname, '../src', 'assets', 'tray.png');
-  console.log('trayIconPath', trayIconPath);
-
-  tray = new Tray(trayIconPath);
+  tray = new Tray(path.join(__dirname, 'trayTemplate@3x.png'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Open',
