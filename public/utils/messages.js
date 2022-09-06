@@ -29,7 +29,7 @@ const showCustomDialog = async (message) => dialog.showMessageBox({
 });
 
 const showStartDockerDialog = async () => dialog.showMessageBox({
-  message: 'Start Docker then re-open Terrarium.',
+  message: 'Start Docker then re-open Terrarium. Terrarium needs it to run LocalTerra.',
   title: 'Terrarium',
   type: 'warning',
 });

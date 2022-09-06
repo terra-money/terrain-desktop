@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Collapse } from '@mui/material';
 import { KeyboardArrowDown as KeyboardArrowDownIcon, Delete as DeleteIcon, Refresh as RefreshIcon } from '@mui/icons-material';
+import { useTour } from '@reactour/tour';
 import { SmartContract } from '../models/Contract';
 import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
 import { REACT_APP_FINDER_URL } from '../constants';
@@ -21,10 +22,15 @@ const ContractView = ({
 
   const [open, setOpen] = useState(false);
   const toggleContractRow = () => setOpen(!open);
+  const { isOpen, currentStep } = useTour();
+
+  useEffect(() => {
+    if (isOpen && currentStep >= 10) setOpen(true);
+  }, [currentStep]);
 
   return (
     <ul className="m-2">
-      <li className="bg-white flex justify-between items-center shadow-row rounded-2xl border-2 border-blue-200">
+      <li className="bg-white contract-view flex justify-between items-center shadow-row rounded-2xl border-2 border-blue-200">
         <div className="bg-blue-200 p-5 py-8 w-44 rounded-l-xl">
           <a
             className="flex items-center text-blue-700 font-semibold hover:text-blue-500 hover:underline"

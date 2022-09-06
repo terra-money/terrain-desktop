@@ -76,7 +76,7 @@ const subscribeToLocalTerraEvents = async (win) => {
   blockWs = new WebSocketClient(LOCAL_TERRA_WS);
 
   localTerraProcess.stdout.on('data', async (data) => {
-    if (!win.webContents) { return; }
+    if (win && win.isDestroyed()) { return; }
 
     win.webContents.send(NEW_LOG, data.toString());
     if (!globals.localTerra.isRunning) {
@@ -104,7 +104,7 @@ const subscribeToLocalTerraEvents = async (win) => {
   });
 
   localTerraProcess.on('close', () => {
-    if (!win.webContents) { return; }
+    if (win && win.isDestroyed()) { return; }
     globals.localTerra.isRunning = false;
     win.webContents.send(LOCAL_TERRA_IS_RUNNING, false);
   });

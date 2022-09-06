@@ -35,3 +35,10 @@
   padding: 16.5px 14px;
   width: 250px;
 }
+
+.MuiFormControlLabel-label	{
+  color: white;
+}
+.MuiButtonBase-root {
+  margin: 0.25rem 0;
+}
