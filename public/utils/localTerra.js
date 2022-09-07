@@ -40,7 +40,7 @@ const validateLocalTerraPath = (url) => {
 const downloadLocalTerra = async () => {
   const localTerraPath = path.join(app.getPath('appData'), 'LocalTerra');
   if (fs.existsSync(localTerraPath)) {
-    throw Error(`Local Terra already exists under the path '${localTerraPath}'`);
+    throw Error(`LocalTerra already exists under the path '${localTerraPath}'`);
   } else {
     await exec(`git clone ${LOCAL_TERRA_GIT} --depth 1`, {
       cwd: app.getPath('appData'),
@@ -113,7 +113,7 @@ const subscribeToLocalTerraEvents = async (win) => {
       globals.localTerra.isRunning = false;
       win.webContents.send(LOCAL_TERRA_IS_RUNNING, false);
     } catch (err) {
-      console.error(`Error closing local terra process: ${err}`);
+      console.error(`Error closing LocalTerra process: ${err}`);
     }
   });
   return localTerraProcess;
@@ -137,7 +137,7 @@ const stopLocalTerra = async () => {
     globals.localTerra.isRunning = false;
     showLocalTerraStopNotif();
   } catch (err) {
-    console.error(`Error stopping local terra: ${err}`);
+    console.error(`Error stopping LocalTerra: ${err}`);
   }
 };
 

@@ -51,7 +51,7 @@ export default function Onboard() {
             disabled={!(isDockerRunning && isDockerInstalled)}
             onClick={onSetLocalTerraPath}
           >
-            Local Terra is already installed
+            LocalTerra is already installed
           </Button>
           <Button variant="contained" disabled={!(isDockerRunning && isDockerInstalled)} onClick={onLocalTerraInstall}> Install LocalTerra</Button>
         </FormGroup>

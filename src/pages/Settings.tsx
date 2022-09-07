@@ -129,7 +129,7 @@ export default function Settings() {
               <FormControl sx={{ minWidth: 400 }}>
                 <TextField
                   {...register('localTerraPath')}
-                  label="Local Terra Path"
+                  label="LocalTerra Path"
                   defaultValue={localTerraPath}
                   InputProps={{
                     endAdornment: (
