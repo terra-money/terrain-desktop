@@ -10,10 +10,10 @@ import {
   useTerraBlockUpdate, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
 } from './hooks/terra';
 import { parseSearchUrl } from './utils';
-import logo from './assets/terra-logo.svg';
+import { ReactComponent as TerraLogo } from './assets/terra-logo.svg';
 import useNav from './hooks/routes';
 
-function App() {
+const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalComponent, setModalComponent] = useState(<></>);
   const navigate = useNavigate();
@@ -93,12 +93,10 @@ function App() {
           />
           <div className="inline-flex items-center">
             <div className="w-10 aspect-square mr-2">
-              <img
-                src={logo}
+              <TerraLogo
                 className={`object-contain cursor-pointer block duration-500 ${
                   open && 'rotate-[360deg]'
                 }`}
-                alt="logo"
               />
             </div>
             <h1
@@ -246,6 +244,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default memo(App);

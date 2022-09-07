@@ -1,6 +1,6 @@
 const { ipcMain } = require('electron');
 const { getSmartContractData } = require('../utils/contracts');
-const { store } = require('../store');
+const { store } = require('../utils/store');
 const { showSmartContractDialog, showMissingSchemaDialog } = require('../utils/messages');
 
 const {

@@ -85,24 +85,24 @@ export const tourProviderProps = {
     {
       selector: '.Logs',
       page: '/Logs',
-      content: 'Incoming logs from local terra.',
+      content: 'View incoming logs from LocalTerra.',
     },
     {
       selector: '.Settings',
-      content: 'Manage your settings here. Like open at login, your local terra path, and your desired block time.',
+      content: 'Manage your settings here. Like open at login, your LocalTerra path, and your desired block time.',
     },
     {
       selector: '.current-block',
       page: '/',
-      content: 'This is the current block of your Local Terra instance. If it it\'s not incrementing then Local Terra is not running.',
+      content: 'This is the current block of your LocalTerra instance. If it it\'s not incrementing then LocalTerra is not running.',
     },
     {
       selector: '.toggle-terra',
-      content: 'Click this button to toggle (pause and resume) Local Terra.',
+      content: 'Click this button to toggle (pause and resume) LocalTerra.',
     },
     {
       selector: '.add-contracts',
-      content: 'Click here to import contracts from your terrain project to call them from Terrarium.',
+      content: 'Click here to import contracts from your Terrain project to call them from Terrarium.',
     },
     {
       selector: '.contract-view',
@@ -110,7 +110,7 @@ export const tourProviderProps = {
     },
     {
       selector: '#pre-baked-contract-0',
-      content: 'This is a method on the cw-20 token base contract that ships with Local Terra. Call your execute and query methods here.',
+      content: 'This is a method on the cw-20 token base contract that ships with LocalTerra. Call your execute and query methods here.',
     },
   ],
 };

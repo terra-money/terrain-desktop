@@ -5,10 +5,10 @@ const {
   downloadLocalTerra,
   subscribeToLocalTerraEvents,
 } = require('../utils/localTerra');
-const { store } = require('../store');
-const { showLocalTerraAlreadyExistsDialog, showCustomDialog } = require('../utils/messages');
+const { store } = require('../utils/store');
+const { showLocalTerraAlreadyExistsDialog } = require('../utils/messages');
 const {
-  INSTALL_LOCAL_TERRA, TOGGLE_LOCAL_TERRA, GET_LOCAL_TERRA_STATUS, LOCAL_TERRA_IS_RUNNING, CUSTOM_ERROR_DIALOG,
+  INSTALL_LOCAL_TERRA, TOGGLE_LOCAL_TERRA, GET_LOCAL_TERRA_STATUS, LOCAL_TERRA_IS_RUNNING,
 } = require('../../src/constants');
 const globals = require('../utils/globals');
 
