@@ -143,9 +143,7 @@ const shutdown = async (win, restart = false) => {
     setDockIconDisplay(false, win);
     app.isQuitting = true;
     await stopLocalTerra();
-    if (restart) {
-      app.relaunch();
-    }
+    if (restart) app.relaunch();
     app.exit();
   } catch (err) {
     app.exit();
