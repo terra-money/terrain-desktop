@@ -22,7 +22,7 @@ module.exports = (win) => {
       store.setLocalTerraPath(localTerraPath);
     } catch (e) {
       await showLocalTerraAlreadyExistsDialog();
-      throw Error('Local Terra already exists under the default path');
+      throw Error('LocalTerra already exists under the default path');
     }
   });
 
