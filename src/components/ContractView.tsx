@@ -3,7 +3,7 @@ import { Collapse } from '@mui/material';
 import { KeyboardArrowDown as KeyboardArrowDownIcon, Delete as DeleteIcon, Refresh as RefreshIcon } from '@mui/icons-material';
 import { useTour } from '@reactour/tour';
 import { SmartContract } from '../models/Contract';
-import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
+import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
 import { REACT_APP_FINDER_URL } from '../constants';
 import ContractMethodsView from './ContractMethodsView';
 

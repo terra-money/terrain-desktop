@@ -1,6 +1,6 @@
 import { TxInfo, Denom } from '@terra-money/terra.js';
 import React, { useEffect, useState } from 'react';
-import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
+import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
 import { useTerraBlockUpdate, useLocalTerraStarted } from '../hooks/terra';
 import { demicrofy, nFormatter } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
