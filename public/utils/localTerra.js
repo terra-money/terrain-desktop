@@ -7,7 +7,9 @@ const yaml = require('js-yaml');
 const util = require('util');
 const waitOn = require('wait-on');
 const exec = util.promisify(require('child_process').exec);
-const { showLocalTerraStartNotif, showLocalTerraStopNotif, showTxOccuredNotif } = require('./messages');
+const {
+  showLocalTerraStartNotif, showLocalTerraStopNotif, showTxOccuredNotif, showCustomDialog,
+} = require('./messages');
 const { store } = require('./store');
 const { setDockIconDisplay, parseTxDescriptionAndMsg } = require('./misc');
 const globals = require('./globals');
@@ -165,7 +167,10 @@ const isDockerRunning = async () => {
     });
     return true;
   } catch (err) {
-    return false;
+    if (JSON.stringify(err).includes('Cannot connect to the Docker daemon')) {
+      return false;
+    }
+    await showCustomDialog(JSON.stringify(err));
   }
 };
 
