@@ -7,7 +7,6 @@ import {
   ContractsPage,
   OnboardPage,
   AccountsPage,
-  SettingsPage,
 } from '../pages';
 import { ReactComponent as AccountsIcon } from '../assets/icons/menu/accounts.svg';
 import { ReactComponent as BlocksIcon } from '../assets/icons/menu/blocks.svg';
@@ -64,7 +63,6 @@ const useNav = ({
       name: 'Settings',
       icon: <CogIcon />,
       path: '/settings',
-      element: <SettingsPage />,
     },
   ];
 

@@ -10,7 +10,7 @@ import {
   Input,
   Button,
 } from '@mui/material';
-import { PROMPT_USER_RESTART } from '../../constants';
+import { PROMPT_USER_RESTART, RESET_APP } from '../../constants';
 
 export default function SettingsModal({ handleToggleClose }: { handleToggleClose: Function}) {
   const navigate = useNavigate();
@@ -19,6 +19,10 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
   const [localTerraPath, setLocalTerraPath] = useState('');
   const [blocktime, setBlocktime] = useState('default');
   const [isLoading, setIsLoading] = useState(true);
+
+  const resetApplication = async () => {
+    await ipcRenderer.invoke(RESET_APP);
+  };
 
   const saveSettings = (data: FieldValues) => {
     window.store.setOpenAtLogin(data.openAtLogin);
@@ -157,6 +161,18 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
               text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Save
+            </button>
+            <button
+              onClick={() => {
+                resetApplication();
+              }}
+              data-modal-toggle="top-left-modal"
+              type="button"
+              className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200
+              text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white
+              dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+            >
+              Reset
             </button>
             <button
               onClick={() => handleToggleClose()}
