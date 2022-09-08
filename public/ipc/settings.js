@@ -11,6 +11,7 @@ const {
   GET_BLOCKTIME,
   SET_BLOCKTIME,
   PROMPT_USER_RESTART,
+  RESET_APP,
   CUSTOM_ERROR_DIALOG,
   GET_OPEN_AT_LOGIN,
   SET_OPEN_AT_LOGIN,
@@ -27,6 +28,7 @@ const {
   showWrongDirectoryDialog,
   showPromptUserRestartDialog,
   showCustomDialog,
+  showPromptResetAppDialog,
 } = require('../utils/messages');
 
 const globals = require('../utils/globals');
@@ -56,9 +58,19 @@ module.exports = (win) => {
     return filePaths[0];
   });
 
-  ipcMain.handle(GET_BLOCKTIME, () => {
+  ipcMain.handle(RESET_APP, async () => {
+    const { response } = await showPromptResetAppDialog();
+
+    if (response === 1) {
+      store.clear();
+      shutdown(win, true);
+    }
+  });
+
+  ipcMain.handle(GET_BLOCKTIME, async () => {
     const localTerraPath = store.getLocalTerraPath();
     const parsedConfig = toml.parse(fs.readFileSync(path.join(localTerraPath, 'config/config.toml')));
+
     switch (parsedConfig.consensus.timeout_commit) {
       case '5s':
         return 'default';
@@ -71,7 +83,7 @@ module.exports = (win) => {
     await showCustomDialog(err.message || JSON.stringify(err));
   });
 
-  ipcMain.handle(SET_BLOCKTIME, (_, blocktime) => {
+  ipcMain.handle(SET_BLOCKTIME, async (_, blocktime) => {
     const localTerraPath = store.getLocalTerraPath();
     const configPath = path.join(localTerraPath, 'config/config.toml');
     const parsedConfig = toml.parse(fs.readFileSync(configPath, 'utf8'));
