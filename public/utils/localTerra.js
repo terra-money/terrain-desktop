@@ -122,25 +122,19 @@ const subscribeToLocalTerraEvents = async (win) => {
 };
 
 const stopLocalTerra = async () => {
-  try {
-    if (globals.localTerra.process.killed) { return; }
+  const localTerraPath = await store.getLocalTerraPath();
+  txWs.destroy();
+  blockWs.destroy();
 
-    const localTerraPath = await store.getLocalTerraPath();
-    txWs.destroy();
-    blockWs.destroy();
+  await exec('docker compose stop', {
+    cwd: localTerraPath,
+    env: {
+      PATH: `${process.env.PATH}:/usr/local/bin/`,
+    },
+  });
 
-    await exec('docker compose stop', {
-      cwd: localTerraPath,
-      env: {
-        PATH: `${process.env.PATH}:/usr/local/bin/`,
-      },
-    });
-
-    globals.localTerra.isRunning = false;
-    showLocalTerraStopNotif();
-  } catch (err) {
-    console.error(`Error stopping LocalTerra: ${err}`);
-  }
+  globals.localTerra.isRunning = false;
+  showLocalTerraStopNotif();
 };
 
 const shutdown = async (win, restart = false) => {
@@ -149,9 +143,7 @@ const shutdown = async (win, restart = false) => {
     setDockIconDisplay(false, win);
     app.isQuitting = true;
     await stopLocalTerra();
-    if (restart) {
-      app.relaunch();
-    }
+    if (restart) app.relaunch();
     app.exit();
   } catch (err) {
     app.exit();

@@ -72,6 +72,7 @@ const App = () => {
   };
 
   const toggleLocalTerra = async () => {
+    if (isLoading) return;
     setIsLoading(true);
     ipcRenderer.invoke(TOGGLE_LOCAL_TERRA, !hasStartedLocalTerra.get());
     hasStartedLocalTerra.set(null); // We're not started or stopped.

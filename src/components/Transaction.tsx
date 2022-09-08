@@ -2,7 +2,7 @@ import { Collapse } from '@mui/material';
 import React from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { TerrariumTx } from '../models/TerrariumTx';
-import { ReactComponent as ExternalLinkIcon } from '../assets/icons/external-link.svg';
+import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
 import EventInfo from './EventInfo';
 import { truncate } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';

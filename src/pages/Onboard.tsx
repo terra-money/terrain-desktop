@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import {
-  Checkbox, FormGroup, FormControlLabel, Button,
+  FormGroup, Button, CircularProgress, FormControlLabel, Checkbox,
 } from '@material-ui/core';
-import { ReactComponent as TerraLogo } from '../assets/terra-logo-base.svg';
+import { ReactComponent as TerraLogoWithText } from '../assets/logo-with-text.svg';
+import { ReactComponent as ExternalLink } from '../assets/external-link.svg';
 import { SET_LOCAL_TERRA_PATH, INSTALL_LOCAL_TERRA, CUSTOM_ERROR_DIALOG } from '../constants';
 
 export default function Onboard() {
-  const [isDockerInstalled, setIsDockerInstalled] = useState(false);
-  const [isDockerRunning, setDockerIsRunning] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDockerSetup, setIsDockerSetup] = useState(false);
   const navigate = useNavigate();
 
-  const handleOnChangeDeps = (e: any) => setIsDockerInstalled(e.target.checked);
-  const handleOnDocker = (e: any) => setDockerIsRunning(e.target.checked);
+  const handleOnChangeDeps = (e: any) => setIsDockerSetup(e.target.checked);
 
   const onSetLocalTerraPath = async () => {
     try {
@@ -26,9 +26,13 @@ export default function Onboard() {
 
   const onLocalTerraInstall = async () => {
     try {
+      setIsLoading(true);
       await ipcRenderer.invoke(INSTALL_LOCAL_TERRA);
       navigate('/', { state: { firstOpen: true } });
-    } catch (e: any) { return e; }
+    } catch (e: any) {
+      setIsLoading(false);
+      return e;
+    }
   };
 
   return (
@@ -39,21 +43,31 @@ export default function Onboard() {
       }}
     >
       <div className="flex flex-col items-center justify-center block space-x-4">
-        <div className="block h-40 w-40 mb-4">
-          <TerraLogo />
-        </div>
+        <TerraLogoWithText />
         <FormGroup>
-          <FormControlLabel onChange={handleOnChangeDeps} control={<Checkbox color="primary" />} label="I have Docker and Git Installed" />
-          <FormControlLabel disabled={!isDockerInstalled} onChange={handleOnDocker} control={<Checkbox color="primary" />} label="Docker is currently running" />
+          <FormControlLabel onChange={handleOnChangeDeps} control={<Checkbox color="primary" />} label="Docker is installed and running" />
+          {!isDockerSetup && (
+          <Button>
+            <a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noreferrer">Install Docker</a>
+            <ExternalLink style={{ marginLeft: 10 }} />
+          </Button>
+          )}
           <Button
             variant="contained"
-            style={{ marginBottom: 10 }}
-            disabled={!(isDockerRunning && isDockerInstalled)}
+            style={{ margin: '20px 0px' }}
+            disabled={!isDockerSetup}
             onClick={onSetLocalTerraPath}
           >
             LocalTerra is already installed
           </Button>
-          <Button variant="contained" disabled={!(isDockerRunning && isDockerInstalled)} onClick={onLocalTerraInstall}> Install LocalTerra</Button>
+          <Button
+            variant="contained"
+            disabled={!isDockerSetup}
+            onClick={onLocalTerraInstall}
+          >
+            {isLoading && <CircularProgress size={20} />}
+            {!isLoading && 'Install LocalTerra'}
+          </Button>
         </FormGroup>
       </div>
     </div>
