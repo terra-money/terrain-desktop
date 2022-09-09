@@ -8,6 +8,13 @@ const showPromptUserRestartDialog = async () => dialog.showMessageBox({
   type: 'question',
 });
 
+const showPromptResetAppDialog = async () => dialog.showMessageBox({
+  message: 'This will restore app to factory settings.  Reset the application?',
+  buttons: ['No', 'Yes'],
+  title: 'Terrarium',
+  type: 'question',
+});
+
 const showPathSelectionDialog = async () => dialog.showOpenDialog({
   message: 'Select your LocalTerra directory.',
   title: 'Terrarium',
@@ -85,4 +92,5 @@ module.exports = {
   showStartDockerDialog,
   showMissingSchemaDialog,
   showCustomDialog,
+  showPromptResetAppDialog,
 };

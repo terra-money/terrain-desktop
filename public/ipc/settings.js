@@ -11,6 +11,7 @@ const {
   GET_BLOCKTIME,
   SET_BLOCKTIME,
   PROMPT_USER_RESTART,
+  RESET_APP,
   CUSTOM_ERROR_DIALOG,
   GET_OPEN_AT_LOGIN,
   SET_OPEN_AT_LOGIN,
@@ -27,6 +28,7 @@ const {
   showWrongDirectoryDialog,
   showPromptUserRestartDialog,
   showCustomDialog,
+  showPromptResetAppDialog,
 } = require('../utils/messages');
 
 const globals = require('../utils/globals');
@@ -56,9 +58,19 @@ module.exports = (win) => {
     return filePaths[0];
   });
 
+  ipcMain.handle(RESET_APP, async () => {
+    const { response } = await showPromptResetAppDialog();
+
+    if (response === 1) {
+      store.clear();
+      shutdown(win, true);
+    }
+  });
+
   ipcMain.handle(GET_BLOCKTIME, () => {
     const localTerraPath = store.getLocalTerraPath();
     const parsedConfig = toml.parse(fs.readFileSync(path.join(localTerraPath, 'config/config.toml')));
+
     switch (parsedConfig.consensus.timeout_commit) {
       case '5s':
         return 'default';

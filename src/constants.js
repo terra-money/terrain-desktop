@@ -10,6 +10,7 @@ const SET_LOCAL_TERRA_PATH = 'setLocalTerraPath';
 const GET_BLOCKTIME = 'getBlocktime';
 const SET_BLOCKTIME = 'setBlocktime';
 const PROMPT_USER_RESTART = 'promptUserRestart';
+const RESET_APP = 'resetApp';
 const GET_OPEN_AT_LOGIN = 'getOpenAtLogin';
 const SET_OPEN_AT_LOGIN = 'setOpenAtLogin';
 const GET_LOCAL_TERRA_STATUS = 'getLocalTerraStatus';
@@ -91,4 +92,5 @@ module.exports = {
   TX,
   NEW_BLOCK,
   NEW_LOG,
+  RESET_APP,
 };
