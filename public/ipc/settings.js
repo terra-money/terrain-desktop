@@ -67,7 +67,7 @@ module.exports = (win) => {
     }
   });
 
-  ipcMain.handle(GET_BLOCKTIME, async () => {
+  ipcMain.handle(GET_BLOCKTIME, () => {
     const localTerraPath = store.getLocalTerraPath();
     const parsedConfig = toml.parse(fs.readFileSync(path.join(localTerraPath, 'config/config.toml')));
 
@@ -83,7 +83,7 @@ module.exports = (win) => {
     await showCustomDialog(err.message || JSON.stringify(err));
   });
 
-  ipcMain.handle(SET_BLOCKTIME, async (_, blocktime) => {
+  ipcMain.handle(SET_BLOCKTIME, (_, blocktime) => {
     const localTerraPath = store.getLocalTerraPath();
     const configPath = path.join(localTerraPath, 'config/config.toml');
     const parsedConfig = toml.parse(fs.readFileSync(configPath, 'utf8'));
