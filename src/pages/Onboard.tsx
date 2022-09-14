@@ -1,66 +1,74 @@
 import React, { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as TerraLogo } from '../assets/terra-logo.svg';
-import { SET_LOCAL_TERRA_PATH, INSTALL_LOCAL_TERRA } from '../constants';
+import {
+  FormGroup, Button, CircularProgress, FormControlLabel, Checkbox,
+} from '@material-ui/core';
+import { ReactComponent as TerraLogoWithText } from '../assets/logo-with-text.svg';
+import { ReactComponent as ExternalLink } from '../assets/external-link.svg';
+import { SET_LOCAL_TERRA_PATH, INSTALL_LOCAL_TERRA, CUSTOM_ERROR_DIALOG } from '../constants';
 
 export default function Onboard() {
-  const [isDockerInstalled, setIsDockerInstalled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDockerSetup, setIsDockerSetup] = useState(false);
   const navigate = useNavigate();
 
-  const handleOnChange = (e: any) => {
-    setIsDockerInstalled(e.target.checked);
-  };
+  const handleOnChangeDeps = (e: any) => setIsDockerSetup(e.target.checked);
 
   const onSetLocalTerraPath = async () => {
     try {
       await ipcRenderer.invoke(SET_LOCAL_TERRA_PATH);
-      navigate('/');
+      navigate('/', { state: { firstOpen: true } });
     } catch (e: any) {
-      console.log(e);
-      // TODO: Display error message on interface (incorrect path)
+      await ipcRenderer.invoke(CUSTOM_ERROR_DIALOG, e);
     }
   };
 
   const onLocalTerraInstall = async () => {
     try {
+      setIsLoading(true);
       await ipcRenderer.invoke(INSTALL_LOCAL_TERRA);
-      navigate('/');
+      navigate('/', { state: { firstOpen: true } });
     } catch (e: any) {
-      console.log(e);
-      // TODO: Display error message on interface
+      setIsLoading(false);
+      return e;
     }
   };
 
   return (
     <div
-      className="flex items-center justify-center bg-terra-dark-blue h-screen"
+      className="flex items-center justify-center h-screen"
       style={{
-        position: 'fixed', top: '0', right: '0', bottom: '0', left: '0', zIndex: '10000',
+        position: 'fixed', top: '0', right: '0', bottom: '0', left: '0', zIndex: '10000', backgroundColor: 'rgba(191, 219, 254, 1)',
       }}
     >
-      <div className="flex flex-col items-center block space-x-4">
-        <div className="block h-40 w-40 mb-4">
-          <TerraLogo />
-        </div>
-        <div className="flex-row text-white space-x-4">
-          <label htmlFor="dockerInstalled">
-            <input onChange={handleOnChange} id="dockerInstalled" type="checkbox" value="dockerInstalled" />
-            I have Docker and Git installed
-          </label>
-        </div>
-        {isDockerInstalled && (
-          <>
-            <button
-              className="text-white hover:underline"
-              type="button"
-              onClick={onSetLocalTerraPath}
-            >
-              I already have LocalTerra installed
-            </button>
-            <button className="text-white hover:underline" type="button" onClick={onLocalTerraInstall}>Install LocalTerra</button>
-          </>
-        )}
+      <div className="flex flex-col items-center justify-center block space-x-4">
+        <TerraLogoWithText />
+        <FormGroup>
+          <FormControlLabel onChange={handleOnChangeDeps} control={<Checkbox color="primary" />} label="Docker is installed and running" />
+          {!isDockerSetup && (
+          <Button>
+            <a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noreferrer">Install Docker</a>
+            <ExternalLink style={{ marginLeft: 10 }} />
+          </Button>
+          )}
+          <Button
+            variant="contained"
+            style={{ margin: '20px 0px' }}
+            disabled={!isDockerSetup}
+            onClick={onSetLocalTerraPath}
+          >
+            LocalTerra is already installed
+          </Button>
+          <Button
+            variant="contained"
+            disabled={!isDockerSetup}
+            onClick={onLocalTerraInstall}
+          >
+            {isLoading && <CircularProgress size={20} />}
+            {!isLoading && 'Install LocalTerra'}
+          </Button>
+        </FormGroup>
       </div>
     </div>
   );

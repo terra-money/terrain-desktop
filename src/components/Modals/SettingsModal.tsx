@@ -9,16 +9,21 @@ import {
   MenuItem,
   Input,
   Button,
+  Tooltip,
 } from '@mui/material';
-import { PROMPT_USER_RESTART } from '../../constants';
+import { PROMPT_USER_RESTART, RESET_APP } from '../../constants';
 
-export default function SettingsModal({ handleToggleClose }: { handleToggleClose: Function}) {
+export default function SettingsModal({ handleToggleClose }: { handleToggleClose: Function }) {
   const navigate = useNavigate();
   const { register, handleSubmit, resetField } = useForm();
   const [openAtLogin, setOpenAtLogin] = useState(false);
   const [localTerraPath, setLocalTerraPath] = useState('');
   const [blocktime, setBlocktime] = useState('default');
   const [isLoading, setIsLoading] = useState(true);
+
+  const resetApplication = async () => {
+    await ipcRenderer.invoke(RESET_APP);
+  };
 
   const saveSettings = (data: FieldValues) => {
     window.store.setOpenAtLogin(data.openAtLogin);
@@ -146,6 +151,21 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
                 )}
                 label="Time between Terra blocks"
               />
+              <br />
+              <Tooltip title="Reset Factory Settings">
+                <button
+                  onClick={() => {
+                    resetApplication();
+                  }}
+                  type="button"
+                  className="text-red-500 bg-white hover:bg-red-100 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg border border-red-200
+              text-sm font-medium ml-4 px-5 py-2.5 hover:text-red-900 focus:z-10 dark:bg-red-700 dark:text-red-300 dark:border-red-500 dark:hover:text-white
+              dark:hover:bg-red-600 dark:focus:ring-red-600"
+                >
+                  Reset
+                </button>
+              </Tooltip>
+
             </form>
           </div>
           <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">

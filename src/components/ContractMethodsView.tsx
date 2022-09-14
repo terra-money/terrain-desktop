@@ -34,11 +34,12 @@ const ContractMethodsView = ({
 
   return (
     <>
-      {schemas.map((schema: any) => (
+      {schemas.map((schema: any, index: number) => (
         <Form
           schema={schema}
           ObjectFieldTemplate={ObjectFieldTemplate}
-          key={schema.required[0]}
+          key={index}
+          id={`pre-baked-contract-${index}`}
           className="border-t-2 mb-8 border-blue-900 first:border-none"
           onSubmit={handleSubmit(schema.msgType)}
         >

@@ -30,10 +30,11 @@ export default function AccountsPage({
   return (
     <div className="flex flex-col w-full">
       <div
-        className="bg-white shadow-nav flex flex-row w-full text-left justify-between items-center px-4 py-5 pl-8 text-blue-600"
+        className="bg-white shadow-nav grid items-center w-full px-4 py-5 pl-8 text-blue-600 z-30"
         style={{
-          display: 'grid',
-          gridTemplateColumns: `${firstColumnSize - 20}px minmax(90px, 3fr) 1fr`,
+          gridTemplateColumns: `${
+            firstColumnSize - 20
+          }px minmax(90px, 3fr) 1fr`,
         }}
       >
         <div className="text-md lg:text-lg font-bold uppercase">Address</div>
@@ -45,7 +46,7 @@ export default function AccountsPage({
         </div>
       </div>
       <Virtuoso
-        className="flex flex-col w-full mt-1"
+        className="flex flex-col w-full"
         followOutput
         initialTopMostItemIndex={accounts.length}
         data={accounts}

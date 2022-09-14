@@ -7,8 +7,10 @@ const yaml = require('js-yaml');
 const util = require('util');
 const waitOn = require('wait-on');
 const exec = util.promisify(require('child_process').exec);
-const { showLocalTerraStartNotif, showLocalTerraStopNotif, showTxOccuredNotif } = require('./messages');
-const { store } = require('../store');
+const {
+  showLocalTerraStartNotif, showLocalTerraStopNotif, showTxOccuredNotif, showCustomDialog,
+} = require('./messages');
+const { store } = require('./store');
 const { setDockIconDisplay, parseTxDescriptionAndMsg } = require('./misc');
 const globals = require('./globals');
 
@@ -76,47 +78,51 @@ const subscribeToLocalTerraEvents = async (win) => {
   blockWs = new WebSocketClient(LOCAL_TERRA_WS);
 
   localTerraProcess.stdout.on('data', async (data) => {
-    if (win.isDestroyed()) return;
+    try {
+      if (win && win.isDestroyed()) { return; }
+      win.webContents.send(NEW_LOG, data.toString());
+      if (!globals.localTerra.isRunning) {
+        txWs.subscribeTx({}, async ({ value }) => {
+          const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
+          win.webContents.send(TX, { description, msg, ...value });
+          showTxOccuredNotif(description);
+        });
 
-    win.webContents.send(NEW_LOG, data.toString());
-    if (!globals.localTerra.isRunning) {
-      txWs.subscribeTx({}, async ({ value }) => {
-        const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
-        win.webContents.send(TX, { description, msg, ...value });
-        showTxOccuredNotif(description);
-      });
+        blockWs.subscribe(NEW_BLOCK, {}, ({ value }) => {
+          win.webContents.send(NEW_BLOCK, value);
+        });
 
-      blockWs.subscribe(NEW_BLOCK, {}, ({ value }) => {
-        win.webContents.send(NEW_BLOCK, value);
-      });
+        txWs.start();
+        blockWs.start();
 
-      txWs.start();
-      blockWs.start();
-
-      globals.localTerra.isRunning = true;
-      win.webContents.send(LOCAL_TERRA_IS_RUNNING, true);
-      win.webContents.send(LOCAL_TERRA_PATH_CONFIGURED, true);
-      showLocalTerraStartNotif();
+        globals.localTerra.isRunning = true;
+        win.webContents.send(LOCAL_TERRA_IS_RUNNING, true);
+        win.webContents.send(LOCAL_TERRA_PATH_CONFIGURED, true);
+        showLocalTerraStartNotif();
+      }
+    } catch (err) {
+      console.error(`Error with stdout data: ${err}`);
     }
   });
+
   localTerraProcess.stderr.on('data', (data) => {
     console.error(`stderr: ${data}`);
   });
 
   localTerraProcess.on('close', () => {
-    if (win.isDestroyed()) return;
-    globals.localTerra.isRunning = false;
-    win.webContents.send(LOCAL_TERRA_IS_RUNNING, false);
+    try {
+      if (win && win.isDestroyed()) { return; }
+      globals.localTerra.isRunning = false;
+      win.webContents.send(LOCAL_TERRA_IS_RUNNING, false);
+    } catch (err) {
+      console.error(`Error closing LocalTerra process: ${err}`);
+    }
   });
   return localTerraProcess;
 };
 
 const stopLocalTerra = async () => {
   const localTerraPath = await store.getLocalTerraPath();
-  if (globals.localTerra.process.killed) {
-    console.log('process already killed');
-    return;
-  }
   txWs.destroy();
   blockWs.destroy();
 
@@ -137,9 +143,7 @@ const shutdown = async (win, restart = false) => {
     setDockIconDisplay(false, win);
     app.isQuitting = true;
     await stopLocalTerra();
-    if (restart) {
-      app.relaunch();
-    }
+    if (restart) app.relaunch();
     app.exit();
   } catch (err) {
     app.exit();
@@ -155,7 +159,10 @@ const isDockerRunning = async () => {
     });
     return true;
   } catch (err) {
-    return false;
+    if (JSON.stringify(err).includes('Cannot connect to the Docker daemon')) {
+      return false;
+    }
+    await showCustomDialog(JSON.stringify(err));
   }
 };
 

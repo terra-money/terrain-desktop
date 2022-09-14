@@ -5,8 +5,8 @@ const {
   downloadLocalTerra,
   subscribeToLocalTerraEvents,
 } = require('../utils/localTerra');
-const { store } = require('../store');
-const { showLocalTerraAlreadyExistsDialog } = require('../utils/messages');
+const { store } = require('../utils/store');
+const { showLocalTerraAlreadyExistsDialog, showCustomDialog } = require('../utils/messages');
 const {
   INSTALL_LOCAL_TERRA, TOGGLE_LOCAL_TERRA, GET_LOCAL_TERRA_STATUS, LOCAL_TERRA_IS_RUNNING,
 } = require('../../src/constants');
@@ -20,9 +20,12 @@ module.exports = (win) => {
       localTerraPath = await downloadLocalTerra();
       globals.localTerra.process = await subscribeToLocalTerraEvents(win);
       store.setLocalTerraPath(localTerraPath);
-    } catch (e) {
-      await showLocalTerraAlreadyExistsDialog();
-      throw Error('LocalTerra already exists under the default path');
+    } catch (err) {
+      if (err.message.includes('LocalTerra already exists')) {
+        await showLocalTerraAlreadyExistsDialog();
+      } else {
+        await showCustomDialog(JSON.stringify(err));
+      }
     }
   });
 

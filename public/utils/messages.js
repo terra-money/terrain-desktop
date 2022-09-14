@@ -8,6 +8,13 @@ const showPromptUserRestartDialog = async () => dialog.showMessageBox({
   type: 'question',
 });
 
+const showPromptResetAppDialog = async () => dialog.showMessageBox({
+  message: 'This will restore app to factory settings.  Reset the application?',
+  buttons: ['No', 'Yes'],
+  title: 'Terrarium',
+  type: 'question',
+});
+
 const showPathSelectionDialog = async () => dialog.showOpenDialog({
   message: 'Select your LocalTerra directory.',
   title: 'Terrarium',
@@ -22,8 +29,14 @@ const showSmartContractDialog = async () => dialog.showOpenDialog({
   properties: ['openDirectory'],
 });
 
+const showCustomDialog = async (message) => dialog.showMessageBox({
+  message,
+  title: 'Terrarium',
+  type: 'warning',
+});
+
 const showStartDockerDialog = async () => dialog.showMessageBox({
-  message: 'Start Docker then try opening Terrarium again.',
+  message: 'Start Docker then re-open Terrarium. Terrarium needs it to run LocalTerra.',
   title: 'Terrarium',
   type: 'warning',
 });
@@ -78,4 +91,6 @@ module.exports = {
   showNoTerrainRefsDialog,
   showStartDockerDialog,
   showMissingSchemaDialog,
+  showCustomDialog,
+  showPromptResetAppDialog,
 };

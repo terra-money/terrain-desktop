@@ -4,7 +4,7 @@ const {
 } = require('electron');
 const isDev = require('electron-is-dev');
 const defaultMenu = require('electron-default-menu');
-const { store } = require('./store');
+const { store } = require('./utils/store');
 const pkg = require('../package.json');
 const registerSettingsHandlers = require('./ipc/settings');
 const registerContractHandlers = require('./ipc/contracts');
@@ -47,7 +47,7 @@ async function init() {
     },
   });
 
-  tray = new Tray(path.join(__dirname, 'tray.png'));
+  tray = new Tray(path.join(__dirname, 'trayTemplate@3x.png'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Open',
@@ -132,7 +132,6 @@ async function init() {
       await startLocalTerra(localTerraPath);
       globals.localTerra.process = await subscribeToLocalTerraEvents(win);
     }
-
     win.show();
     win.focus();
   });

@@ -1,18 +1,19 @@
 import React, { useEffect, useState, memo } from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Modal } from '@material-ui/core';
+import { useTour } from '@reactour/tour';
 import { NavLink, SettingsModal } from './components';
 import { GET_LOCAL_TERRA_STATUS, TOGGLE_LOCAL_TERRA } from './constants';
 import {
   useTerraBlockUpdate, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
 } from './hooks/terra';
 import { parseSearchUrl } from './utils';
-import logo from './assets/terra-logo.svg';
+import { ReactComponent as TerraLogo } from './assets/terra-logo.svg';
 import useNav from './hooks/routes';
 
-function App() {
+const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalComponent, setModalComponent] = useState(<></>);
   const navigate = useNavigate();
@@ -24,6 +25,30 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const { setIsOpen: openTour, currentStep, steps } = useTour();
+  const { state: navState }: any = useLocation();
+
+  useEffect(() => {
+    if (navState && navState.firstOpen) {
+      openTour(true);
+      toggleLocalTerra();
+    }
+  }, [navState]);
+
+  useEffect(() => {
+    // @ts-ignore
+    if (steps[currentStep].page) navigate(steps[currentStep].page);
+  }, [currentStep]);
+
+  useEffect(() => {
+    ipcRenderer.send(GET_LOCAL_TERRA_STATUS);
+    if (!isLocalTerraPathConfigured.get()) navigate('/onboard');
+  }, []);
+
+  useEffect(() => {
+    if (hasStartedLocalTerra.get() === null) setIsLoading(true);
+    else setIsLoading(false);
+  }, [hasStartedLocalTerra, latestHeight]);
 
   const handleToggleOpen = (modalName: any) => {
     setModalComponent(modalName);
@@ -37,20 +62,6 @@ function App() {
     handleToggleOpen,
   });
 
-  // retrigger LocalTerraRunning ipc event.
-  useEffect(() => {
-    ipcRenderer.send(GET_LOCAL_TERRA_STATUS);
-  }, []);
-
-  useEffect(() => {
-    if (!isLocalTerraPathConfigured.get()) navigate('/onboard');
-  }, []);
-
-  useEffect(() => {
-    if (hasStartedLocalTerra.get() === null) setIsLoading(true);
-    else setIsLoading(false);
-  }, [hasStartedLocalTerra, latestHeight]);
-
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
 
   const handleSearch = (e: any) => {
@@ -61,6 +72,7 @@ function App() {
   };
 
   const toggleLocalTerra = async () => {
+    if (isLoading) return;
     setIsLoading(true);
     ipcRenderer.invoke(TOGGLE_LOCAL_TERRA, !hasStartedLocalTerra.get());
     hasStartedLocalTerra.set(null); // We're not started or stopped.
@@ -82,12 +94,10 @@ function App() {
           />
           <div className="inline-flex items-center">
             <div className="w-10 aspect-square mr-2">
-              <img
-                src={logo}
+              <TerraLogo
                 className={`object-contain cursor-pointer block duration-500 ${
                   open && 'rotate-[360deg]'
                 }`}
-                alt="logo"
               />
             </div>
             <h1
@@ -99,7 +109,7 @@ function App() {
             </h1>
           </div>
           <div
-            className={`flex items-center rounded-md mt-6 bg-light-white py-2 ${
+            className={`search flex items-center rounded-md mt-6 bg-light-white py-2 ${
               !open ? 'px-2.5' : 'px-4'
             }`}
           >
@@ -179,7 +189,7 @@ function App() {
         <div className="flex-auto bg-gray-background w-full h-screen overflow-hidden">
           <header className="bg-white shadow-md z-40 relative flex justify-between p-6 lg:pl-12 bg-white overflow-x-auto">
             <ul className="flex flex-row w-full gap-1 lg:gap-10 xl:gap-20 items-center font-medium">
-              <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <li className="current-block flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-md md:text-[15px] md:leading-7 lg:text-xl xl:text-2xl text-terra-mid-blue">
                   {latestHeight}
                 </p>
@@ -219,13 +229,13 @@ function App() {
               </li>
             </ul>
           </header>
-          <main className="flex w-full h-[calc(100vh-96px)] overflow-hidden">
+          <main className="flex w-full h-[calc(100vh-90px)] overflow-hidden">
             {routes}
           </main>
         </div>
         <Modal
           open={isModalOpen}
-          onClose={() => handleToggleClose()}
+          onClose={handleToggleClose}
           disablePortal
           disableEnforceFocus
           disableAutoFocus
@@ -237,6 +247,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default memo(App);

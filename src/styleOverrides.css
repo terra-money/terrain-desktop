@@ -35,3 +35,7 @@
   padding: 16.5px 14px;
   width: 250px;
 }
+
+.MuiButtonBase-root {
+  margin: 0.25rem 0;
+}
