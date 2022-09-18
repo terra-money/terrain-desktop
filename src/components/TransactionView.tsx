@@ -7,7 +7,7 @@ import EventInfo from './EventInfo';
 import { truncate } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
 
-const Transaction = ({
+const TransactionView = ({
   data, index, onToggleEventDetails, width,
 }: {
   data: TerrariumTx,
@@ -33,9 +33,8 @@ const Transaction = ({
         className="bg-white grid justify-between items-center shadow-row rounded-2xl border-2 border-blue-200"
         style={{
           gridTemplateColumns: `${width < 1050 ? '125px' : '200px'} ${
-            width < 1024 ? '230px' : width > 1400 ? '2fr' : '280px'
-          } ${width < 1024 ? '100px' : '1fr'} minmax(100px, 2fr) 0.5fr`,
-          minWidth: '600px',
+            width < 1024 ? width > 899 ? '180px' : width > 767 ? '150px' : '110px' : width > 1400 ? '500px' : '280px'
+          } ${width < 1024 ? '90px' : '1fr'} minmax(100px, 2fr) 0.5fr`,
         }}
       >
         <div className="bg-blue-200 p-5 px-2 lg:p-5 rounded-l-xl">
@@ -51,15 +50,15 @@ const Transaction = ({
             <ExternalLinkIcon />
           </a>
         </div>
-        <div className="flex justify-center items-center px-3 text-sm lg:text-lg overflow-auto">
-          {data.msg['@type']}
+        <div className="flex justify-center items-center px-1 md:px-3 text-sm lg:text-lg">
+          <div className="overflow-ellipsis overflow-hidden">
+            {data.msg['@type']}
+          </div>
         </div>
-        <div className="flex justify-center items-center px-3 text-sm lg:text-lg">
+        <div className="flex justify-center items-center px-1 md:px-3 text-sm lg:text-lg">
           {height}
         </div>
-        <div
-          className="flex justify-center items-center px-3 text-sm lg:text-lg"
-        >
+        <div className="flex justify-center items-center px-1 md:px-3 text-sm lg:text-lg">
           {result.gas_wanted}
           {' '}
           /
@@ -91,4 +90,4 @@ const Transaction = ({
   );
 };
 
-export default React.memo(Transaction);
+export default React.memo(TransactionView);

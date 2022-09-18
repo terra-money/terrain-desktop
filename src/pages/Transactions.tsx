@@ -1,13 +1,13 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
-import Transaction from '../components/Transaction';
+import TransactionView from '../components/TransactionView';
 import { useTxs } from '../hooks/terra';
 import { useWindowDimensions } from '../utils';
 
 export default function TransactionsPage() {
   const { get: getTxs, set: setTxs } = useTxs();
   const txs = getTxs();
-  const dimensions = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   if (txs.length === 0) {
     return (
@@ -27,32 +27,32 @@ export default function TransactionsPage() {
   return (
     <div className="flex flex-col w-full">
       <div
-        className="bg-white shadow-nav grid w-full items-center py-5 pl-8 pr-0 text-blue-600 font-bold z-30"
+        className="bg-white shadow-nav grid w-full items-center py-5 pl-8 pr-3 text-blue-600 font-bold z-30"
         style={{
-          gridTemplateColumns: `${
-            dimensions.width < 1050 ? '102px' : '178px'
-          } ${
-            dimensions.width < 1024
-              ? '230px'
-              : dimensions.width > 1400
-                ? '2fr'
-                : '281px'
-          } ${
-            dimensions.width < 1024 ? '100px' : '1fr'
-          } minmax(100px, 2fr) 0.5fr`,
+          gridTemplateColumns: `${width < 1050 ? '102px' : '178px'} ${
+            width < 1024
+              ? width > 899
+                ? '180px'
+                : width > 767
+                  ? '150px'
+                  : '110px'
+              : width > 1400
+                ? '500px'
+                : '280px'
+          } ${width < 1024 ? '90px' : '1fr'} minmax(100px, 2fr) 0.5fr`,
         }}
       >
         <div className="text-md lg:text-lg font-bold uppercase">Hash</div>
-        <div className="flex justify-center px-3 text-md lg:text-lg font-bold uppercase">
+        <div className="flex justify-center px-1 md:px-3 text-md lg:text-lg font-bold uppercase">
           Type
         </div>
-        <div className="flex justify-center px-3 text-md lg:text-lg font-bold uppercase">
+        <div className="flex justify-center px-1 md:px-3 text-md lg:text-lg font-bold uppercase">
           Block
         </div>
-        <div className="flex justify-center px-3 text-md lg:text-lg font-bold uppercase">
-          Gas Requested / Used
+        <div className="flex justify-center px-1 md:px-3 text-md lg:text-lg font-bold uppercase">
+          {width <= 920 ? 'Gas Req/Used' : 'Gas Requested / Used'}
         </div>
-        <div className="flex justify-center px-3 text-md lg:text-lg font-bold uppercase" />
+        <div className="flex justify-center px-1 md:px-3 text-md lg:text-lg font-bold uppercase" />
       </div>
       <div className="bg-white" style={{ flexGrow: 1 }}>
         <Virtuoso
@@ -60,12 +60,12 @@ export default function TransactionsPage() {
           className="flex flex-col w-full"
           data={txs}
           itemContent={(index, data) => (
-            <Transaction
+            <TransactionView
               onToggleEventDetails={toggleEventDetails}
               data={data}
               key={index}
               index={index}
-              width={dimensions.width}
+              width={width}
             />
           )}
         />
