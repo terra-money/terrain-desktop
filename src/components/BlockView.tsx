@@ -40,7 +40,7 @@ const BlockView = (props: {
         className="bg-white grid items-center shadow-row rounded-2xl border-2 border-blue-200"
         style={{
           gridTemplateColumns: `
-            ${props.width <= 767 ? '85px' : '130px'}
+            ${props.width <= 767 ? '95px' : '140px'}
             ${props.width < 1100 ? 'minmax(150px, 1fr)' : '2fr'} ${
             props.width <= 860
               ? 'minmax(75px, 80px)'

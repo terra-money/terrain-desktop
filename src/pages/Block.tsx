@@ -9,7 +9,7 @@ export default function BlocksPage() {
   const [filter, setFilter] = React.useState(false);
   const { get: getBlocks, set: setBlocks } = useBlocks();
   const data = getBlocks();
-  const windowDimensions = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   const handleToggleFilter = () => setFilter(!filter);
 
@@ -31,12 +31,12 @@ export default function BlocksPage() {
         }}
       />
       <div
-        className="bg-white grid items-center w-full px-4 py-5 md:pl-8 text-blue-600 font-bold z-50 shadow-nav"
+        className="bg-white grid items-center w-full px-4 py-5 md:pl-8 pr-3 text-blue-600 font-bold z-50 shadow-nav"
         style={{
           gridTemplateColumns: `${
-            windowDimensions.width <= 767 ? '75px' : '107px'
-          } ${windowDimensions.width < 1100 ? 'minmax(150px, 1fr)' : '2fr'} ${
-            windowDimensions.width <= 860
+            width <= 767 ? '88px' : '117px'
+          } ${width < 1100 ? 'minmax(150px, 1fr)' : '2fr'} ${
+            width <= 860
               ? 'minmax(75px, 80px)'
               : 'minmax(75px, 180px)'
           } minmax(85px, 1fr) 0.5fr`,
@@ -47,7 +47,7 @@ export default function BlocksPage() {
           Time
         </div>
         <div className="flex justify-center px-5 text-md lg:text-lg font-bold uppercase">
-          {windowDimensions.width <= 860 ? 'Txs' : 'Transactions'}
+          {width <= 860 ? 'Txs' : 'Transactions'}
         </div>
         <div className="flex justify-center px-5 text-md lg:text-lg font-bold uppercase">
           Gas used
@@ -66,7 +66,7 @@ export default function BlocksPage() {
               data={block}
               index={index}
               key={index}
-              width={windowDimensions.width}
+              width={width}
             />
           )}
         />
