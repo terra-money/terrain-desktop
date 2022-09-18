@@ -17,7 +17,7 @@ export default function ContractsPage() {
   const { terra, wallets } = useTerra();
   const [walletName, setWalletName] = React.useState('test1');
   const [contractCallResponse, setContractCallResponse] = React.useState('');
-  const windowDimensions = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   const wallet = wallets[walletName];
 
@@ -77,7 +77,7 @@ export default function ContractsPage() {
   return (
     <div className="flex flex-col w-full">
       <div
-        className="flex flex-row w-full text-left items-center px-4 py-5 gap-8 text-blue-600 shadow-nav"
+        className="bg-white flex flex-row w-full text-left items-center px-4 py-5 gap-8 text-blue-600 shadow-nav"
         style={{ background: '#ffffffe0' }}
       >
         <SelectWallet
@@ -96,14 +96,22 @@ export default function ContractsPage() {
       <div
         className="bg-white grid items-center w-full px-4 py-5 md:pl-8 text-blue-600 font-bold z-50 shadow-nav"
         style={{
-          gridTemplateColumns: '117px minmax(120px, 1fr) 2fr minmax(116px, 0.75fr)',
+          gridTemplateColumns: `${
+            width <= 767
+              ? '155px'
+              : width > 1400
+                ? '280px'
+                : width < 1170
+                  ? '180px'
+                  : '235px'
+          } minmax(90px, 1fr) 2fr minmax(116px, 0.75fr)`,
         }}
       >
         <div className="text-md lg:text-lg font-bold uppercase">Name</div>
-        <div className="flex justify-center px-5 text-md lg:text-lg font-bold uppercase">
+        <div className="flex justify-center px-1 md:px-3 text-md lg:text-lg font-bold uppercase">
           Code ID
         </div>
-        <div className="flex justify-center px-5 text-md lg:text-lg font-bold uppercase">
+        <div className="flex justify-center px-1 md:px-3 text-md lg:text-lg font-bold uppercase">
           Address
         </div>
         <div className="flex justify-center px-5 text-md lg:text-lg font-bold uppercase" />
@@ -122,7 +130,7 @@ export default function ContractsPage() {
               handleRefreshRefs={handleRefreshRefs}
               data={data}
               key={index}
-              width={windowDimensions.width}
+              width={width}
             />
           )}
         />
