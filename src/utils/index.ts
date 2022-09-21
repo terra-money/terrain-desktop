@@ -52,11 +52,34 @@ export const demicrofy = (num: number) => num / MICRO as number;
 
 export function truncate(
   text: string = '',
-  [h, t]: [number, number] = [6, 6],
+  lengthNumbers?: [number, number],
 ): string {
-  const head = text.slice(0, h);
-  const tail = text.slice(-1 * t, text.length);
-  return text.length > h + t ? [head, tail].join('...') : text;
+  const { width } = getWindowDimensions();
+  let headEnd = lengthNumbers ? lengthNumbers[0] : 6;
+  let tailStart = lengthNumbers ? lengthNumbers[1] : 6;
+
+  if (!lengthNumbers) {
+    if (width >= 1750) {
+      return text;
+    }
+    if (width <= 820) {
+      headEnd = 6;
+      tailStart = 6;
+    } else if (width <= 1010) {
+      headEnd = 8;
+      tailStart = 8;
+    } else if (width <= 1310) {
+      headEnd = 14;
+      tailStart = 14;
+    } else if (width <= 1750) {
+      headEnd = 20;
+      tailStart = 20;
+    }
+  }
+
+  const head = text.slice(0, headEnd);
+  const tail = text.slice(-1 * tailStart, text.length);
+  return text.length > headEnd + tailStart ? [head, tail].join('...') : text;
 }
 
 export function nFormatter(num: number) {

@@ -9,21 +9,20 @@ import ContractMethodsView from './ContractMethodsView';
 import { truncate } from '../utils';
 
 const ContractView = ({
-  handleDeleteContract, handleQuery, handleExecute, handleRefreshRefs, data, width,
+  handleDeleteContract, handleQuery, handleExecute, handleRefreshRefs, data, firstColumnSize,
 }:{
     data: SmartContract
     handleDeleteContract: Function
     handleQuery: Function
     handleExecute: Function
     handleRefreshRefs: Function
-    width: number
+    firstColumnSize: number
 }) => {
   const {
     name, codeId, address, schemas, path,
   } = data;
 
   const [open, setOpen] = useState(false);
-  const [truncatedAddress, setTruncatedAddress] = useState(address);
   const toggleContractRow = () => setOpen(!open);
   const { isOpen, currentStep } = useTour();
 
@@ -31,34 +30,14 @@ const ContractView = ({
     if (isOpen && currentStep >= 10) setOpen(true);
   }, [currentStep]);
 
-  useEffect(() => {
-    if (width >= 1750) {
-      setTruncatedAddress(address);
-    } else if (width <= 835) {
-      setTruncatedAddress(truncate(address, [6, 4]));
-    } else if (width <= 1010) {
-      setTruncatedAddress(truncate(address, [8, 8]));
-    } else if (width <= 1310) {
-      setTruncatedAddress(truncate(address, [14, 14]));
-    } else if (width <= 1750) {
-      setTruncatedAddress(truncate(address, [20, 20]));
-    }
-  }, [width]);
-
   return (
     <ul className="m-2">
       <li
         className="bg-white contract-view grid items-center shadow-row rounded-2xl border-2 border-blue-200"
         style={{
           gridTemplateColumns: `${
-            width <= 767
-              ? '160px'
-              : width > 1400
-                ? '300px'
-                : width < 1170
-                  ? '200px'
-                  : '255px'
-          } minmax(90px, 1fr) 2fr minmax(116px, 0.75fr)`,
+            firstColumnSize
+          }px minmax(90px, 1fr) 2fr minmax(100px, 0.75fr)`,
         }}
       >
         <div className="rounded-l-xl">
@@ -68,7 +47,7 @@ const ContractView = ({
             href={`${REACT_APP_FINDER_URL}/address/${address}`}
             rel="noreferrer"
           >
-            <div className="bg-blue-200 px-2 py-8 md:pl-4 overflow-ellipsis overflow-hidden">
+            <div className="bg-blue-200 px-2 py-8 md:pl-5 overflow-ellipsis overflow-hidden">
               {name}
             </div>
             <div className="bg-blue-200 pr-4 py-9 md:py-[38px]">
@@ -80,9 +59,9 @@ const ContractView = ({
           {codeId}
         </div>
         <div className="flex justify-center items-center px-1 md:px-3 text-sm md:text-lg">
-          {truncatedAddress}
+          {truncate(address)}
         </div>
-        <div className="flex justify-end pl-5">
+        <div className="flex justify-end pl-3">
           <button
             type="button"
             onClick={() => handleDeleteContract(codeId)}
@@ -98,7 +77,7 @@ const ContractView = ({
             <RefreshIcon className="text-blue" />
           </button>
           {schemas && (
-            <div className="p-4 pl-2">
+            <div className="p-3 pl-2">
               <KeyboardArrowDownIcon
                 className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
                 onClick={toggleContractRow}

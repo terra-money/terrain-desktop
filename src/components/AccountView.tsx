@@ -10,17 +10,14 @@ function AccountView({
   wallet,
   handleToggleClose,
   handleToggleOpen,
-  width,
   firstColumnSize,
 }: {
   wallet: any;
   handleToggleClose: Function;
   handleToggleOpen: Function;
-  width: number;
   firstColumnSize: number;
 }) {
   const { accAddress, mnemonic } = wallet.key;
-  const [truncatedAddress, setTruncatedAddress] = useState(accAddress);
   const [balance, setBalance] = useState(0.0);
   const { getBalance } = useTerraBlockUpdate();
   const hasStartedLocalTerra = useLocalTerraStarted();
@@ -34,16 +31,6 @@ function AccountView({
       setBalance(demicrofy(Number(amount)));
     });
   }, [hasStartedLocalTerra]);
-
-  useEffect(() => {
-    if (width >= 1025) {
-      setTruncatedAddress(accAddress);
-    } else if (width <= 767) {
-      setTruncatedAddress(truncate(accAddress, [10, 10]));
-    } else if (width <= 1024) {
-      setTruncatedAddress(truncate(accAddress, [14, 14]));
-    }
-  }, [width]);
 
   return (
     <div className="m-2">
@@ -60,7 +47,7 @@ function AccountView({
             className="flex items-center text-blue-700 font-semibold hover:text-blue-500 hover:underline"
             rel="noreferrer"
           >
-            <p className="mr-2">{truncatedAddress}</p>
+            <p className="mr-2">{truncate(accAddress)}</p>
             <ExternalLinkIcon />
           </a>
         </div>

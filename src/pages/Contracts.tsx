@@ -15,8 +15,10 @@ import { useWindowDimensions } from '../utils';
 export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
   const { terra, wallets } = useTerra();
-  const [walletName, setWalletName] = React.useState('test1');
-  const [contractCallResponse, setContractCallResponse] = React.useState('');
+  const [walletName, setWalletName] = useState('test1');
+  const [contractCallResponse, setContractCallResponse] = useState('');
+  const [firstColumnSize, setFirstColumnSize] = useState(280);
+
   const { width } = useWindowDimensions();
 
   const wallet = wallets[walletName];
@@ -74,6 +76,18 @@ export default function ContractsPage() {
     }
   };
 
+  useEffect(() => {
+    if (width >= 1400) {
+      setFirstColumnSize(280);
+    } else if (width <= 767) {
+      setFirstColumnSize(155);
+    } else if (width < 1170) {
+      setFirstColumnSize(180);
+    } else if (width < 1400) {
+      setFirstColumnSize(235);
+    }
+  }, [width]);
+
   return (
     <div className="flex flex-col w-full">
       <div
@@ -97,14 +111,8 @@ export default function ContractsPage() {
         className="bg-white grid items-center w-full px-4 py-5 md:pl-8 text-blue-600 font-bold z-50 shadow-nav"
         style={{
           gridTemplateColumns: `${
-            width <= 767
-              ? '155px'
-              : width > 1400
-                ? '280px'
-                : width < 1170
-                  ? '180px'
-                  : '235px'
-          } minmax(90px, 1fr) 2fr minmax(116px, 0.75fr)`,
+            firstColumnSize === 155 ? firstColumnSize : firstColumnSize - 20
+          }px minmax(90px, 1fr) 2fr minmax(100px, 0.75fr)`,
         }}
       >
         <div className="text-md lg:text-lg font-bold uppercase">Name</div>
@@ -130,7 +138,7 @@ export default function ContractsPage() {
               handleRefreshRefs={handleRefreshRefs}
               data={data}
               key={index}
-              width={width}
+              firstColumnSize={firstColumnSize}
             />
           )}
         />

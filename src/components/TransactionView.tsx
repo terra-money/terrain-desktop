@@ -45,7 +45,7 @@ const TransactionView = ({
             rel="noreferrer"
           >
             <div className="mr-2">
-              {width < 1050 ? truncate(txhash, [4, 4]) : truncate(txhash)}
+              {width < 1050 ? truncate(txhash, [4, 4]) : truncate(txhash, [6, 6])}
             </div>
             <ExternalLinkIcon />
           </a>

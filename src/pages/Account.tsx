@@ -11,19 +11,23 @@ export default function AccountsPage({
   handleToggleClose: Function;
   handleToggleOpen: Function;
 }) {
-  const [firstColumnSize, setFirstColumnSize] = useState(475);
+  const [firstColumnSize, setFirstColumnSize] = useState(480);
 
   const { getTestAccounts } = useTerra();
   const accounts = getTestAccounts();
   const { width } = useWindowDimensions();
 
   useEffect(() => {
-    if (width >= 1025) {
-      setFirstColumnSize(475);
-    } else if (width <= 767) {
-      setFirstColumnSize(265);
-    } else if (width <= 1024) {
+    if (width >= 1750) {
+      setFirstColumnSize(480);
+    } else if (width <= 820) {
+      setFirstColumnSize(190);
+    } else if (width <= 1010) {
+      setFirstColumnSize(230);
+    } else if (width <= 1310) {
       setFirstColumnSize(345);
+    } else if (width <= 1750) {
+      setFirstColumnSize(450);
     }
   }, [width]);
 
@@ -33,7 +37,7 @@ export default function AccountsPage({
         className="bg-white shadow-nav grid items-center w-full px-4 py-5 pl-8 text-blue-600 z-30"
         style={{
           gridTemplateColumns: `${
-            firstColumnSize - 20
+            firstColumnSize - 25
           }px minmax(90px, 3fr) 1fr`,
         }}
       >
@@ -56,7 +60,6 @@ export default function AccountsPage({
             key={account.key.accAddress}
             handleToggleClose={handleToggleClose}
             handleToggleOpen={handleToggleOpen}
-            width={width}
             firstColumnSize={firstColumnSize}
           />
         )}
