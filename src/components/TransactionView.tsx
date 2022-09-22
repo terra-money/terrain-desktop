@@ -7,12 +7,13 @@ import EventInfo from './EventInfo';
 import { truncate } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
 
-const Transaction = ({
-  data, index, onToggleEventDetails,
+const TransactionView = ({
+  data, index, onToggleEventDetails, width,
 }: {
   data: TerrariumTx,
   index: number,
   onToggleEventDetails: (_index: number) => void,
+  width: number,
 }) => {
   const { txhash, result, height } = data.TxResult;
   const txHref = `${REACT_APP_FINDER_URL}/tx/${txhash}`;
@@ -28,29 +29,47 @@ const Transaction = ({
 
   return (
     <ul className="m-2">
-      <li className="flex justify-between items-center shadow-row rounded-2xl border-2 border-blue-200">
-        <div className="bg-blue-200 p-5 w-52 rounded-l-xl">
+      <li
+        className="bg-white grid justify-between items-center shadow-row rounded-2xl border-2 border-blue-200"
+        style={{
+          gridTemplateColumns: `${width < 1050 ? '125px' : '200px'} ${
+            width < 1024 ? width > 899 ? '180px' : width > 767 ? '150px' : '110px' : width > 1400 ? '500px' : '280px'
+          } ${width < 1024 ? '90px' : '1fr'} minmax(100px, 2fr) 0.5fr`,
+        }}
+      >
+        <div className="bg-blue-200 p-5 px-2 lg:p-5 rounded-l-xl">
           <a
-            className="flex items-center text-blue-700 font-semibold hover:text-blue-500 hover:underline"
+            className="flex items-center text-sm lg:text-base text-blue-700 font-semibold hover:text-blue-500 hover:underline"
             target="_blank"
             href={txHref}
             rel="noreferrer"
           >
-            <div className="mr-2">{truncate(txhash)}</div>
+            <div className="mr-2">
+              {width < 1050 ? truncate(txhash, [4, 4]) : truncate(txhash, [6, 6])}
+            </div>
             <ExternalLinkIcon />
           </a>
         </div>
-        <div className="p-4 w-96 overflow-auto">{data.msg['@type']}</div>
-        <div className="p-4">{height}</div>
-        <div className="p-4 pl-10 text-ellipsis overflow-hidden whitespace-nowrap">
+        <div className="flex justify-center items-center px-1 md:px-3 text-sm lg:text-lg">
+          <div className="overflow-ellipsis overflow-hidden">
+            {data.msg['@type']}
+          </div>
+        </div>
+        <div className="flex justify-center items-center px-1 md:px-3 text-sm lg:text-lg">
+          {height}
+        </div>
+        <div className="flex justify-center items-center px-1 md:px-3 text-sm lg:text-lg">
           {result.gas_wanted}
+          {' '}
           /
+          {' '}
           {result.gas_used}
+          {' '}
           (
           {percentGasUsed.toFixed(2)}
           %)
         </div>
-        <div className="p-4">
+        <div className="flex justify-end pr-2 pl-0 lg:px-5">
           <KeyboardArrowDownIcon
             className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
             onClick={toggleEventsRow}
@@ -71,4 +90,4 @@ const Transaction = ({
   );
 };
 
-export default React.memo(Transaction);
+export default React.memo(TransactionView);

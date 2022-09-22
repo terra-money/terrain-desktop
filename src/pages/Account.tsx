@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { AccountView } from '../components';
 import { useTerra } from '../hooks/terra';
+import { useWindowDimensions } from '../utils';
 
 export default function AccountsPage({
   handleToggleClose,
@@ -10,25 +11,46 @@ export default function AccountsPage({
   handleToggleClose: Function;
   handleToggleOpen: Function;
 }) {
+  const [firstColumnSize, setFirstColumnSize] = useState(480);
+
   const { getTestAccounts } = useTerra();
   const accounts = getTestAccounts();
+  const { width } = useWindowDimensions();
+
+  useEffect(() => {
+    if (width >= 1750) {
+      setFirstColumnSize(480);
+    } else if (width <= 820) {
+      setFirstColumnSize(190);
+    } else if (width <= 1010) {
+      setFirstColumnSize(230);
+    } else if (width <= 1310) {
+      setFirstColumnSize(345);
+    } else if (width <= 1750) {
+      setFirstColumnSize(450);
+    }
+  }, [width]);
 
   return (
     <div className="flex flex-col w-full">
       <div
-        className="bg-white shadow-nav flex flex-row w-full text-left justify-between items-center px-4 py-5 text-blue-600"
+        className="bg-white shadow-nav grid items-center w-full px-4 py-5 pl-8 text-blue-600 z-30"
+        style={{
+          gridTemplateColumns: `${
+            firstColumnSize - 25
+          }px minmax(90px, 3fr) 1fr`,
+        }}
       >
-        <div className="text-lg font-bold  uppercase min-w-[470px] ml-[15px]">
-          Address
+        <div className="text-md lg:text-lg font-bold uppercase">Address</div>
+        <div className="flex justify-center px-5 text-md lg:text-lg font-bold uppercase">
+          Luna
         </div>
-        <div className="flex lg:gap-8 xl:gap-24">
-          <div className="ml-6 text-lg font-bold uppercase">Luna</div>
-          <div className="text-lg font-bold uppercase ml-[-15px]">Tx Count</div>
-          <div className="text-lg font-bold uppercase mr-[15px] ml-[45px]">Key</div>
+        <div className="flex justify-end px-5 text-md lg:text-lg font-bold uppercase">
+          Key
         </div>
       </div>
       <Virtuoso
-        className="flex flex-col w-full mt-1"
+        className="flex flex-col w-full"
         followOutput
         initialTopMostItemIndex={accounts.length}
         data={accounts}
@@ -38,6 +60,7 @@ export default function AccountsPage({
             key={account.key.accAddress}
             handleToggleClose={handleToggleClose}
             handleToggleOpen={handleToggleOpen}
+            firstColumnSize={firstColumnSize}
           />
         )}
       />

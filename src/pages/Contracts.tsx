@@ -10,27 +10,17 @@ import { useTerra } from '../hooks/terra';
 import {
   IMPORT_SAVED_CONTRACTS, IMPORT_NEW_CONTRACTS, DELETE_CONTRACT, REFRESH_CONTRACT_REFS,
 } from '../constants';
-
-const CONTRACTS_HEADER = [
-  {
-    title: 'Name',
-    className: 'w-48 p-4',
-  },
-  {
-    title: 'Code ID',
-    className: 'p-4',
-  },
-  {
-    title: 'Address',
-    className: 'w-56 p-4 pl-3 mr-36',
-  },
-];
+import { useWindowDimensions } from '../utils';
 
 export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
   const { terra, wallets } = useTerra();
-  const [walletName, setWalletName] = React.useState('test1');
-  const [contractCallResponse, setContractCallResponse] = React.useState('');
+  const [walletName, setWalletName] = useState('test1');
+  const [contractCallResponse, setContractCallResponse] = useState('');
+  const [firstColumnSize, setFirstColumnSize] = useState(280);
+
+  const { width } = useWindowDimensions();
+
   const wallet = wallets[walletName];
 
   useEffect(() => {
@@ -86,10 +76,22 @@ export default function ContractsPage() {
     }
   };
 
+  useEffect(() => {
+    if (width >= 1400) {
+      setFirstColumnSize(280);
+    } else if (width <= 767) {
+      setFirstColumnSize(155);
+    } else if (width < 1170) {
+      setFirstColumnSize(180);
+    } else if (width < 1400) {
+      setFirstColumnSize(235);
+    }
+  }, [width]);
+
   return (
     <div className="flex flex-col w-full">
       <div
-        className="flex flex-row w-full text-left items-center px-4 py-5 gap-8 text-blue-600 shadow-nav"
+        className="bg-white flex flex-row w-full text-left items-center px-4 py-5 gap-8 text-blue-600 shadow-nav"
         style={{ background: '#ffffffe0' }}
       >
         <SelectWallet
@@ -106,21 +108,23 @@ export default function ContractsPage() {
         </button>
       </div>
       <div
-        className="bg-gray-background flex justify-between text-blue-600 z-50 shadow-nav"
+        className="bg-white grid items-center w-full px-4 py-5 md:pl-8 text-blue-600 font-bold z-50 shadow-nav"
         style={{
-          background: '#ffffffe0',
+          gridTemplateColumns: `${
+            firstColumnSize === 155 ? firstColumnSize : firstColumnSize - 20
+          }px minmax(90px, 1fr) 2fr minmax(100px, 0.75fr)`,
         }}
       >
-        {CONTRACTS_HEADER.map((header, index) => (
-          <div
-            key={index}
-            className={`text-lg font-bold uppercase ${header.className}`}
-          >
-            {header.title}
-          </div>
-        ))}
+        <div className="text-md lg:text-lg font-bold uppercase">Name</div>
+        <div className="flex justify-center px-1 md:px-3 text-md lg:text-lg font-bold uppercase">
+          Code ID
+        </div>
+        <div className="flex justify-center px-1 md:px-3 text-md lg:text-lg font-bold uppercase">
+          Address
+        </div>
+        <div className="flex justify-center px-5 text-md lg:text-lg font-bold uppercase" />
       </div>
-      {contractCallResponse && (JSON.stringify(contractCallResponse, null, 2))}
+      {contractCallResponse && JSON.stringify(contractCallResponse, null, 2)}
       {contracts && (
         <Virtuoso
           followOutput
@@ -134,6 +138,7 @@ export default function ContractsPage() {
               handleRefreshRefs={handleRefreshRefs}
               data={data}
               key={index}
+              firstColumnSize={firstColumnSize}
             />
           )}
         />
