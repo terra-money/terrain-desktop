@@ -13,6 +13,8 @@ const {
   BROWSER_WINDOW_WIDTH,
   BROWSER_WINDOW_HEIGHT,
   LOCAL_TERRA_PATH_CONFIGURED,
+  REACT_APP_FINDER_URL,
+  REACT_APP_DOCS_URL,
 } = require('../src/constants');
 const {
   stopLocalTerra,
@@ -26,6 +28,7 @@ const { setDockIconDisplay } = require('./utils/misc');
 const { showStartDockerDialog } = require('./utils/messages');
 
 let tray = null;
+const APP_URL = isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`;
 
 app.setAboutPanelOptions({
   applicationName: app.getName(),
@@ -66,13 +69,11 @@ async function init() {
   ]);
 
   tray.setContextMenu(contextMenu);
+  win.loadURL(APP_URL);
 
   if (isDev) {
-    win.loadURL('http://localhost:3000');
     await session.defaultSession.loadExtension(path.resolve('extensions', 'redux'));
     win.webContents.openDevTools();
-  } else {
-    win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
   }
 
   /**
@@ -90,14 +91,19 @@ async function init() {
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
   }
 
-  const isRunning = await isDockerRunning();
-  if (!isRunning) {
+  if (!await isDockerRunning()) {
     await showStartDockerDialog();
     app.quit();
   }
 
   win.webContents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
+    if (url.startsWith(REACT_APP_FINDER_URL) || url.startsWith(REACT_APP_DOCS_URL)) {
+      const child = new BrowserWindow({
+        width: 1000, height: 600, parent: win, show: false,
+      });
+      child.loadURL(url);
+      child.once('ready-to-show', () => { child.show(); });
+    }
     return { action: 'deny' };
   });
 
