@@ -61,7 +61,7 @@ async function init() {
     { type: 'separator' },
     {
       label: 'Quit',
-      click: () => shutdown(win),
+      click: () => { tray = null; shutdown(win); },
     },
   ]);
 
@@ -85,8 +85,9 @@ async function init() {
     appMenu[0].submenu[8] = new MenuItem({
       label: `Quit ${app.getName()}`,
       accelerator: 'Command+Q',
-      click: () => shutdown(win),
+      click: () => { tray = null; shutdown(win); },
     });
+    
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
   }
 

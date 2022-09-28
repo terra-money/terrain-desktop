@@ -41,7 +41,7 @@ export const StateListeners = () => {
     return () => {
       ipcRenderer.removeAllListeners(NEW_BLOCK);
       ipcRenderer.removeAllListeners(TX);
-      ipcRenderer.removeAllListeners(NEW_BLOCK);
+      ipcRenderer.removeAllListeners(NEW_LOG);
       ipcRenderer.removeAllListeners(LOCAL_TERRA_IS_RUNNING);
       ipcRenderer.removeAllListeners(LOCAL_TERRA_PATH_CONFIGURED);
     };

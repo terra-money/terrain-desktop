@@ -11,7 +11,7 @@ function ObjectFieldTemplate(props: any) {
       </div>
       {props.description}
       {props.properties.map((element: any) => (
-        <div key={element.key} className="property-wrapper">
+        <div key={element.name} className="property-wrapper">
           {element.content}
         </div>
       ))}

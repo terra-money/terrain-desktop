@@ -56,7 +56,7 @@ const downloadLocalTerra = async () => {
 };
 
 const startLocalTerra = (localTerraPath) => {
-  exec('docker compose up -d --wait', {
+  exec('docker compose up -d --wait --remove-orphans', {
     cwd: localTerraPath,
     env: {
       PATH: `${process.env.PATH}:/usr/local/bin/`,
@@ -138,6 +138,11 @@ const stopLocalTerra = async () => {
 };
 
 const shutdown = async (win, restart = false) => {
+  // Force shutdown after 20 seconds.
+  setTimeout(() => {
+    app.exit();
+  }, 20000);
+
   try {
     win.hide();
     setDockIconDisplay(false, win);
