@@ -36,8 +36,8 @@ async function init() {
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
-    minWidth: 690,
-    minHeight: 460,
+    minWidth: 1200,
+    minHeight: 720,
     show: false,
     webPreferences: {
       contextIsolation: false,
