@@ -39,16 +39,15 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
   };
 
   useEffect(() => {
-    const updateCurrentSettings = () => {
-      const currentOpenAtLogin = window.store.getOpenAtLogin();
+    const updateCurrentSettings = async () => {
+      const [currentOpenAtLogin, currentLocalTerraPath, currentBlocktime] = await Promise.all([
+        window.store.getOpenAtLogin(),
+        window.store.getLocalTerraPath(),
+        window.store.getBlocktime(),
+      ]);
       setOpenAtLogin(currentOpenAtLogin);
-
-      const currentLocalTerraPath = window.store.getLocalTerraPath();
       setLocalTerraPath(currentLocalTerraPath);
-
-      const currentBlocktime = window.store.getBlocktime();
       setBlocktime(currentBlocktime);
-
       setIsLoading(false);
     };
 
@@ -141,7 +140,7 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
                       size="small"
                       defaultValue={blocktime}
                       {...register('blocktime')}
-                      className="flex"
+                      className="flex p-2"
                     >
                       <MenuItem value="default">Default (5 seconds)</MenuItem>
                       <MenuItem value="1s">1 second</MenuItem>

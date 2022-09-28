@@ -6,15 +6,14 @@ import { SelectChangeEvent } from '@mui/material/Select';
 import { MsgExecuteContract } from '@terra-money/terra.js';
 import { SelectWallet, ContractView } from '../components';
 import { useTerra } from '../hooks/terra';
-
 import {
   IMPORT_SAVED_CONTRACTS, IMPORT_NEW_CONTRACTS, DELETE_CONTRACT, REFRESH_CONTRACT_REFS,
 } from '../constants';
 import { useWindowDimensions } from '../utils';
 
-export default function ContractsPage() {
+function ContractsPage() {
   const [contracts, setContracts] = useState([]);
-  const { terra, wallets } = useTerra();
+  const { wallets, terra } = useTerra();
   const [walletName, setWalletName] = useState('test1');
   const [contractCallResponse, setContractCallResponse] = useState('');
   const [firstColumnSize, setFirstColumnSize] = useState(280);
@@ -146,3 +145,5 @@ export default function ContractsPage() {
     </div>
   );
 }
+
+export default React.memo(ContractsPage);
