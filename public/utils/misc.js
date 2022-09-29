@@ -34,8 +34,6 @@ const setDockIconDisplay = (state, win) => {
 
 const validateIpcSender = (senderFrame) => isDev || new URL(senderFrame.url).protocol === 'file:';
 
-export default validateIpcSender;
-
 module.exports = {
   parseTxDescriptionAndMsg,
   parseTxMsg,

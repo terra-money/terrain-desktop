@@ -1,6 +1,7 @@
 const { ipcMain } = require('electron');
 const { getSmartContractData } = require('../utils/contracts');
 const { store } = require('../utils/store');
+const { validateIpcSender } = require('../utils/misc');
 const { showSmartContractDialog, showMissingSchemaDialog } = require('../utils/messages');
 
 const {
@@ -13,7 +14,7 @@ module.exports = () => {
   ipcMain.handle(DELETE_CONTRACT, (_, codeId) => store.deleteContract(codeId));
 
   ipcMain.handle(REFRESH_CONTRACT_REFS, (e, path) => {
-    console.log('e', e.senderFrame);
+    // if (!validateIpcSender(e.senderFrame)) return null;
     const updRefs = getSmartContractData(path);
     const contracts = store.refreshContracts(updRefs, path);
     return contracts;
