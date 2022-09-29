@@ -13,8 +13,6 @@ const {
   BROWSER_WINDOW_WIDTH,
   BROWSER_WINDOW_HEIGHT,
   LOCAL_TERRA_PATH_CONFIGURED,
-  REACT_APP_FINDER_URL,
-  REACT_APP_DOCS_URL,
 } = require('../src/constants');
 const {
   stopLocalTerra,
@@ -24,7 +22,7 @@ const {
   shutdown,
 } = require('./utils/localTerra');
 const globals = require('./utils/globals');
-const { setDockIconDisplay } = require('./utils/misc');
+const { setDockIconDisplay, isValidOrigin } = require('./utils/misc');
 const { showStartDockerDialog } = require('./utils/messages');
 
 let tray = null;
@@ -97,7 +95,7 @@ async function init() {
   }
 
   win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith(REACT_APP_FINDER_URL) || url.startsWith(REACT_APP_DOCS_URL)) {
+    if (isValidOrigin(url)) {
       const child = new BrowserWindow({
         width: 1000, height: 600, parent: win, show: false,
       });
@@ -126,7 +124,7 @@ async function init() {
     app.quit();
   });
 
-  process.on('SIGINT', async () => { // catch ctrl+c event
+  process.on('SIGINT', async () => {
     await stopLocalTerra();
     app.quit();
   });

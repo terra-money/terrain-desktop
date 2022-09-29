@@ -12,7 +12,8 @@ module.exports = () => {
 
   ipcMain.handle(DELETE_CONTRACT, (_, codeId) => store.deleteContract(codeId));
 
-  ipcMain.handle(REFRESH_CONTRACT_REFS, (_, path) => {
+  ipcMain.handle(REFRESH_CONTRACT_REFS, (e, path) => {
+    console.log('e', e.senderFrame);
     const updRefs = getSmartContractData(path);
     const contracts = store.refreshContracts(updRefs, path);
     return contracts;
