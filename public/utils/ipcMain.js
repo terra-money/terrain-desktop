@@ -1,15 +1,14 @@
 const { ipcMain } = require('electron');
 const { validateIpcSender } = require('./misc');
 
-const customIpcHandle = (...args) => {
-  console.log('args', args[1]);
-  console.log('WORK');
-//   console.log('channel', channel);
-//   ipcMain.handle(channel, listener);
+const secureHandle = (channel, listener) => {
+  const secureListener = (event, ...args) => {
+    if (!validateIpcSender(event.senderFrame)) return null;
+    return listener(event, ...args);
+  };
+  ipcMain.handle(channel, secureListener);
 };
 
-ipcMain.customHandle = customIpcHandle;
+ipcMain.secureHandle = secureHandle;
 
-module.exports = {
-  ipcMain,
-};
+module.exports = { ipcMain };

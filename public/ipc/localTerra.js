@@ -33,7 +33,7 @@ module.exports = (win) => {
     win.webContents.send(LOCAL_TERRA_IS_RUNNING, globals.localTerra.isRunning);
   });
 
-  ipcMain.customHandle(TOGGLE_LOCAL_TERRA, async (_, localTerraStatus) => {
+  ipcMain.secureHandle(TOGGLE_LOCAL_TERRA, async (e, localTerraStatus) => {
     const localTerraPath = store.getLocalTerraPath();
 
     if (localTerraStatus) {

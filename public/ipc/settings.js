@@ -36,7 +36,7 @@ const globals = require('../utils/globals');
 
 // Register IPC handlers relating to the settings page.
 module.exports = (win) => {
-  ipcMain.customHandle(GET_OPEN_AT_LOGIN, () => app.getLoginItemSettings().openAtLogin);
+  ipcMain.secureHandle(GET_OPEN_AT_LOGIN, () => app.getLoginItemSettings().openAtLogin);
   ipcMain.handle(SET_OPEN_AT_LOGIN, (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
 
   ipcMain.handle(SET_LOCAL_TERRA_PATH, async (save = true) => {
