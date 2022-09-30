@@ -1,4 +1,4 @@
-const { ipcMain } = require('electron');
+const { ipcMain } = require('../utils/ipcMain');
 const {
   stopLocalTerra,
   startLocalTerra,
@@ -33,7 +33,7 @@ module.exports = (win) => {
     win.webContents.send(LOCAL_TERRA_IS_RUNNING, globals.localTerra.isRunning);
   });
 
-  ipcMain.handle(TOGGLE_LOCAL_TERRA, async (_, localTerraStatus) => {
+  ipcMain.customHandle(TOGGLE_LOCAL_TERRA, async (_, localTerraStatus) => {
     const localTerraPath = store.getLocalTerraPath();
 
     if (localTerraStatus) {

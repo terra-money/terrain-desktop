@@ -1,7 +1,8 @@
-const { app, ipcMain } = require('electron');
+const { app } = require('electron');
 const toml = require('@iarna/toml');
 const fs = require('fs');
 const path = require('path');
+const { ipcMain } = require('../utils/ipcMain');
 const { store } = require('../utils/store');
 const {
   DEFAULT_BLOCKTIME,
@@ -35,7 +36,7 @@ const globals = require('../utils/globals');
 
 // Register IPC handlers relating to the settings page.
 module.exports = (win) => {
-  ipcMain.handle(GET_OPEN_AT_LOGIN, () => app.getLoginItemSettings().openAtLogin);
+  ipcMain.customHandle(GET_OPEN_AT_LOGIN, () => app.getLoginItemSettings().openAtLogin);
   ipcMain.handle(SET_OPEN_AT_LOGIN, (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
 
   ipcMain.handle(SET_LOCAL_TERRA_PATH, async (save = true) => {
