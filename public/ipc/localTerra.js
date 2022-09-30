@@ -14,7 +14,7 @@ const globals = require('../utils/globals');
 
 // Register IPC handlers relating to localTerra and contracts importing.
 module.exports = (win) => {
-  ipcMain.handle(INSTALL_LOCAL_TERRA, async () => {
+  ipcMain.secureHandle(INSTALL_LOCAL_TERRA, async () => {
     let localTerraPath;
     try {
       localTerraPath = await downloadLocalTerra();
