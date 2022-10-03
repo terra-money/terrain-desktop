@@ -23,6 +23,8 @@ const NEW_LOG = 'NewLog';
 const LOCAL_TERRA_WS = 'ws://localhost:26657/websocket';
 const REACT_APP_FINDER_URL = 'https://finder.terra.money/localterra';
 const REACT_APP_DOCS_URL = 'https://docs.terra.money/search.html';
+const FINDER_ORIGIN = 'https://finder.terra.money';
+const DOCS_ORIGIN = 'https://docs.terra.money';
 const LOCAL_TERRA_GIT = 'https://github.com/terra-money/LocalTerra.git';
 
 const BROWSER_WINDOW_WIDTH = 1200;
@@ -92,5 +94,7 @@ module.exports = {
   TX,
   NEW_BLOCK,
   NEW_LOG,
+  FINDER_ORIGIN,
+  DOCS_ORIGIN,
   RESET_APP,
 };

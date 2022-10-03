@@ -1,7 +1,8 @@
-const { app, ipcMain } = require('electron');
+const { app } = require('electron');
 const toml = require('@iarna/toml');
 const fs = require('fs');
 const path = require('path');
+const { ipcMain } = require('../utils/ipcMain');
 const { store } = require('../utils/store');
 const {
   DEFAULT_BLOCKTIME,
@@ -35,10 +36,10 @@ const globals = require('../utils/globals');
 
 // Register IPC handlers relating to the settings page.
 module.exports = (win) => {
-  ipcMain.handle(GET_OPEN_AT_LOGIN, () => app.getLoginItemSettings().openAtLogin);
-  ipcMain.handle(SET_OPEN_AT_LOGIN, (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
+  ipcMain.secureHandle(GET_OPEN_AT_LOGIN, () => app.getLoginItemSettings().openAtLogin);
+  ipcMain.secureHandle(SET_OPEN_AT_LOGIN, (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
 
-  ipcMain.handle(SET_LOCAL_TERRA_PATH, async (save = true) => {
+  ipcMain.secureHandle(SET_LOCAL_TERRA_PATH, async (save = true) => {
     const { filePaths } = await showPathSelectionDialog();
     const isValid = validateLocalTerraPath(filePaths[0]);
 
@@ -58,7 +59,7 @@ module.exports = (win) => {
     return filePaths[0];
   });
 
-  ipcMain.handle(RESET_APP, async () => {
+  ipcMain.secureHandle(RESET_APP, async () => {
     const { response } = await showPromptResetAppDialog();
 
     if (response === 1) {
@@ -67,7 +68,7 @@ module.exports = (win) => {
     }
   });
 
-  ipcMain.handle(GET_BLOCKTIME, () => {
+  ipcMain.secureHandle(GET_BLOCKTIME, () => {
     const localTerraPath = store.getLocalTerraPath();
     const parsedConfig = toml.parse(fs.readFileSync(path.join(localTerraPath, 'config/config.toml')));
 
@@ -79,11 +80,11 @@ module.exports = (win) => {
     }
   });
 
-  ipcMain.handle(CUSTOM_ERROR_DIALOG, async (_, err) => {
+  ipcMain.secureHandle(CUSTOM_ERROR_DIALOG, async (_, err) => {
     await showCustomDialog(err.message || JSON.stringify(err));
   });
 
-  ipcMain.handle(SET_BLOCKTIME, (_, blocktime) => {
+  ipcMain.secureHandle(SET_BLOCKTIME, (_, blocktime) => {
     const localTerraPath = store.getLocalTerraPath();
     const configPath = path.join(localTerraPath, 'config/config.toml');
     const parsedConfig = toml.parse(fs.readFileSync(configPath, 'utf8'));
@@ -103,7 +104,7 @@ module.exports = (win) => {
     fs.writeFileSync(configPath, toml.stringify(parsedConfig));
   });
 
-  ipcMain.handle(PROMPT_USER_RESTART, async () => {
+  ipcMain.secureHandle(PROMPT_USER_RESTART, async () => {
     const { response } = await showPromptUserRestartDialog();
 
     if (response === 1) {

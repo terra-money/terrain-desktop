@@ -1,4 +1,4 @@
-const { ipcMain } = require('electron');
+const { ipcMain } = require('../utils/ipcMain');
 const {
   stopLocalTerra,
   startLocalTerra,
@@ -14,7 +14,7 @@ const globals = require('../utils/globals');
 
 // Register IPC handlers relating to localTerra and contracts importing.
 module.exports = (win) => {
-  ipcMain.handle(INSTALL_LOCAL_TERRA, async () => {
+  ipcMain.secureHandle(INSTALL_LOCAL_TERRA, async () => {
     let localTerraPath;
     try {
       localTerraPath = await downloadLocalTerra();
@@ -33,7 +33,7 @@ module.exports = (win) => {
     win.webContents.send(LOCAL_TERRA_IS_RUNNING, globals.localTerra.isRunning);
   });
 
-  ipcMain.handle(TOGGLE_LOCAL_TERRA, async (_, localTerraStatus) => {
+  ipcMain.secureHandle(TOGGLE_LOCAL_TERRA, async (e, localTerraStatus) => {
     const localTerraPath = store.getLocalTerraPath();
 
     if (localTerraStatus) {

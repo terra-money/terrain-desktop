@@ -211,7 +211,8 @@ const App = () => {
                 <button
                   type="button"
                   onClick={toggleLocalTerra}
-                  className="toggle-terra flex items-center justify-center space-x-3 text-xs rounded-lg w-28 md:w-40 h-10 border-4 border-gray-brackground"
+                  className={`${isLoading ? 'cursor-pointer' : ''}
+                  toggle-terra flex items-center justify-center space-x-3 text-xs rounded-lg w-28 md:w-40 h-10 border-4 border-gray-brackground`}
                 >
                   <BsCircleFill
                     className={
