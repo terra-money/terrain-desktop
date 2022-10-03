@@ -52,7 +52,6 @@ const useNav = ({
       path: '/transactions',
       element: <TransactionsPage />,
     },
-
     {
       name: 'Logs',
       icon: <LogsIcon />,

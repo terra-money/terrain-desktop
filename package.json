@@ -50,6 +50,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-virtuoso": "^2.14.0",
+    "rsuite-table": "^5.7.1",
     "semver": "^7.3.7",
     "wait-on": "^6.0.1"
   },
