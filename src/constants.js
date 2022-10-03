@@ -9,6 +9,8 @@ const REFRESH_CONTRACT_REFS = 'refreshContractRefs';
 const SET_LOCAL_TERRA_PATH = 'setLocalTerraPath';
 const GET_BLOCKTIME = 'getBlocktime';
 const SET_BLOCKTIME = 'setBlocktime';
+const SET_LITE_MODE = 'setLiteMode';
+const GET_LITE_MODE = 'getLiteMode';
 const PROMPT_USER_RESTART = 'promptUserRestart';
 const RESET_APP = 'resetApp';
 const GET_OPEN_AT_LOGIN = 'getOpenAtLogin';
@@ -80,6 +82,8 @@ module.exports = {
   ONESECOND_BLOCKTIME,
   LOCAL_TERRA_PATH_CONFIGURED,
   LOCAL_TERRA_IS_RUNNING,
+  SET_LITE_MODE,
+  GET_LITE_MODE,
   INSTALL_LOCAL_TERRA,
   TOGGLE_LOCAL_TERRA,
   IMPORT_SAVED_CONTRACTS,

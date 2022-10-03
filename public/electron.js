@@ -86,7 +86,7 @@ async function init() {
       accelerator: 'Command+Q',
       click: () => { tray = null; shutdown(win); },
     });
-    
+
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
   }
 

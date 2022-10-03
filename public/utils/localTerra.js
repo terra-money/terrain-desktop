@@ -55,8 +55,9 @@ const downloadLocalTerra = async () => {
   return localTerraPath;
 };
 
-const startLocalTerra = (localTerraPath) => {
-  exec('docker compose up -d --wait --remove-orphans', {
+const startLocalTerra = async (localTerraPath) => {
+  const liteMode = await store.getLiteMode();
+  exec(`docker compose up ${liteMode ? 'terrad' : ''} -d --wait --remove-orphans`, {
     cwd: localTerraPath,
     env: {
       PATH: `${process.env.PATH}:/usr/local/bin/`,
