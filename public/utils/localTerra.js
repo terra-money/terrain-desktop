@@ -4,11 +4,12 @@ const { spawn } = require('child_process');
 const { WebSocketClient } = require('@terra-money/terra.js');
 const fs = require('fs');
 const yaml = require('js-yaml');
+const os = require('os');
 const util = require('util');
 const waitOn = require('wait-on');
 const exec = util.promisify(require('child_process').exec);
 const {
-  showLocalTerraStartNotif, showLocalTerraStopNotif, showTxOccuredNotif, showCustomDialog,
+  showLocalTerraStartNotif, showMemoryOveruseDialog, showLocalTerraStopNotif, showTxOccuredNotif, showCustomDialog,
 } = require('./messages');
 const { store } = require('./store');
 const { setDockIconDisplay, parseTxDescriptionAndMsg } = require('./misc');
@@ -20,6 +21,7 @@ const {
   LOCAL_TERRA_IS_RUNNING,
   LOCAL_TERRA_PATH_CONFIGURED,
   NEW_LOG,
+  MEM_USE_THRESHOLD,
   NEW_BLOCK,
   TX,
 } = require('../../src/constants');
@@ -53,6 +55,14 @@ const downloadLocalTerra = async () => {
     await startLocalTerra(localTerraPath);
   }
   return localTerraPath;
+};
+
+const startMemMonitor = () => {
+  setInterval(() => {
+    if (MEM_USE_THRESHOLD < os.freemem() - os.totalmem()) {
+      showMemoryOveruseDialog();
+    }
+  }, 10000);
 };
 
 const startLocalTerra = async (localTerraPath) => {
@@ -182,4 +192,5 @@ module.exports = {
   validateLocalTerraPath,
   subscribeToLocalTerraEvents,
   shutdown,
+  startMemMonitor,
 };

@@ -41,6 +41,12 @@ const showStartDockerDialog = async () => dialog.showMessageBox({
   type: 'warning',
 });
 
+const showMemoryOveruseDialog = async () => dialog.showMessageBox({
+  message: 'You\'re running out of memory. If this is a consistent problem try running Terrarium in LiteMode.',
+  title: 'Terrarium',
+  type: 'warning',
+});
+
 const showMissingSchemaDialog = async () => dialog.showMessageBox({
   message: 'Some schemas were missing from your terrain project directory. Run `cargo schema` in your contract folder and re-import access contract methods.',
   title: 'Terrarium',
@@ -93,4 +99,5 @@ module.exports = {
   showMissingSchemaDialog,
   showCustomDialog,
   showPromptResetAppDialog,
+  showMemoryOveruseDialog,
 };

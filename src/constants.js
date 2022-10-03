@@ -29,6 +29,7 @@ const FINDER_ORIGIN = 'https://finder.terra.money';
 const DOCS_ORIGIN = 'https://docs.terra.money';
 const LOCAL_TERRA_GIT = 'https://github.com/terra-money/LocalTerra.git';
 
+const MEM_USE_THRESHOLD_MB = 100 * 1024 * 1024; // 100MB
 const BROWSER_WINDOW_WIDTH = 1200;
 const MAX_LOG_LENGTH = 500;
 const MAX_BLOCKS_LENGTH = 500;
@@ -101,4 +102,5 @@ module.exports = {
   FINDER_ORIGIN,
   DOCS_ORIGIN,
   RESET_APP,
+  MEM_USE_THRESHOLD_MB,
 };
