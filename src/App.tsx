@@ -11,7 +11,7 @@ import {
 } from './hooks/terra';
 import { parseSearchUrl } from './utils';
 import { ReactComponent as TerraLogo } from './assets/terra-logo.svg';
-import useNav from './hooks/routes';
+import useAppRoutes from './hooks/routes';
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,12 +25,12 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const { setIsOpen: openTour, currentStep, steps } = useTour();
+  const { setIsOpen: setTourIsOpen, currentStep, steps } = useTour();
   const { state: navState }: any = useLocation();
 
   useEffect(() => {
     if (navState && navState.firstOpen) {
-      openTour(true);
+      setTourIsOpen(true);
       toggleLocalTerra();
     }
   }, [navState]);
@@ -43,6 +43,7 @@ const App = () => {
   useEffect(() => {
     ipcRenderer.send(GET_LOCAL_TERRA_STATUS);
     if (!isLocalTerraPathConfigured.get()) navigate('/onboard');
+    else navigate('/');
   }, []);
 
   useEffect(() => {
@@ -56,12 +57,6 @@ const App = () => {
   };
 
   const handleToggleClose = () => setIsModalOpen(false);
-
-  const { routes, menu } = useNav({
-    handleToggleClose,
-    handleToggleOpen,
-  });
-
   const handleSearchInput = (e: any) => setSearchQuery(e.target.value);
 
   const handleSearch = (e: any) => {
@@ -77,6 +72,11 @@ const App = () => {
     ipcRenderer.invoke(TOGGLE_LOCAL_TERRA, !hasStartedLocalTerra.get());
     hasStartedLocalTerra.set(null); // We're not started or stopped.
   };
+
+  const { routes, menu } = useAppRoutes({
+    handleToggleClose,
+    handleToggleOpen,
+  });
 
   return (
     <div className="flex flex-col w-screen h-screen">

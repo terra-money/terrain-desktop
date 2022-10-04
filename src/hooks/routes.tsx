@@ -15,7 +15,7 @@ import { ReactComponent as ContractsIcon } from '../assets/icons/menu/contracts.
 import { ReactComponent as LogsIcon } from '../assets/icons/menu/logs.svg';
 import { ReactComponent as CogIcon } from '../assets/icons/menu/cog.svg';
 
-const useNav = ({
+const useAppRoutes = ({
   handleToggleClose,
   handleToggleOpen,
 }: {
@@ -71,9 +71,7 @@ const useNav = ({
       path: '/onboard',
       element: <OnboardPage />,
     },
-    // Add here routes that cannot be accessed directly from the menu entry
-
-    // Menu entries
+    // Add routes that cannot be accessed directly from the menu entry
     ...menu,
   ];
 
@@ -83,4 +81,4 @@ const useNav = ({
   };
 };
 
-export default useNav;
+export default useAppRoutes;
