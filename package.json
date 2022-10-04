@@ -19,7 +19,10 @@
     "build:css": "tailwind -i public/styles.css -o src/index.css --minify",
     "watch:css": "TAILWIND_MODE=watch tailwind -i public/styles.css -o src/index.css --watch",
     "package": "electron-forge package",
-    "make": "npm run build:css && npm run build && electron-forge make"
+    "make": "npm run build:css && npm run build && electron-forge make",
+    "make:ia32": "npm run make --arch ia32",
+    "make:x64": "npm run make --arch x64",
+    "make:arm64": "npm run make --arch arm64"
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
