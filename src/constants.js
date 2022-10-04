@@ -9,6 +9,8 @@ const REFRESH_CONTRACT_REFS = 'refreshContractRefs';
 const SET_LOCAL_TERRA_PATH = 'setLocalTerraPath';
 const GET_BLOCKTIME = 'getBlocktime';
 const SET_BLOCKTIME = 'setBlocktime';
+const SET_LITE_MODE = 'setLiteMode';
+const GET_LITE_MODE = 'getLiteMode';
 const PROMPT_USER_RESTART = 'promptUserRestart';
 const RESET_APP = 'resetApp';
 const GET_OPEN_AT_LOGIN = 'getOpenAtLogin';
@@ -23,8 +25,11 @@ const NEW_LOG = 'NewLog';
 const LOCAL_TERRA_WS = 'ws://localhost:26657/websocket';
 const REACT_APP_FINDER_URL = 'https://finder.terra.money/localterra';
 const REACT_APP_DOCS_URL = 'https://docs.terra.money/search.html';
+const FINDER_ORIGIN = 'https://finder.terra.money';
+const DOCS_ORIGIN = 'https://docs.terra.money';
 const LOCAL_TERRA_GIT = 'https://github.com/terra-money/LocalTerra.git';
 
+const MEM_USE_THRESHOLD_MB = 100 * 1024 * 1024; // 100MB
 const BROWSER_WINDOW_WIDTH = 1200;
 const MAX_LOG_LENGTH = 500;
 const MAX_BLOCKS_LENGTH = 500;
@@ -78,6 +83,8 @@ module.exports = {
   ONESECOND_BLOCKTIME,
   LOCAL_TERRA_PATH_CONFIGURED,
   LOCAL_TERRA_IS_RUNNING,
+  SET_LITE_MODE,
+  GET_LITE_MODE,
   INSTALL_LOCAL_TERRA,
   TOGGLE_LOCAL_TERRA,
   IMPORT_SAVED_CONTRACTS,
@@ -92,5 +99,8 @@ module.exports = {
   TX,
   NEW_BLOCK,
   NEW_LOG,
+  FINDER_ORIGIN,
+  DOCS_ORIGIN,
   RESET_APP,
+  MEM_USE_THRESHOLD_MB,
 };

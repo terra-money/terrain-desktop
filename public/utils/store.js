@@ -42,6 +42,14 @@ class TerrariumStore extends Store {
     return window.ipcRenderer.invoke(SET_OPEN_AT_LOGIN, status);
   }
 
+  getLiteMode() {
+    return this.get('liteMode');
+  }
+
+  setLiteMode(status) {
+    return this.set('liteMode', status);
+  }
+
   setContracts() {
     this.set('contracts', this.contracts);
     return this.contracts;

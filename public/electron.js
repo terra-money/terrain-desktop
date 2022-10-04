@@ -1,4 +1,5 @@
 const path = require('path');
+const os = require('os');
 const {
   app, shell, BrowserWindow, Menu, Tray, MenuItem, session,
 } = require('electron');
@@ -20,12 +21,14 @@ const {
   subscribeToLocalTerraEvents,
   isDockerRunning,
   shutdown,
+  startMemMonitor,
 } = require('./utils/localTerra');
 const globals = require('./utils/globals');
-const { setDockIconDisplay } = require('./utils/misc');
+const { setDockIconDisplay, isValidOrigin } = require('./utils/misc');
 const { showStartDockerDialog } = require('./utils/messages');
 
 let tray = null;
+const APP_URL = isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`;
 
 app.setAboutPanelOptions({
   applicationName: app.getName(),
@@ -33,6 +36,8 @@ app.setAboutPanelOptions({
 });
 
 async function init() {
+  startMemMonitor();
+
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
@@ -66,13 +71,11 @@ async function init() {
   ]);
 
   tray.setContextMenu(contextMenu);
+  win.loadURL(APP_URL);
 
   if (isDev) {
-    win.loadURL('http://localhost:3000');
     await session.defaultSession.loadExtension(path.resolve('extensions', 'redux'));
     win.webContents.openDevTools();
-  } else {
-    win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
   }
 
   /**
@@ -91,14 +94,19 @@ async function init() {
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
   }
 
-  const isRunning = await isDockerRunning();
-  if (!isRunning) {
+  if (!await isDockerRunning()) {
     await showStartDockerDialog();
     app.quit();
   }
 
   win.webContents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
+    if (isValidOrigin(url)) {
+      const child = new BrowserWindow({
+        width: 1000, height: 600, parent: win, show: false,
+      });
+      child.loadURL(url);
+      child.once('ready-to-show', () => { child.show(); });
+    }
     return { action: 'deny' };
   });
 
@@ -121,7 +129,7 @@ async function init() {
     app.quit();
   });
 
-  process.on('SIGINT', async () => { // catch ctrl+c event
+  process.on('SIGINT', async () => {
     await stopLocalTerra();
     app.quit();
   });

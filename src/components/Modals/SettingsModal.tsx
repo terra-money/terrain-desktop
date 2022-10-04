@@ -17,6 +17,7 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
   const navigate = useNavigate();
   const { register, handleSubmit, resetField } = useForm();
   const [openAtLogin, setOpenAtLogin] = useState(false);
+  const [liteMode, setLiteMode] = useState(false);
   const [localTerraPath, setLocalTerraPath] = useState('');
   const [blocktime, setBlocktime] = useState('default');
   const [isLoading, setIsLoading] = useState(true);
@@ -27,10 +28,12 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
 
   const saveSettings = (data: FieldValues) => {
     window.store.setOpenAtLogin(data.openAtLogin);
+    window.store.setLiteMode(data.liteMode);
     window.store.setLocalTerraPath(data.localTerraPath);
     window.store.setBlocktime(data.blocktime);
     if (
       localTerraPath !== data.localTerraPath
+      || liteMode !== data.liteMode
       || blocktime !== data.blocktime
     ) {
       ipcRenderer.invoke(PROMPT_USER_RESTART);
@@ -40,12 +43,14 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
 
   useEffect(() => {
     const updateCurrentSettings = async () => {
-      const [currentOpenAtLogin, currentLocalTerraPath, currentBlocktime] = await Promise.all([
+      const [currentOpenAtLogin, currentLiteMode, currentLocalTerraPath, currentBlocktime] = await Promise.all([
         window.store.getOpenAtLogin(),
+        window.store.getLiteMode(),
         window.store.getLocalTerraPath(),
         window.store.getBlocktime(),
       ]);
       setOpenAtLogin(currentOpenAtLogin);
+      setLiteMode(currentLiteMode);
       setLocalTerraPath(currentLocalTerraPath);
       setBlocktime(currentBlocktime);
       setIsLoading(false);
@@ -54,9 +59,7 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
     updateCurrentSettings();
   }, []);
 
-  if (isLoading) {
-    return null;
-  }
+  if (isLoading) return null;
 
   return (
     <div
@@ -106,6 +109,17 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
                   />
                 )}
                 label="Open Terrarium at startup"
+              />
+              <br />
+              <FormControlLabel
+                labelPlacement="start"
+                control={(
+                  <Checkbox
+                    defaultChecked={liteMode}
+                    {...register('liteMode')}
+                  />
+                )}
+                label="Run LocalTerra in Lite mode"
               />
               <br />
               <FormControlLabel
