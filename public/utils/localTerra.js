@@ -59,7 +59,7 @@ const downloadLocalTerra = async () => {
 
 const startMemMonitor = () => {
   setInterval(() => {
-    if (MEM_USE_THRESHOLD < os.freemem() - os.totalmem()) {
+    if (os.freemem() < MEM_USE_THRESHOLD) {
       showMemoryOveruseDialog();
     }
   }, 10000);
