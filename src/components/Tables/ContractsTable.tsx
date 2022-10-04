@@ -1,4 +1,3 @@
-/* eslint-disable react/no-children-prop */
 /* eslint-disable react/prop-types */
 import React, { useState, useRef, useEffect } from 'react';
 import {
@@ -221,7 +220,6 @@ const ContractsTable = ({
           align="center"
           verticalAlign="middle"
         >
-          {/* <HeaderCell children={undefined} /> */}
           <HeaderCell>{undefined}</HeaderCell>
           <Cell className="force-height-88 border-2 border-r-0 border-l-0 border-blue-200">
             {(rowData) => (
