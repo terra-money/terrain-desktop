@@ -1,11 +1,13 @@
+.left-nav ul a {
+  transition:
+    background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
 .left-nav ul a:hover {
   background-color: #0f40b9;
-  color: white;
+  color: white !important;
 }
-.left-nav ul a:hover svg {
-  fill: rgba(219, 234, 254, var(--tw-text-opacity));
-}
-
 .left-nav ul a.selected {
   background-color: #0f40b9;
   color: white;
@@ -14,7 +16,9 @@
 .left-nav ul a svg {
   fill: rgba(191, 219, 254, 1);
 }
-
+.left-nav ul a:hover svg {
+  fill: white !important;
+}
 .left-nav ul a.selected svg {
   background-color: #0f40b9;
   fill: white;
@@ -22,20 +26,128 @@
 
 .left-nav .Settings {
   background: rgb(0 44 149);
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+.left-nav .Settings:hover {
+  background-color: #0f40b9 !important;
 }
 
+.main-button {
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
 .main-button:hover {
-  background-color: #0f40b9;
+  background-color: #0f40b9 !important;
   color: white;
+  box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
 }
 
+/*
+  START of MUI overrides
+*/
 .custom-select .MuiSelect-select {
   animation-name: mui-auto-fill-cancel;
   animation-duration: 10ms;
   padding: 16.5px 14px;
   width: 250px;
+  height: 1.4375em !important;
+  min-height: 0 !important;
+  line-height: 1.4375em !important;
+}
+.custom-select .MuiInputLabel-root {
+  line-height: 1.4375em !important;
+  letter-spacing: 0.00938em !important;
+  transform: translate(14px, -9px) scale(0.75) !important;
+}
+
+.MuiPaper-root {
+  min-width: 296px !important;
+}
+.MuiPaper-root .MuiMenuItem-root{
+  display: block !important;
+  padding: 6px 16px !important;
+  justify-content: start !important;
 }
 
 .MuiButtonBase-root {
   margin: 0.25rem 0;
 }
+
+.MuiButton-root {
+  min-width: 64px !important;
+  padding: 6px 16px !important;
+  border-radius: 4px !important;
+  color: #fff !important;
+  background-color: #1976d2 !important;
+}
+/*
+  END of MUI overrides
+*/
+
+/*
+  START of RS-TABLE overrides
+*/
+.rs-table {
+  border: none !important;
+  height: 100% !important;
+}
+
+.rs-table-row-header {
+  box-shadow: 0px 1px 4px 0px rgb(50 50 50 / 75%) !important;
+}
+
+.rs-table-row-header {
+  padding: 0 0.5rem;
+  background-color: rgba(255, 255, 255, 1) !important;
+}
+
+.rs-table-cell-header .rs-table-cell  {
+  background-color: inherit !important;
+}
+
+.rs-table-cell-content {
+  padding: 0 !important;
+  height: inherit !important;
+}
+
+.rs-table-body-row-wrapper {
+  height: calc(100% - 68px) !important
+}
+
+.rs-table-body-wheel-area {
+  width: -webkit-fill-available !important;
+  overflow-x: hidden;
+  height: 100% !important;
+  min-height: unset !important;
+}
+
+.force-height-88 {
+  height: 88px !important;
+}
+
+.rs-table-row-expanded {
+  padding: 0 !important;
+  background-color: rgba(237, 237, 242, 1) !important;
+}
+
+.rs-table-row-expanded .overflow-auto::-webkit-scrollbar,
+.rs-table-row-expanded .overflow-y-scroll::-webkit-scrollbar,
+.rs-table-body-wheel-area::-webkit-scrollbar {
+  width: 11px !important;
+  height: 11px !important;
+}
+.rs-table-row-expanded .overflow-auto::-webkit-scrollbar-track,
+.rs-table-row-expanded .overflow-y-scroll::-webkit-scrollbar-track {
+  margin: 10px;
+}
+.rs-table-row-expanded .overflow-auto::-webkit-scrollbar-thumb,
+.rs-table-row-expanded .overflow-y-scroll::-webkit-scrollbar-thumb,
+.rs-table-body-wheel-area::-webkit-scrollbar-thumb {
+  background-color: #9d9d9d;
+  border-radius: 20px;
+  border-right: 1px solid transparent;
+  border-left: 1px solid transparent;
+  background-clip: content-box;
+}
+/*
+  END of RS-TABLE overrides
+*/

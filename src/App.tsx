@@ -82,7 +82,7 @@ const App = () => {
     <div className="flex flex-col w-screen h-screen">
       <div className="flex">
         <div
-          className={`left-nav bg-terra-dark-blue h-full p-5 pt-7 ${
+          className={`left-nav bg-terra-dark-blue h-screen p-5 pt-7 ${
             open ? 'w-72' : 'w-20'
           } duration-300 relative`}
         >
@@ -186,8 +186,8 @@ const App = () => {
           </ul>
         </div>
 
-        <div className="flex-auto bg-gray-background w-full h-screen overflow-hidden">
-          <header className="bg-white shadow-md z-40 relative flex justify-between p-6 lg:pl-12 bg-white overflow-x-auto">
+        <div className="relative flex-auto bg-gray-background w-full h-screen overflow-hidden">
+          <header className="absolute w-full bg-white shadow-md z-40 flex justify-between p-6 lg:pl-12">
             <ul className="flex flex-row w-full gap-1 lg:gap-10 xl:gap-20 items-center font-medium">
               <li className="current-block flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-md md:text-[15px] md:leading-7 lg:text-xl xl:text-2xl text-terra-mid-blue">
@@ -230,7 +230,7 @@ const App = () => {
               </li>
             </ul>
           </header>
-          <main className="flex w-full h-[calc(100vh-90px)] overflow-hidden">
+          <main className="flex w-full h-full overflow-hidden pt-[88px] md:pt-[92px] xl:pt-[96px]">
             {routes}
           </main>
         </div>

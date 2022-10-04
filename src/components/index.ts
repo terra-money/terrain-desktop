@@ -1,10 +1,10 @@
 export { default as AccountView } from './AccountView';
 export { default as KeyView } from './KeyView';
 export { default as LogView } from './LogView';
-export { default as ContractView } from './ContractView';
 export { default as BlockView } from './BlockView';
 export { default as NavLink } from './NavLink';
 export { default as SelectWallet } from './SelectWallet';
 export { default as KeyViewModal } from './Modals/KeyViewModal';
 export { default as SettingsModal } from './Modals/SettingsModal';
 export { default as Provider } from './Provider';
+export { default as ContractsTable } from './Tables/ContractsTable';

@@ -23,9 +23,18 @@ module.exports = {
       row: 'rgb(156 163 175 / 45%) 0px 0px 5px 1px',
       md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
     },
+    flex: {
+      1: '1 1 0%',
+      auto: '1 1 auto',
+      initial: '0 1 auto',
+      inherit: 'inherit',
+      none: 'none',
+      2: '2 2 0%',
+    },
   },
   variants: {
     extend: {},
   },
   plugins: [],
+  important: true,
 };

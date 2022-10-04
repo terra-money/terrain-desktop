@@ -1,4 +1,5 @@
 const path = require('path');
+const os = require('os');
 const {
   app, shell, BrowserWindow, Menu, Tray, MenuItem, session,
 } = require('electron');
@@ -20,6 +21,7 @@ const {
   subscribeToLocalTerraEvents,
   isDockerRunning,
   shutdown,
+  startMemMonitor,
 } = require('./utils/localTerra');
 const globals = require('./utils/globals');
 const { setDockIconDisplay, isValidOrigin } = require('./utils/misc');
@@ -34,10 +36,12 @@ app.setAboutPanelOptions({
 });
 
 async function init() {
+  startMemMonitor();
+
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
-    minWidth: 1200,
+    minWidth: 800,
     minHeight: 720,
     show: false,
     webPreferences: {
@@ -86,7 +90,7 @@ async function init() {
       accelerator: 'Command+Q',
       click: () => { tray = null; shutdown(win); },
     });
-    
+
     Menu.setApplicationMenu(Menu.buildFromTemplate(appMenu));
   }
 

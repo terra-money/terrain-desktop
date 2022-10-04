@@ -8,3 +8,4 @@ src/index.css
 build
 extensions
 out
+.vscode/settings.json
