@@ -1,5 +1,4 @@
 const path = require('path');
-const os = require('os');
 const {
   app, shell, BrowserWindow, Menu, Tray, MenuItem, session,
 } = require('electron');
@@ -36,8 +35,6 @@ app.setAboutPanelOptions({
 });
 
 async function init() {
-  startMemMonitor();
-
   const win = new BrowserWindow({
     width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
     height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
@@ -113,6 +110,7 @@ async function init() {
   registerSettingsHandlers(win);
   regsisterLocalTerraHandlers(win);
   registerContractHandlers();
+  startMemMonitor();
 
   // Catch window close and hide the window instead.
   win.on('close', (event) => {

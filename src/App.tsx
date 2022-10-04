@@ -36,8 +36,8 @@ const App = () => {
   }, [navState]);
 
   useEffect(() => {
-    // @ts-ignore
-    if (steps[currentStep].page) navigate(steps[currentStep].page);
+    const { page } = steps[currentStep] as any;
+    if (page) navigate(page);
   }, [currentStep]);
 
   useEffect(() => {
