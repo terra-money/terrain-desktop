@@ -80,45 +80,6 @@ const ContractsTable = ({
     setOpen(!!nextExpandedRowKeys.length);
   };
 
-  const RowExpanded = ({ rowData }: { rowData: any }) => (
-    <div className="flex flex-row pt-[8px] gap-[10px] h-[480px] bg-gray-background">
-      <div
-        className={`bg-white border-2 border-blue-200 rounded-2xl shadow-row flex-1 lg:flex-2 h-[480px] overflow-y-scroll ${
-          !contractCallResponseByAddress[rowData.address] && 'mr-6'
-        }`}
-      >
-        <Collapse
-          in={open}
-          timeout="auto"
-          className="pl-8 pr-6 lg:px-16 py-8"
-        >
-          <ContractMethodsView
-            handleQuery={handleQuery}
-            handleExecute={handleExecute}
-            schemas={rowData.schemas}
-            address={rowData.address}
-          />
-        </Collapse>
-      </div>
-      {contractCallResponseByAddress[rowData.address] && (
-        <div className="bg-white mr-6 flex-1 h-[480px] w-full overflow-auto border-2 border-blue-200 rounded-2xl shadow-row">
-          <Collapse
-            in={open}
-            timeout="auto"
-            className="pr-8 pt-8"
-          >
-            <div className="inner-res-overflow overflow-auto">
-              <div className="mb-1 ml-8 xl:ml-12">
-                {contractCallResponseByAddress[rowData.address]
-                    && contractCallResponseByAddress[rowData.address]}
-              </div>
-            </div>
-          </Collapse>
-        </div>
-      )}
-    </div>
-  );
-
   return (
     <div className="flex-auto shadow-nav">
       <Table
@@ -141,7 +102,40 @@ const ContractsTable = ({
             {children}
           </div>
         )}
-        renderRowExpanded={(rowData) => <RowExpanded rowData={rowData} />}
+        renderRowExpanded={(rowData) => (
+          <div className="flex flex-row pt-[8px] gap-[10px] h-[480px] bg-gray-background">
+            <div
+              className={`bg-white border-2 border-blue-200 rounded-2xl shadow-row flex-1 lg:flex-2 h-[480px] overflow-y-scroll ${
+                !contractCallResponseByAddress[rowData?.address] && 'mr-6'
+              }`}
+            >
+              <Collapse
+                in={open}
+                timeout="auto"
+                className="pl-8 pr-6 lg:px-16 py-8"
+              >
+                <ContractMethodsView
+                  handleQuery={handleQuery}
+                  handleExecute={handleExecute}
+                  schemas={rowData?.schemas}
+                  address={rowData?.address}
+                />
+              </Collapse>
+            </div>
+            {contractCallResponseByAddress[rowData?.address] && (
+              <div className="bg-white mr-6 flex-1 h-[480px] w-full overflow-auto border-2 border-blue-200 rounded-2xl shadow-row">
+                <Collapse in={open} timeout="auto" className="pr-8 pt-8">
+                  <div className="inner-res-overflow overflow-auto">
+                    <div className="mb-1 ml-8 xl:ml-12">
+                      {contractCallResponseByAddress[rowData?.address]
+                        && contractCallResponseByAddress[rowData?.address]}
+                    </div>
+                  </div>
+                </Collapse>
+              </div>
+            )}
+          </div>
+        )}
       >
         <Column flexGrow={1} minWidth={120} align="left" verticalAlign="middle">
           <HeaderCell>
