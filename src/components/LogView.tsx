@@ -3,16 +3,21 @@ import React from 'react';
 const Convert = require('ansi-to-html');
 const createDOMPurify = require('dompurify');
 
-const convert = new Convert();
+const convert = new Convert({ newline: true });
 const DOMPurify = createDOMPurify(window);
 
-const LogItemView = ({ log }: { log: any }) => (
-  <pre
-    className="break-words whitespace-pre-line"
-    dangerouslySetInnerHTML={{
-      __html: DOMPurify.sanitize(convert.toHtml(log)),
-    }}
-  />
-);
-
+const LogItemView = ({ log }: { log: any }) => {
+  const isBeginningOfBlock = log.includes('Timed out');
+  return (
+    <>
+      {isBeginningOfBlock && <div className="w-full h-1 bg-black my-1" />}
+      <pre
+        className="break-words whitespace-pre-line"
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(convert.toHtml(log)),
+        }}
+      />
+    </>
+  );
+};
 export default React.memo(LogItemView);
