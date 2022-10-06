@@ -112,7 +112,7 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
               />
               <br />
               <Tooltip
-                title="Disable LiteMode to run the FCD and maintain tx history."
+                title="Disable LiteMode to run the FCD and maintain transaction history."
               >
                 <FormControlLabel
                   labelPlacement="start"
