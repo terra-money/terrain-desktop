@@ -111,16 +111,20 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
                 label="Open Terrarium at startup"
               />
               <br />
-              <FormControlLabel
-                labelPlacement="start"
-                control={(
-                  <Checkbox
-                    defaultChecked={liteMode}
-                    {...register('liteMode')}
-                  />
+              <Tooltip
+                title="Disable LiteMode to run the FCD and maintain tx history."
+              >
+                <FormControlLabel
+                  labelPlacement="start"
+                  control={(
+                    <Checkbox
+                      defaultChecked={liteMode}
+                      {...register('liteMode')}
+                    />
                 )}
-                label="Run LocalTerra in Lite mode"
-              />
+                  label="Run LocalTerra in LiteMode"
+                />
+              </Tooltip>
               <br />
               <FormControlLabel
                 labelPlacement="start"

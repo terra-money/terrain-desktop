@@ -58,7 +58,7 @@ export default function Onboard() {
             disabled={!isDockerSetup}
             onClick={onSetLocalTerraPath}
           >
-            LocalTerra is already installed
+            Select LocalTerra directory
           </Button>
           <Button
             variant="contained"
