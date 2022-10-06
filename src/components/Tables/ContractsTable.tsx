@@ -153,7 +153,7 @@ const ContractsTable = ({
                 style={{ width: 'inherit' }}
               >
                 <div className="bg-blue-200 flex items-center">
-                  <div className="px-2 py-[34px] md:py-8 md:pl-5 md:pr-3 overflow-ellipsis overflow-hidden rounded-l-xl">
+                  <div className="px-2 py-[34px] md:py-8 md:pl-5 md:pr-3 text-ellipsis overflow-hidden rounded-l-xl">
                     {rowData.name}
                   </div>
                   <div className="pr-2 md:pr-4 py-[38px]">
@@ -195,7 +195,7 @@ const ContractsTable = ({
             {(rowData) => (
               <div className="flex" style={{ width: 'inherit' }}>
                 <div
-                  className="text-right text-[3px] overflow-ellipsis overflow-hidden text-transparent"
+                  className="text-right text-[3px] text-ellipsis overflow-hidden text-transparent"
                   style={{ width: 'inherit' }}
                 >
                   <span className="text-sm md:text-lg text-black">
@@ -218,7 +218,7 @@ const ContractsTable = ({
           <Cell className="force-height-88 border-2 border-r-0 border-l-0 border-blue-200">
             {(rowData) => (
               <div
-                className="text-left text-[3px] overflow-ellipsis overflow-hidden text-transparent"
+                className="text-left text-[3px] text-ellipsis overflow-hidden text-transparent"
                 style={{ width: 'inherit', direction: 'rtl' }}
                 ref={addressRef}
               >

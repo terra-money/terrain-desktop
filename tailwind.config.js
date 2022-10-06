@@ -1,8 +1,7 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   mode: 'jit',
-  purge: ['./public/index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'class', // or 'media' or 'class'
   theme: {
     minHeight: {
       '1/2': '50%',
@@ -31,9 +30,6 @@ module.exports = {
       none: 'none',
       2: '2 2 0%',
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [],
   important: true,

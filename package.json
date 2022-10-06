@@ -29,7 +29,6 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@hookstate/core": "^3.0.13",
-    "rsuite-table": "^5.7.1",  
     "@hookstate/devtools": "^3.0.2",
     "@iarna/toml": "^2.2.5",
     "@material-ui/core": "^4.12.4",
@@ -55,6 +54,7 @@
     "react-router-dom": "^6.4.1",
     "react-scripts": "^5.0.1",
     "react-virtuoso": "^2.19.0",
+    "rsuite-table": "^5.7.1",
     "semver": "^7.3.7",
     "wait-on": "^6.0.1"
   },
@@ -67,6 +67,7 @@
     "@types/node": "^16.11.62",
     "@types/react": "^17.0.50",
     "@types/react-dom": "^18.0.6",
+    "autoprefixer": "^10.4.12",
     "concurrently": "^6.5.1",
     "electron": "^21.0.0",
     "electron-builder": "^23.3.3",
@@ -78,8 +79,9 @@
     "eslint-plugin-prettier": "^3.4.1",
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "postcss": "^8.4.17",
     "react-app-rewired": "^2.2.1",
-    "tailwindcss": "^2.2.19",
+    "tailwindcss": "^3.1.8",
     "typescript": "^4.8.4"
   },
   "eslintConfig": {
