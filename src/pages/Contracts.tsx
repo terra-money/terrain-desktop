@@ -12,12 +12,14 @@ import {
 function ContractsPage() {
   const [contracts, setContracts] = useState([]);
   const { wallets, terra } = useTerra();
-  const [walletName, setWalletName] = useState('test1');
-  const [contractCallResponseByAddress, setContractCallResponseByAddress] = useState({});
+  const [selectedWallet, setSelectedWallet] = useState('validator');
+  const [contractResByAddress, setContractResByAddress] = useState({});
 
-  const wallet = wallets[walletName];
+  const wallet = wallets[selectedWallet];
 
   useEffect(() => {
+    const cachedWallet = window.localStorage.getItem('prevWalletSelection');
+    if (cachedWallet) setSelectedWallet(cachedWallet);
     importSavedContracts();
   }, []);
 
@@ -41,20 +43,17 @@ function ContractsPage() {
     setContracts(savedContracts);
   };
 
-  const handleWalletChange = (event: SelectChangeEvent) => setWalletName(event.target.value);
+  const handleWalletChange = (event: SelectChangeEvent) => {
+    setSelectedWallet(event.target.value);
+    window.localStorage.setItem('prevWalletSelection', event.target.value);
+  };
 
   const handleQuery = async (msgData: Object, address: string) => {
     try {
       const res = await terra.wasm.contractQuery(address, msgData) as any;
-      setContractCallResponseByAddress({
-        ...contractCallResponseByAddress,
-        [address]: JSON.stringify(res, null, 2),
-      });
+      setContractResByAddress({ ...contractResByAddress, [address]: JSON.stringify(res, null, 2) });
     } catch (err) {
-      setContractCallResponseByAddress({
-        ...contractCallResponseByAddress,
-        [address]: JSON.stringify(err),
-      });
+      setContractResByAddress({ ...contractResByAddress, [address]: JSON.stringify(err) });
     }
   };
 
@@ -70,15 +69,9 @@ function ContractsPage() {
         ],
       });
       const res = await terra.tx.broadcast(execMsg) as any;
-      setContractCallResponseByAddress({
-        ...contractCallResponseByAddress,
-        [address]: JSON.stringify(res, null, 2),
-      });
+      setContractResByAddress({ ...contractResByAddress, [address]: JSON.stringify(res, null, 2) });
     } catch (err) {
-      setContractCallResponseByAddress({
-        ...contractCallResponseByAddress,
-        [address]: JSON.stringify(err),
-      });
+      setContractResByAddress({ ...contractResByAddress, [address]: JSON.stringify(err) });
     }
   };
 
@@ -86,7 +79,7 @@ function ContractsPage() {
     <div className="flex flex-col w-full h-[calc(100vh-88px)] md:h-[calc(100vh-92px)] xl:h-[calc(100vh-96px)]">
       <div className="bg-white flex flex-row w-full text-left items-center px-4 py-5 gap-8 text-blue-600 shadow-nav">
         <SelectWallet
-          walletName={walletName}
+          selectedWallet={selectedWallet}
           handleWalletChange={handleWalletChange}
         />
         <button
@@ -104,7 +97,7 @@ function ContractsPage() {
         handleExecute={handleExecute}
         handleRefreshRefs={handleRefreshRefs}
         contracts={contracts}
-        contractCallResponseByAddress={contractCallResponseByAddress}
+        contractResByAddress={contractResByAddress}
       />
     </div>
   );

@@ -31,14 +31,14 @@ const ContractsTable = ({
   handleExecute,
   handleRefreshRefs,
   contracts,
-  contractCallResponseByAddress,
+  contractResByAddress,
 }: {
   contracts: SmartContract[];
   handleDeleteContract: Function;
   handleQuery: Function;
   handleExecute: Function;
   handleRefreshRefs: Function;
-  contractCallResponseByAddress: any;
+  contractResByAddress: any;
 }) => {
   const [expandedRowKeys, setExpandedRowKeys] = useState<any>([]);
   const [hideCustomEllipsis, setHideCustomEllipsis] = useState(false);
@@ -106,7 +106,7 @@ const ContractsTable = ({
           <div className="flex flex-row pt-[8px] gap-[10px] h-[480px] bg-gray-background">
             <div
               className={`bg-white border-2 border-blue-200 rounded-2xl shadow-row flex-1 lg:flex-2 h-[480px] overflow-y-scroll ${
-                !contractCallResponseByAddress[rowData?.address] && 'mr-6'
+                !contractResByAddress[rowData?.address] && 'mr-6'
               }`}
             >
               <Collapse
@@ -122,13 +122,13 @@ const ContractsTable = ({
                 />
               </Collapse>
             </div>
-            {contractCallResponseByAddress[rowData?.address] && (
+            {contractResByAddress[rowData?.address] && (
               <div className="bg-white mr-6 flex-1 h-[480px] w-full overflow-auto border-2 border-blue-200 rounded-2xl shadow-row">
                 <Collapse in={open} timeout="auto" className="pr-8 pt-8">
                   <div className="inner-res-overflow overflow-auto">
                     <div className="mb-1 ml-8 xl:ml-12">
-                      {contractCallResponseByAddress[rowData?.address]
-                        && contractCallResponseByAddress[rowData?.address]}
+                      {contractResByAddress[rowData?.address]
+                        && contractResByAddress[rowData?.address]}
                     </div>
                   </div>
                 </Collapse>
