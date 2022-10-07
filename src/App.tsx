@@ -123,7 +123,7 @@ const App = () => {
               onChange={handleSearchInput}
               onKeyDown={handleSearch}
               type="search"
-              placeholder="Search"
+              placeholder="Search txHash, blockHeight, documentation..."
               className={`text-base bg-transparent w-full text-white focus:outline-none duration-300 ${
                 !open && 'hidden'
               }`}

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { MsgExecuteContract } from '@terra-money/terra.js';
-import { SelectWallet, ContractsTable } from '../components';
+import { SelectWallet, ContractsTable, LinearLoad } from '../components';
 import { useTerra } from '../hooks/terra';
 import {
   IMPORT_SAVED_CONTRACTS, IMPORT_NEW_CONTRACTS, DELETE_CONTRACT, REFRESH_CONTRACT_REFS,
@@ -11,6 +11,7 @@ import {
 
 function ContractsPage() {
   const [contracts, setContracts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { wallets, terra } = useTerra();
   const [walletName, setWalletName] = useState('test1');
   const [contractCallResponseByAddress, setContractCallResponseByAddress] = useState({});
@@ -45,6 +46,7 @@ function ContractsPage() {
 
   const handleQuery = async (msgData: Object, address: string) => {
     try {
+      setIsLoading(true);
       const res = await terra.wasm.contractQuery(address, msgData) as any;
       setContractCallResponseByAddress({
         ...contractCallResponseByAddress,
@@ -56,10 +58,12 @@ function ContractsPage() {
         [address]: JSON.stringify(err),
       });
     }
+    setIsLoading(false);
   };
 
   const handleExecute = async (msgData: Object, address: string) => {
     try {
+      setIsLoading(true);
       const execMsg = await wallet.createAndSignTx({
         msgs: [
           new MsgExecuteContract(
@@ -80,6 +84,7 @@ function ContractsPage() {
         [address]: JSON.stringify(err),
       });
     }
+    setIsLoading(false);
   };
 
   return (
@@ -98,6 +103,7 @@ function ContractsPage() {
           Add Contracts
         </button>
       </div>
+      {isLoading && <LinearLoad />}
       <ContractsTable
         handleDeleteContract={handleDeleteContract}
         handleQuery={handleQuery}

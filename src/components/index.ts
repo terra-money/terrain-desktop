@@ -7,4 +7,5 @@ export { default as SelectWallet } from './SelectWallet';
 export { default as KeyViewModal } from './Modals/KeyViewModal';
 export { default as SettingsModal } from './Modals/SettingsModal';
 export { default as Provider } from './Provider';
+export { default as LinearLoad } from './LinearLoad';
 export { default as ContractsTable } from './Tables/ContractsTable';
