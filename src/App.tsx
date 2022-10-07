@@ -144,7 +144,7 @@ const App = () => {
                       px-8 h-16 absolute bottom-0 left-0 w-full rounded-none space-x-1 items-center rounded-md mt-2 text-blue-200
                       `}
                   >
-                    <div className={`float-left ${open ? 'mr-2' : 'block'}`}>
+                    <div className={`float-left h-15 w-15 ${open ? 'mr-2' : 'block'}`}>
                       {menuItem.icon}
                     </div>
                     <div

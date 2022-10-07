@@ -92,7 +92,7 @@ function ContractsPage() {
         <button
           type="button"
           onClick={handleNewContractsImport}
-          className="main-button add-contracts flex items-center grow gap-2.5 py-3.5 px-5 rounded-lg text-white bg-terra-dark-blue"
+          className="main-button add-contracts flex items-center gap-2.5 py-3.5 px-5 rounded-lg text-white bg-terra-dark-blue"
         >
           <FaPlus className="flex-none w-3 text-white" />
           Add Contracts

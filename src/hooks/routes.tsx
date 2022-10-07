@@ -25,13 +25,13 @@ const useAppRoutes = ({
   const menu = [
     {
       name: 'Contracts',
-      icon: <ContractsIcon />,
+      icon: <ContractsIcon className="w-6 h-6" />,
       path: '/',
       element: <ContractsPage />,
     },
     {
       name: 'Accounts',
-      icon: <AccountsIcon />,
+      icon: <AccountsIcon className="w-6 h-6" />,
       path: '/accounts',
       element: (
         <AccountsPage
@@ -42,25 +42,25 @@ const useAppRoutes = ({
     },
     {
       name: 'Blocks',
-      icon: <BlocksIcon />,
+      icon: <BlocksIcon className="w-6 h-6" />,
       path: '/blocks',
       element: <BlockPage />,
     },
     {
       name: 'Transactions',
-      icon: <TransactionsIcon />,
+      icon: <TransactionsIcon className="w-6 h-6" />,
       path: '/transactions',
       element: <TransactionsPage />,
     },
     {
       name: 'Logs',
-      icon: <LogsIcon />,
+      icon: <LogsIcon className="w-6 h-6" />,
       path: '/logs',
       element: <LogsPage />,
     },
     {
       name: 'Settings',
-      icon: <CogIcon />,
+      icon: <CogIcon className="w-6 h-6" />,
       path: '/settings',
     },
   ];

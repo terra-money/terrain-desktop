@@ -51,7 +51,7 @@ const TransactionView = ({
           </a>
         </div>
         <div className="flex justify-center items-center px-1 md:px-3 text-sm lg:text-lg">
-          <div className="overflow-ellipsis overflow-hidden">
+          <div className="text-ellipsis overflow-hidden">
             {data.msg['@type']}
           </div>
         </div>
