@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useRef, useEffect } from 'react';
 import {
   Table, Column, HeaderCell, Cell, RowDataType,
