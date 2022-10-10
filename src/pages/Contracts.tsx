@@ -1,9 +1,9 @@
 import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
+import { Virtuoso } from 'react-virtuoso';
 import { FaPlus } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { MsgExecuteContract } from '@terra-money/terra.js';
-import { SelectWallet, ContractsTable, LinearLoad } from '../components';
+import { SelectWallet, ContractView } from '../components';
 import { useTerra } from '../hooks/terra';
 import {
   IMPORT_SAVED_CONTRACTS, IMPORT_NEW_CONTRACTS, DELETE_CONTRACT, REFRESH_CONTRACT_REFS,
@@ -11,13 +11,12 @@ import {
 
 function ContractsPage() {
   const [contracts, setContracts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const { wallets, terra } = useTerra();
+  const { wallets } = useTerra();
   const [walletName, setWalletName] = useState('test1');
-  const [contractCallResponseByAddress, setContractCallResponseByAddress] = useState({});
 
   const wallet = wallets[walletName];
 
+  const gridTemplateColumns = 'minmax(150px, max-content) 100px 2.5fr 50px';
   useEffect(() => {
     importSavedContracts();
   }, []);
@@ -44,52 +43,12 @@ function ContractsPage() {
 
   const handleWalletChange = (event: SelectChangeEvent) => setWalletName(event.target.value);
 
-  const handleQuery = async (msgData: Object, address: string) => {
-    try {
-      setIsLoading(true);
-      const res = await terra.wasm.contractQuery(address, msgData) as any;
-      setContractCallResponseByAddress({
-        ...contractCallResponseByAddress,
-        [address]: JSON.stringify(res, null, 2),
-      });
-    } catch (err) {
-      setContractCallResponseByAddress({
-        ...contractCallResponseByAddress,
-        [address]: JSON.stringify(err),
-      });
-    }
-    setIsLoading(false);
-  };
-
-  const handleExecute = async (msgData: Object, address: string) => {
-    try {
-      setIsLoading(true);
-      const execMsg = await wallet.createAndSignTx({
-        msgs: [
-          new MsgExecuteContract(
-            wallet.key.accAddress,
-            address,
-            msgData,
-          ),
-        ],
-      });
-      const res = await terra.tx.broadcast(execMsg) as any;
-      setContractCallResponseByAddress({
-        ...contractCallResponseByAddress,
-        [address]: JSON.stringify(res, null, 2),
-      });
-    } catch (err) {
-      setContractCallResponseByAddress({
-        ...contractCallResponseByAddress,
-        [address]: JSON.stringify(err),
-      });
-    }
-    setIsLoading(false);
-  };
-
   return (
-    <div className="flex flex-col w-full h-[calc(100vh-88px)] md:h-[calc(100vh-92px)] xl:h-[calc(100vh-96px)]">
-      <div className="bg-white flex flex-row w-full text-left items-center px-4 py-5 gap-8 text-blue-600 shadow-nav">
+    <div className="flex flex-col w-full">
+      <div
+        className="bg-white flex flex-row w-full text-left items-center px-4 py-5 gap-8 text-blue-600 shadow-nav"
+        style={{ background: '#ffffffe0' }}
+      >
         <SelectWallet
           walletName={walletName}
           handleWalletChange={handleWalletChange}
@@ -103,15 +62,36 @@ function ContractsPage() {
           Add Contracts
         </button>
       </div>
-      {isLoading && <LinearLoad />}
-      <ContractsTable
-        handleDeleteContract={handleDeleteContract}
-        handleQuery={handleQuery}
-        handleExecute={handleExecute}
-        handleRefreshRefs={handleRefreshRefs}
-        contracts={contracts}
-        contractCallResponseByAddress={contractCallResponseByAddress}
-      />
+      <div
+        className="bg-white grid items-center w-full px-4 py-5 md:pl-8 text-blue-600 font-bold z-50 shadow-nav"
+        style={{ gridTemplateColumns }}
+      >
+        <div className="text-md lg:text-lg font-bold uppercase">Name</div>
+        <div className="flex text-md font-bold uppercase">
+          Code ID
+        </div>
+        <div className="flex font-bold uppercase">
+          Address
+        </div>
+        <div className="flex px-5 text-md lg:text-lg font-bold uppercase" />
+      </div>
+      {contracts && (
+        <Virtuoso
+          followOutput
+          className="flex flex-col w-full"
+          data={contracts}
+          itemContent={(index, data) => (
+            <ContractView
+              handleDeleteContract={handleDeleteContract}
+              handleRefreshRefs={handleRefreshRefs}
+              data={data}
+              key={index}
+              wallet={wallet}
+              gridTemplateColumns={gridTemplateColumns}
+            />
+          )}
+        />
+      )}
     </div>
   );
 }

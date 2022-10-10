@@ -32,9 +32,9 @@ const LOCAL_TERRA_GIT = 'https://github.com/terra-money/LocalTerra.git';
 
 const MEM_USE_THRESHOLD_MB = 100 * 1024 * 1024; // 100MB
 const BROWSER_WINDOW_WIDTH = 1200;
+const BROWSER_WINDOW_HEIGHT = 720;
 const MAX_LOG_LENGTH = 500;
 const MAX_BLOCKS_LENGTH = 500;
-const BROWSER_WINDOW_HEIGHT = 720;
 
 const DEFAULT_BLOCKTIME = {
   timeout_propose: '3s',
