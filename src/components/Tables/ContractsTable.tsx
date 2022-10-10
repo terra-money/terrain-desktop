@@ -14,7 +14,6 @@ import { useTour } from '@reactour/tour';
 import { SmartContract } from '../../models';
 import { ReactComponent as ExternalLinkIcon } from '../../assets/external-link.svg';
 import { REACT_APP_FINDER_URL } from '../../constants';
-import { useWindowDimensions } from '../../utils';
 import ContractMethodsView from '../ContractMethodsView';
 
 type RowData = RowDataType & {
@@ -41,24 +40,13 @@ const ContractsTable = ({
   contractCallResponseByAddress: any;
 }) => {
   const [expandedRowKeys, setExpandedRowKeys] = useState<any>([]);
-  const [hideCustomEllipsis, setHideCustomEllipsis] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const { width } = useWindowDimensions();
-  const addressRef = useRef<any>();
   const { isOpen, currentStep } = useTour();
 
   useEffect(() => {
     if (isOpen && currentStep >= 10) setOpen(true);
   }, [currentStep]);
-
-  useEffect(() => {
-    if (addressRef?.current?.clientWidth > 319) {
-      setHideCustomEllipsis(true);
-    } else if (addressRef?.current?.clientWidth <= 319) {
-      setHideCustomEllipsis(false);
-    }
-  }, [width]);
 
   const toggleContractRow = (address: any) => {
     let isCurrentlyOpen = false;
@@ -72,9 +60,7 @@ const ContractsTable = ({
       }
     });
 
-    if (!isCurrentlyOpen) {
-      nextExpandedRowKeys.push(address);
-    }
+    if (!isCurrentlyOpen) nextExpandedRowKeys.push(address);
 
     setExpandedRowKeys(nextExpandedRowKeys);
     setOpen(!!nextExpandedRowKeys.length);
@@ -181,7 +167,6 @@ const ContractsTable = ({
           />
         </Column>
         <Column
-          flexGrow={width > 930 ? 1.25 : 0.75}
           align="center"
           verticalAlign="middle"
           colSpan={2}
@@ -199,35 +184,9 @@ const ContractsTable = ({
                   style={{ width: 'inherit' }}
                 >
                   <span className="text-sm md:text-lg text-black">
-                    {rowData.address.slice(0, rowData.address.length / 2)}
+                    {rowData.address}
                   </span>
                 </div>
-                {!hideCustomEllipsis && (
-                  <span className="text-sm md:text-lg text-black">...</span>
-                )}
-              </div>
-            )}
-          </Cell>
-        </Column>
-        <Column
-          flexGrow={width > 930 ? 1.25 : 0.75}
-          align="center"
-          verticalAlign="middle"
-        >
-          <HeaderCell>{undefined}</HeaderCell>
-          <Cell className="force-height-88 border-2 border-r-0 border-l-0 border-blue-200">
-            {(rowData) => (
-              <div
-                className="text-left text-[3px] text-ellipsis overflow-hidden text-transparent"
-                style={{ width: 'inherit', direction: 'rtl' }}
-                ref={addressRef}
-              >
-                <span className="text-sm md:text-lg text-black">
-                  {rowData.address.slice(
-                    rowData.address.length / 2,
-                    rowData.address.length,
-                  )}
-                </span>
               </div>
             )}
           </Cell>
@@ -252,14 +211,14 @@ const ContractsTable = ({
               <div className="inline-block">
                 <button
                   type="button"
-                  onClick={() => handleDeleteContract(rowData.codeId)}
+                  onClick={handleDeleteContract(rowData.codeId)}
                   className="text-blue"
                 >
                   <DeleteIcon className="text-blue" />
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleRefreshRefs(rowData.path)}
+                  onClick={handleRefreshRefs(rowData.path)}
                   className="text-blue"
                 >
                   <RefreshIcon className="text-blue" />

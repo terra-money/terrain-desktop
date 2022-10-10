@@ -2,7 +2,7 @@ import { Denom } from '@terra-money/terra.js';
 import React, { useEffect, useState } from 'react';
 import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
 import { useTerraBlockUpdate, useLocalTerraStarted } from '../hooks/terra';
-import { demicrofy, nFormatter, truncate } from '../utils';
+import { demicrofy, nFormatter } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
 import { KeyViewModal } from '.';
 
@@ -10,12 +10,12 @@ function AccountView({
   wallet,
   handleToggleClose,
   handleToggleOpen,
-  firstColumnSize,
+  gridTemplateColumns,
 }: {
   wallet: any;
   handleToggleClose: Function;
   handleToggleOpen: Function;
-  firstColumnSize: number;
+  gridTemplateColumns: string;
 }) {
   const { accAddress, mnemonic } = wallet.key;
   const [balance, setBalance] = useState(0.0);
@@ -36,9 +36,7 @@ function AccountView({
     <div className="m-2">
       <div
         className="bg-white grid items-center shadow-row rounded-2xl border-2 border-blue-200"
-        style={{
-          gridTemplateColumns: `${firstColumnSize}px minmax(90px, 3fr) 1fr`,
-        }}
+        style={{ gridTemplateColumns }}
       >
         <div className="bg-blue-200 p-5 py-4 rounded-l-xl">
           <a
@@ -47,11 +45,11 @@ function AccountView({
             className="flex items-center text-blue-700 font-semibold hover:text-blue-500 hover:underline"
             rel="noreferrer"
           >
-            <p className="mr-2">{truncate(accAddress)}</p>
+            <p className="mr-2">{accAddress}</p>
             <ExternalLinkIcon />
           </a>
         </div>
-        <div className="flex justify-center items-center px-5">
+        <div className="flex px-8 items-center">
           <p className="text-lg font-semibold text-blue-700">
             {nFormatter(balance)}
           </p>
