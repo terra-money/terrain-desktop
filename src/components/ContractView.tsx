@@ -9,13 +9,14 @@ import { REACT_APP_FINDER_URL } from '../constants';
 import ContractMethodsView from './ContractMethodsView';
 
 const ContractView = ({
-  handleDeleteContract, handleRefreshRefs, data, gridTemplateColumns, wallet, setIsLoading,
+  handleDeleteContract, handleRefreshRefs, data, gridTemplateColumns, wallet, setIsLoading, isLoading,
 }:{
     data: SmartContract
     handleDeleteContract: Function
     handleRefreshRefs: Function
     gridTemplateColumns: string
     setIsLoading: Function
+    isLoading: boolean
     wallet: Wallet
 }) => {
   const {
@@ -99,6 +100,7 @@ const ContractView = ({
               setIsLoading={setIsLoading}
               address={address}
               wallet={wallet}
+              isLoading={isLoading}
             />
           </Collapse>
         </li>

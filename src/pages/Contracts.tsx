@@ -92,6 +92,7 @@ function ContractsPage() {
               data={data}
               key={index}
               setIsLoading={setIsLoading}
+              isLoading={isLoading}
               wallet={wallet}
               gridTemplateColumns={gridTemplateColumns}
             />

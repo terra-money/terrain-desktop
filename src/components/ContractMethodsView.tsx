@@ -23,30 +23,28 @@ function ObjectFieldTemplate(props: any) {
 }
 
 const ContractMethodsView = ({
-  schemas, address, wallet, setIsLoading,
+  schemas, address, wallet, setIsLoading, isLoading,
 }: {
   schemas: Object[],
   address: string,
   wallet: Wallet,
   setIsLoading: Function
+  isLoading: boolean
 }) => {
   const { terra } = useTerra();
   const [contractRes, setContractRes] = useState({});
   const [targetIndex, setTargetIndex] = useState(0);
 
   const handleQuery = async (msgData: Object) => {
-    setIsLoading(true);
     try {
       const res = await terra.wasm.contractQuery(address, msgData) as any;
       setContractRes(res);
     } catch (err) {
       setContractRes(err as Error);
     }
-    setIsLoading(false);
   };
 
   const handleExecute = async (msgData: Object) => {
-    setIsLoading(true);
     try {
       const execMsg = await wallet.createAndSignTx({
         msgs: [
@@ -62,12 +60,13 @@ const ContractMethodsView = ({
     } catch (err) {
       setContractRes(err as Error);
     }
-    setIsLoading(false);
   };
-  const handleSubmit = (msgType: string, index: number) => ({ formData }: any) => {
+  const handleSubmit = (msgType: string, index: number) => async ({ formData }: any) => {
     setTargetIndex(index);
-    if (msgType === 'query') handleQuery(formData);
-    else handleExecute(formData);
+    setIsLoading(true);
+    if (msgType === 'query') await handleQuery(formData);
+    else await handleExecute(formData);
+    setIsLoading(false);
   };
 
   return (
@@ -86,7 +85,7 @@ const ContractMethodsView = ({
               {schema.msgType}
             </Button>
           </Form>
-          {JSON.stringify(contractRes) !== '{}' && index === targetIndex && (
+          {JSON.stringify(contractRes) !== '{}' && !isLoading && index === targetIndex && (
           <ReactJson
             enableClipboard
             collapsed={1}
