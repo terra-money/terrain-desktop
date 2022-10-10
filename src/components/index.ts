@@ -9,4 +9,4 @@ export { default as SettingsModal } from './Modals/SettingsModal';
 export { default as Provider } from './Provider';
 export { default as LinearLoad } from './LinearLoad';
 export { default as TransactionView } from './TransactionView';
-export { default as ContractsTable } from './Tables/ContractsTable';
+export { default as ContractView } from './ContractView';
