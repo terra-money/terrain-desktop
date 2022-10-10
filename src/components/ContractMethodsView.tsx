@@ -22,25 +22,31 @@ function ObjectFieldTemplate(props: any) {
   );
 }
 
-const ContractMethodsView = ({ schemas, address, wallet }: {
+const ContractMethodsView = ({
+  schemas, address, wallet, setIsLoading,
+}: {
   schemas: Object[],
   address: string,
-  wallet: Wallet
+  wallet: Wallet,
+  setIsLoading: Function
 }) => {
   const { terra } = useTerra();
   const [contractRes, setContractRes] = useState({});
   const [targetIndex, setTargetIndex] = useState(0);
 
   const handleQuery = async (msgData: Object) => {
+    setIsLoading(true);
     try {
       const res = await terra.wasm.contractQuery(address, msgData) as any;
       setContractRes(res);
     } catch (err) {
       setContractRes(err as Error);
     }
+    setIsLoading(false);
   };
 
   const handleExecute = async (msgData: Object) => {
+    setIsLoading(true);
     try {
       const execMsg = await wallet.createAndSignTx({
         msgs: [
@@ -56,6 +62,7 @@ const ContractMethodsView = ({ schemas, address, wallet }: {
     } catch (err) {
       setContractRes(err as Error);
     }
+    setIsLoading(false);
   };
   const handleSubmit = (msgType: string, index: number) => ({ formData }: any) => {
     setTargetIndex(index);
@@ -82,7 +89,7 @@ const ContractMethodsView = ({ schemas, address, wallet }: {
           {JSON.stringify(contractRes) !== '{}' && index === targetIndex && (
           <ReactJson
             enableClipboard
-            collapsed={2}
+            collapsed={1}
             src={contractRes}
           />
           )}
