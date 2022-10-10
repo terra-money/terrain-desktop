@@ -2,12 +2,12 @@ import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import TransactionView from '../components/TransactionView';
 import { useTxs } from '../hooks/terra';
-import { useWindowDimensions } from '../utils';
 
 export default function TransactionsPage() {
   const { get: getTxs, set: setTxs } = useTxs();
   const txs = getTxs();
-  const { width } = useWindowDimensions();
+
+  const gridTemplateColumns = '200px minmax(250px, 1fr) 100px minmax(100px, 1fr) 30px';
 
   if (txs.length === 0) {
     return (
@@ -28,31 +28,18 @@ export default function TransactionsPage() {
     <div className="flex flex-col w-full">
       <div
         className="bg-white shadow-nav grid w-full items-center py-5 pl-8 pr-3 text-blue-600 font-bold z-30"
-        style={{
-          gridTemplateColumns: `${width < 1050 ? '102px' : '178px'} ${
-            width < 1024
-              ? width > 899
-                ? '180px'
-                : width > 767
-                  ? '150px'
-                  : '110px'
-              : width > 1400
-                ? '500px'
-                : '280px'
-          } ${width < 1024 ? '90px' : '1fr'} minmax(100px, 2fr) 0.5fr`,
-        }}
+        style={{ gridTemplateColumns }}
       >
         <div className="text-md lg:text-lg font-bold uppercase">Hash</div>
-        <div className="flex justify-center px-1 md:px-3 text-md lg:text-lg font-bold uppercase">
+        <div className="px-1 md:px-3 text-md font-bold uppercase">
           Type
         </div>
-        <div className="flex justify-center px-1 md:px-3 text-md lg:text-lg font-bold uppercase">
+        <div className="px-1 md:px-3 text-md font-bold uppercase">
           Block
         </div>
-        <div className="flex justify-center px-1 md:px-3 text-md lg:text-lg font-bold uppercase">
-          {width <= 920 ? 'Gas Req/Used' : 'Gas Requested / Used'}
+        <div className="px-1 md:px-3 text-md font-bold uppercase">
+          Gas Used
         </div>
-        <div className="flex justify-center px-1 md:px-3 text-md lg:text-lg font-bold uppercase" />
       </div>
       <div className="bg-white" style={{ flexGrow: 1 }}>
         <Virtuoso
@@ -65,7 +52,7 @@ export default function TransactionsPage() {
               data={data}
               key={index}
               index={index}
-              width={width}
+              gridTemplateColumns={gridTemplateColumns}
             />
           )}
         />

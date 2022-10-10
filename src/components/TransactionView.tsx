@@ -1,6 +1,6 @@
 import { Collapse } from '@mui/material';
 import React from 'react';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { KeyboardArrowDown as KeyboardArrowDownIcon } from '@mui/icons-material';
 import { TerrariumTx } from '../models/TerrariumTx';
 import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
 import EventInfo from './EventInfo';
@@ -8,12 +8,12 @@ import { truncate } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
 
 const TransactionView = ({
-  data, index, onToggleEventDetails, width,
+  data, index, onToggleEventDetails, gridTemplateColumns,
 }: {
   data: TerrariumTx,
   index: number,
+  gridTemplateColumns: string,
   onToggleEventDetails: (_index: number) => void,
-  width: number,
 }) => {
   const { txhash, result, height } = data.TxResult;
   const txHref = `${REACT_APP_FINDER_URL}/tx/${txhash}`;
@@ -30,12 +30,8 @@ const TransactionView = ({
   return (
     <ul className="m-2">
       <li
-        className="bg-white grid justify-between items-center shadow-row rounded-2xl border-2 border-blue-200"
-        style={{
-          gridTemplateColumns: `${width < 1050 ? '125px' : '200px'} ${
-            width < 1024 ? width > 899 ? '180px' : width > 767 ? '150px' : '110px' : width > 1400 ? '500px' : '280px'
-          } ${width < 1024 ? '90px' : '1fr'} minmax(100px, 2fr) 0.5fr`,
-        }}
+        className="bg-white grid shadow-row rounded-2xl border-2 border-blue-200"
+        style={{ gridTemplateColumns }}
       >
         <div className="bg-blue-200 p-5 px-2 lg:p-5 rounded-l-xl">
           <a
@@ -45,31 +41,28 @@ const TransactionView = ({
             rel="noreferrer"
           >
             <div className="mr-2">
-              {width < 1050 ? truncate(txhash, [4, 4]) : truncate(txhash, [6, 6])}
+              {truncate(txhash, [6, 6])}
             </div>
             <ExternalLinkIcon />
           </a>
         </div>
-        <div className="flex justify-center items-center px-1 md:px-3 text-sm lg:text-lg">
+        <div className="flex items-center px-1 md:px-3 text-sm lg:text-md">
           <div className="text-ellipsis overflow-hidden">
             {data.msg['@type']}
           </div>
         </div>
-        <div className="flex justify-center items-center px-1 md:px-3 text-sm lg:text-lg">
+        <div className="flex items-center px-1 md:px-3 text-sm lg:text-md">
           {height}
         </div>
-        <div className="flex justify-center items-center px-1 md:px-3 text-sm lg:text-lg">
+        <div className="flex items-center px-1 md:px-3 text-sm lg:text-md">
           {result.gas_wanted}
-          {' '}
           /
-          {' '}
           {result.gas_used}
-          {' '}
           (
           {percentGasUsed.toFixed(2)}
           %)
         </div>
-        <div className="flex justify-end pr-2 pl-0 lg:px-5">
+        <div className="flex items-center justify-end pr-2 pl-0 lg:px-5">
           <KeyboardArrowDownIcon
             className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
             onClick={toggleEventsRow}

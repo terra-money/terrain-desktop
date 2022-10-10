@@ -36,10 +36,10 @@ app.setAboutPanelOptions({
 
 async function init() {
   const win = new BrowserWindow({
-    width: BROWSER_WINDOW_WIDTH ? Number(BROWSER_WINDOW_WIDTH) : 1200,
-    height: BROWSER_WINDOW_HEIGHT ? Number(BROWSER_WINDOW_HEIGHT) : 720,
-    minWidth: 800,
-    minHeight: 720,
+    width: Number(BROWSER_WINDOW_WIDTH),
+    height: Number(BROWSER_WINDOW_HEIGHT),
+    minWidth: Number(BROWSER_WINDOW_WIDTH),
+    minHeight: Number(BROWSER_WINDOW_HEIGHT),
     show: false,
     webPreferences: {
       contextIsolation: false,
