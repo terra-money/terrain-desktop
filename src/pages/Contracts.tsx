@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { FaPlus } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { MsgExecuteContract } from '@terra-money/terra.js';
 import { SelectWallet, ContractView } from '../components';
 import { useTerra } from '../hooks/terra';
 import {
@@ -12,9 +11,8 @@ import {
 
 function ContractsPage() {
   const [contracts, setContracts] = useState([]);
-  const { wallets, terra } = useTerra();
+  const { wallets } = useTerra();
   const [walletName, setWalletName] = useState('test1');
-  const [contractCallResponse, setContractCallResponse] = useState('');
 
   const wallet = wallets[walletName];
 
@@ -44,33 +42,6 @@ function ContractsPage() {
   };
 
   const handleWalletChange = (event: SelectChangeEvent) => setWalletName(event.target.value);
-
-  const handleQuery = async (msgData: Object, address: string) => {
-    try {
-      const res = await terra.wasm.contractQuery(address, msgData) as any;
-      setContractCallResponse(res);
-    } catch (err) {
-      setContractCallResponse(JSON.stringify(err));
-    }
-  };
-
-  const handleExecute = async (msgData: Object, address: string) => {
-    try {
-      const execMsg = await wallet.createAndSignTx({
-        msgs: [
-          new MsgExecuteContract(
-            wallet.key.accAddress,
-            address,
-            msgData,
-          ),
-        ],
-      });
-      const res = await terra.tx.broadcast(execMsg) as any;
-      setContractCallResponse(res);
-    } catch (err) {
-      setContractCallResponse(JSON.stringify(err));
-    }
-  };
 
   return (
     <div className="flex flex-col w-full">
@@ -104,7 +75,6 @@ function ContractsPage() {
         </div>
         <div className="flex px-5 text-md lg:text-lg font-bold uppercase" />
       </div>
-      {contractCallResponse && JSON.stringify(contractCallResponse, null, 2)}
       {contracts && (
         <Virtuoso
           followOutput
@@ -113,11 +83,10 @@ function ContractsPage() {
           itemContent={(index, data) => (
             <ContractView
               handleDeleteContract={handleDeleteContract}
-              handleQuery={handleQuery}
-              handleExecute={handleExecute}
               handleRefreshRefs={handleRefreshRefs}
               data={data}
               key={index}
+              wallet={wallet}
               gridTemplateColumns={gridTemplateColumns}
             />
           )}

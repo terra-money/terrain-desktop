@@ -2,20 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { Collapse } from '@mui/material';
 import { KeyboardArrowDown as KeyboardArrowDownIcon, Delete as DeleteIcon, Refresh as RefreshIcon } from '@mui/icons-material';
 import { useTour } from '@reactour/tour';
+import { Wallet } from '@terra-money/terra.js';
 import { SmartContract } from '../models/Contract';
 import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
 import { REACT_APP_FINDER_URL } from '../constants';
 import ContractMethodsView from './ContractMethodsView';
 
 const ContractView = ({
-  handleDeleteContract, handleQuery, handleExecute, handleRefreshRefs, data, gridTemplateColumns,
+  handleDeleteContract, handleRefreshRefs, data, gridTemplateColumns, wallet,
 }:{
     data: SmartContract
     handleDeleteContract: Function
-    handleQuery: Function
-    handleExecute: Function
     handleRefreshRefs: Function
     gridTemplateColumns: string
+    wallet: Wallet
 }) => {
   const {
     name, codeId, address, schemas, path,
@@ -94,10 +94,9 @@ const ContractView = ({
             `}
           >
             <ContractMethodsView
-              handleQuery={handleQuery}
-              handleExecute={handleExecute}
               schemas={schemas}
               address={address}
+              wallet={wallet}
             />
           </Collapse>
         </li>
