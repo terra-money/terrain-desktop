@@ -18,7 +18,7 @@ function ContractsPage() {
 
   const wallet = wallets[walletName];
 
-  const gridTemplateColumns = 'minmax(200px, max-content) minmax(90px, 1fr) 2fr minmax(100px, 0.75fr)';
+  const gridTemplateColumns = 'minmax(150px, max-content) 100px 2.5fr 50px';
   useEffect(() => {
     importSavedContracts();
   }, []);
@@ -96,10 +96,10 @@ function ContractsPage() {
         style={{ gridTemplateColumns }}
       >
         <div className="text-md lg:text-lg font-bold uppercase">Name</div>
-        <div className="flex px-1 md:px-3 text-md lg:text-lg font-bold uppercase">
+        <div className="flex text-md font-bold uppercase">
           Code ID
         </div>
-        <div className="flex px-1 md:px-3 text-md lg:text-lg font-bold uppercase">
+        <div className="flex font-bold uppercase">
           Address
         </div>
         <div className="flex px-5 text-md lg:text-lg font-bold uppercase" />

@@ -6,7 +6,6 @@ import { SmartContract } from '../models/Contract';
 import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
 import { REACT_APP_FINDER_URL } from '../constants';
 import ContractMethodsView from './ContractMethodsView';
-import { truncate } from '../utils';
 
 const ContractView = ({
   handleDeleteContract, handleQuery, handleExecute, handleRefreshRefs, data, gridTemplateColumns,
@@ -36,26 +35,25 @@ const ContractView = ({
         className="bg-white contract-view grid items-center shadow-row rounded-2xl border-2 border-blue-200"
         style={{ gridTemplateColumns }}
       >
-        <div className="rounded-l-xl">
-          <a
-            className="flex items-center text-blue-700 font-semibold text-sm md:text-base hover:text-blue-500 hover:underline rounded-l-xl"
-            target="_blank"
-            href={`${REACT_APP_FINDER_URL}/address/${address}`}
-            rel="noreferrer"
-          >
-            <div className="bg-blue-200 px-2 py-8 md:pl-5 overflow-ellipsis overflow-hidden">
-              {name}
-            </div>
-            <div className="bg-blue-200 pr-4 py-9 md:py-[38px]">
-              <ExternalLinkIcon />
-            </div>
-          </a>
-        </div>
-        <div className="flex justify-center items-center px-1 md:px-3 text-sm md:text-lg">
+        <a
+          className="flex items-center text-blue-700 font-semibold text-sm md:text-base hover:text-blue-500 hover:underline rounded-l-xl"
+          target="_blank"
+          href={`${REACT_APP_FINDER_URL}/address/${address}`}
+          rel="noreferrer"
+        >
+          <div className="px-2 py-8 md:pl-5 overflow-ellipsis overflow-hidden">
+            {name}
+          </div>
+          <div className="pr-4 py-9 md:py-[38px]">
+            <ExternalLinkIcon />
+          </div>
+        </a>
+
+        <div className="flex items-center justify-center px-3 text-sm md:text-md">
           {codeId}
         </div>
-        <div className="flex justify-center items-center px-1 md:px-3 text-sm md:text-lg">
-          {truncate(address)}
+        <div className="flex items-center px-3 text-sm md:text-md">
+          {address}
         </div>
         <div className="flex justify-end pl-3">
           <button
