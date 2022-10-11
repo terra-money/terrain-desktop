@@ -4,7 +4,7 @@ import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg'
 import { useTerraBlockUpdate, useLocalTerraStarted } from '../hooks/terra';
 import { demicrofy, nFormatter } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
-import { KeyViewModal } from '.';
+import { KeyViewModal, AddressCopyBtn } from '.';
 import { ReactComponent as KeyIcon } from '../assets/icons/menu/key.svg';
 
 function AccountView({
@@ -39,7 +39,7 @@ function AccountView({
         className="bg-white grid items-center shadow-row rounded-2xl border-2 border-blue-200"
         style={{ gridTemplateColumns }}
       >
-        <div className="bg-blue-200 p-5 py-4 rounded-l-xl">
+        <div className="flex flex-row p-5 py-4 rounded-l-xl">
           <a
             href={`${REACT_APP_FINDER_URL}/address/${accAddress}`}
             target="_blank"
@@ -47,8 +47,9 @@ function AccountView({
             rel="noreferrer"
           >
             <p className="mr-2">{accAddress}</p>
-            <ExternalLinkIcon />
+            <ExternalLinkIcon className="mr-5" />
           </a>
+          <AddressCopyBtn className="justify-self-end" text={accAddress} />
         </div>
         <div className="flex px-8 items-center">
           <p className="text-lg font-semibold text-blue-700">

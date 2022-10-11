@@ -107,7 +107,7 @@ export const tourProviderProps = {
   onClickClose: ({ setIsOpen }: { setIsOpen: Function }) => setIsOpen(false),
   steps: [
     {
-      selector: '.search',
+      selector: '.tour__search',
       content: 'Search for blocks, transactions, and addresses with the Finder block explorer.',
     },
     {
@@ -140,24 +140,24 @@ export const tourProviderProps = {
       content: 'Manage your settings here. Like open at login, your LocalTerra path, and your desired block time.',
     },
     {
-      selector: '.current-block',
+      selector: '.tour__current-block',
       page: '/',
       content: 'This is the current block of your LocalTerra instance. If it it\'s not incrementing then LocalTerra is not running.',
     },
     {
-      selector: '.toggle-terra',
+      selector: '.tour__toggle-terra',
       content: 'Click this button to toggle (pause and resume) LocalTerra.',
     },
     {
-      selector: '.add-contracts',
+      selector: '.tour__add-contracts',
       content: 'Click here to import contracts from your Terrain project to call them from Terrarium.',
     },
     {
-      selector: '.contract-view',
+      selector: '.tour__contract-view',
       content: 'This is the contract view of pre-baked contract',
     },
     {
-      selector: '#pre-baked-contract-0',
+      selector: '#tour__pre-baked-contract-0',
       content: 'This is a method on the cw-20 token base contract that ships with LocalTerra. Call your execute and query methods here.',
     },
   ],

@@ -57,7 +57,7 @@ const ContractMethodsView = ({
             schema={schema}
             ObjectFieldTemplate={ObjectFieldTemplate}
             key={index}
-            id={`pre-baked-contract-${index}`}
+            id={`tour__pre-baked-contract-${index}`}
             className="border-t-2 mb-8 border-blue-900 first:border-none"
             onSubmit={handleSubmit(schema.msgType, index)}
           >

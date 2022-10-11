@@ -34,7 +34,7 @@ const ContractView = ({
   return (
     <ul className="m-2">
       <li
-        className="bg-white contract-view grid items-center shadow-row rounded-2xl border-2 border-blue-200"
+        className="bg-white tour__contract-view grid items-center shadow-row rounded-2xl border-2 border-blue-200"
         style={{ gridTemplateColumns }}
       >
         <a
