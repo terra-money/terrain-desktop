@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Form from '@rjsf/material-ui';
 import { Button } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { MsgExecuteContract, Wallet } from '@terra-money/terra.js';
 import ReactJson from 'react-json-view';
 import { useTerra } from '../hooks/terra';
@@ -33,12 +34,11 @@ const ContractMethodsView = ({
 }) => {
   const { terra } = useTerra();
   const [contractRes, setContractRes] = useState({});
-  const [targetIndex, setTargetIndex] = useState(0);
+  const [targetIndex, setTargetIndex] = useState(-1);
 
   const handleQuery = async (msgData: Object) => {
     try {
-      const res = await terra.wasm.contractQuery(address, msgData) as any;
-      setContractRes(res);
+      setContractRes(await terra.wasm.contractQuery(address, msgData));
     } catch (err) {
       setContractRes(err as Error);
     }
@@ -47,20 +47,16 @@ const ContractMethodsView = ({
   const handleExecute = async (msgData: Object) => {
     try {
       const execMsg = await wallet.createAndSignTx({
-        msgs: [
-          new MsgExecuteContract(
-            wallet.key.accAddress,
-            address,
-            msgData,
-          ),
-        ],
+        msgs: [new MsgExecuteContract(wallet.key.accAddress, address, msgData)],
       });
-      const res = await terra.tx.broadcast(execMsg) as any;
-      setContractRes(res);
+      setContractRes(await terra.tx.broadcast(execMsg));
     } catch (err) {
       setContractRes(err as Error);
     }
   };
+
+  const handleResClose = () => setTargetIndex(-1);
+
   const handleSubmit = (msgType: string, index: number) => async ({ formData }: any) => {
     setTargetIndex(index);
     setIsLoading(true);
@@ -86,11 +82,13 @@ const ContractMethodsView = ({
             </Button>
           </Form>
           {JSON.stringify(contractRes) !== '{}' && !isLoading && index === targetIndex && (
-          <ReactJson
-            enableClipboard
-            collapsed={1}
-            src={contractRes}
-          />
+            <>
+              <CloseIcon onClick={handleResClose} />
+              <ReactJson
+                collapsed={1}
+                src={contractRes}
+              />
+            </>
           )}
         </>
       ))}
