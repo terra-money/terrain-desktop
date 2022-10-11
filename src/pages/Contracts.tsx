@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { FaPlus } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { SelectWallet, ContractView } from '../components';
+import { SelectWallet, ContractView, LinearLoad } from '../components';
 import { useTerra } from '../hooks/terra';
 import {
   IMPORT_SAVED_CONTRACTS, IMPORT_NEW_CONTRACTS, DELETE_CONTRACT, REFRESH_CONTRACT_REFS,
@@ -11,13 +11,17 @@ import {
 
 function ContractsPage() {
   const [contracts, setContracts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { wallets } = useTerra();
-  const [walletName, setWalletName] = useState('test1');
+  const [selectedWallet, setSelectedWallet] = useState('test1');
 
-  const wallet = wallets[walletName];
+  const wallet = wallets[selectedWallet];
 
   const gridTemplateColumns = 'minmax(150px, max-content) 100px 2.5fr 50px';
+
   useEffect(() => {
+    const cachedWallet = window.localStorage.getItem('prevWalletSelection');
+    if (cachedWallet) setSelectedWallet(cachedWallet);
     importSavedContracts();
   }, []);
 
@@ -41,7 +45,10 @@ function ContractsPage() {
     setContracts(savedContracts);
   };
 
-  const handleWalletChange = (event: SelectChangeEvent) => setWalletName(event.target.value);
+  const handleWalletChange = (event: SelectChangeEvent) => {
+    setSelectedWallet(event.target.value);
+    window.localStorage.setItem('prevWalletSelection', event.target.value);
+  };
 
   return (
     <div className="flex flex-col w-full">
@@ -50,7 +57,7 @@ function ContractsPage() {
         style={{ background: '#ffffffe0' }}
       >
         <SelectWallet
-          walletName={walletName}
+          selectedWallet={selectedWallet}
           handleWalletChange={handleWalletChange}
         />
         <button
@@ -62,6 +69,7 @@ function ContractsPage() {
           Add Contracts
         </button>
       </div>
+      {isLoading && (<LinearLoad />)}
       <div
         className="bg-white grid items-center w-full px-4 py-5 md:pl-8 text-blue-600 font-bold z-50 shadow-nav"
         style={{ gridTemplateColumns }}
@@ -86,6 +94,8 @@ function ContractsPage() {
               handleRefreshRefs={handleRefreshRefs}
               data={data}
               key={index}
+              setIsLoading={setIsLoading}
+              isLoading={isLoading}
               wallet={wallet}
               gridTemplateColumns={gridTemplateColumns}
             />

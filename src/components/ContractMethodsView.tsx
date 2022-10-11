@@ -1,40 +1,30 @@
 import React, { useState } from 'react';
 import Form from '@rjsf/material-ui';
 import { Button } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { MsgExecuteContract, Wallet } from '@terra-money/terra.js';
 import ReactJson from 'react-json-view';
 import { useTerra } from '../hooks/terra';
+import ObjectFieldTemplate from './ObjectFieldTemplate';
 
-function ObjectFieldTemplate(props: any) {
-  if (props.properties.length === 0) { return null; }
-  return (
-    <div className="py-6">
-      <div className="text-2xl capitalize text-blue-700 font-semibold">
-        {props.title}
-      </div>
-      {props.description}
-      {props.properties.map((element: any) => (
-        <div key={element.name} className="property-wrapper">
-          {element.content}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-const ContractMethodsView = ({ schemas, address, wallet }: {
+const ContractMethodsView = ({
+  schemas, address, wallet, setIsLoading, isLoading,
+}: {
   schemas: Object[],
   address: string,
-  wallet: Wallet
+  wallet: Wallet,
+  setIsLoading: Function
+  isLoading: boolean
 }) => {
   const { terra } = useTerra();
   const [contractRes, setContractRes] = useState({});
-  const [targetIndex, setTargetIndex] = useState(0);
+  const [targetIndex, setTargetIndex] = useState(-1);
+
+  const handleResClose = () => setTargetIndex(-1);
 
   const handleQuery = async (msgData: Object) => {
     try {
-      const res = await terra.wasm.contractQuery(address, msgData) as any;
-      setContractRes(res);
+      setContractRes(await terra.wasm.contractQuery(address, msgData));
     } catch (err) {
       setContractRes(err as Error);
     }
@@ -43,24 +33,20 @@ const ContractMethodsView = ({ schemas, address, wallet }: {
   const handleExecute = async (msgData: Object) => {
     try {
       const execMsg = await wallet.createAndSignTx({
-        msgs: [
-          new MsgExecuteContract(
-            wallet.key.accAddress,
-            address,
-            msgData,
-          ),
-        ],
+        msgs: [new MsgExecuteContract(wallet.key.accAddress, address, msgData)],
       });
-      const res = await terra.tx.broadcast(execMsg) as any;
-      setContractRes(res);
+      setContractRes(await terra.tx.broadcast(execMsg));
     } catch (err) {
       setContractRes(err as Error);
     }
   };
-  const handleSubmit = (msgType: string, index: number) => ({ formData }: any) => {
+
+  const handleSubmit = (msgType: string, index: number) => async ({ formData }: any) => {
     setTargetIndex(index);
-    if (msgType === 'query') handleQuery(formData);
-    else handleExecute(formData);
+    setIsLoading(true);
+    if (msgType === 'query') await handleQuery(formData);
+    else await handleExecute(formData);
+    setIsLoading(false);
   };
 
   return (
@@ -79,12 +65,14 @@ const ContractMethodsView = ({ schemas, address, wallet }: {
               {schema.msgType}
             </Button>
           </Form>
-          {JSON.stringify(contractRes) !== '{}' && index === targetIndex && (
-          <ReactJson
-            enableClipboard
-            collapsed={2}
-            src={contractRes}
-          />
+          {JSON.stringify(contractRes) !== '{}' && !isLoading && index === targetIndex && (
+            <div className="flex flex-col center-items mb-2">
+              <CloseIcon onClick={handleResClose} className="cursor-pointer w-4" />
+              <ReactJson
+                collapsed={1}
+                src={contractRes}
+              />
+            </div>
           )}
         </>
       ))}
