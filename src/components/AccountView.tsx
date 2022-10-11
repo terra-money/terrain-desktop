@@ -4,7 +4,7 @@ import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg'
 import { useTerraBlockUpdate, useLocalTerraStarted } from '../hooks/terra';
 import { demicrofy, nFormatter } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
-import { KeyViewModal, AddressCopyBtn } from '.';
+import { KeyViewModal, TextCopyButton } from '.';
 import { ReactComponent as KeyIcon } from '../assets/icons/menu/key.svg';
 
 function AccountView({
@@ -49,7 +49,7 @@ function AccountView({
             <p className="mr-2">{accAddress}</p>
             <ExternalLinkIcon className="mr-5" />
           </a>
-          <AddressCopyBtn className="justify-self-end" text={accAddress} />
+          <TextCopyButton text={accAddress} />
         </div>
         <div className="flex px-8 items-center">
           <p className="text-lg font-semibold text-blue-700">

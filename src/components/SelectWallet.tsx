@@ -3,6 +3,7 @@ import {
   InputLabel, FormControl, Select, MenuItem,
 } from '@mui/material';
 import { useTerra } from '../hooks/terra';
+import { TextCopyButton } from '.';
 
 const SelectWallet = ({ handleWalletChange, selectedWallet }: { handleWalletChange: any, selectedWallet: string }) => {
   const { wallets } = useTerra();
@@ -13,6 +14,9 @@ const SelectWallet = ({ handleWalletChange, selectedWallet }: { handleWalletChan
         {Object.keys(wallets).map((name: any) => (
           <MenuItem key={name} value={name}>
             {name}
+            {'       ...'}
+            {wallets[name].key.accAddress.slice(-5)}
+            {name !== selectedWallet && <TextCopyButton text={wallets[name].key.accAddress} />}
           </MenuItem>
         ))}
       </Select>

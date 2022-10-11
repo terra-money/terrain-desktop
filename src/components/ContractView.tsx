@@ -6,7 +6,8 @@ import { Wallet } from '@terra-money/terra.js';
 import { SmartContract } from '../models/Contract';
 import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
 import { REACT_APP_FINDER_URL } from '../constants';
-import ContractMethodsView from './ContractMethodsView';
+import { TextCopyButton, ContractMethodsView } from '.';
+import { truncate } from '../utils';
 
 const ContractView = ({
   handleDeleteContract, handleRefreshRefs, data, gridTemplateColumns, wallet, setIsLoading, isLoading,
@@ -51,12 +52,16 @@ const ContractView = ({
           </div>
         </a>
 
-        <div className="flex items-center justify-center px-3 text-sm md:text-md">
+        <div className="mt-1 flex justify-center px-3 text-sm md:text-md">
           {codeId}
         </div>
-        <div className="flex items-center px-3 text-sm md:text-md">
-          {address}
+        <div className="flex flex-row center-items">
+          <div className="mt-1 text-blue-700 px-3 text-md md:text-md">
+            {truncate(address, [10, 10])}
+          </div>
+          <TextCopyButton className="ml-1 mb-2" text={address} />
         </div>
+
         <div className="flex justify-end pl-3">
           <button
             type="button"
