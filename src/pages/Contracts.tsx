@@ -45,7 +45,10 @@ function ContractsPage() {
     setContracts(savedContracts);
   };
 
-  const handleWalletChange = (event: SelectChangeEvent) => setSelectedWallet(event.target.value);
+  const handleWalletChange = (event: SelectChangeEvent) => {
+    setSelectedWallet(event.target.value);
+    window.localStorage.setItem('prevWalletSelection', event.target.value);
+  };
 
   return (
     <div className="flex flex-col w-full">

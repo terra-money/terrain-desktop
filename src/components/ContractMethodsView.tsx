@@ -5,23 +5,7 @@ import { Close as CloseIcon } from '@mui/icons-material';
 import { MsgExecuteContract, Wallet } from '@terra-money/terra.js';
 import ReactJson from 'react-json-view';
 import { useTerra } from '../hooks/terra';
-
-function ObjectFieldTemplate(props: any) {
-  if (props.properties.length === 0) { return null; }
-  return (
-    <div className="py-6">
-      <div className="text-2xl capitalize text-blue-700 font-semibold">
-        {props.title}
-      </div>
-      {props.description}
-      {props.properties.map((element: any) => (
-        <div key={element.name} className="property-wrapper">
-          {element.content}
-        </div>
-      ))}
-    </div>
-  );
-}
+import ObjectFieldTemplate from './ObjectFieldTemplate';
 
 const ContractMethodsView = ({
   schemas, address, wallet, setIsLoading, isLoading,
@@ -35,6 +19,8 @@ const ContractMethodsView = ({
   const { terra } = useTerra();
   const [contractRes, setContractRes] = useState({});
   const [targetIndex, setTargetIndex] = useState(-1);
+
+  const handleResClose = () => setTargetIndex(-1);
 
   const handleQuery = async (msgData: Object) => {
     try {
@@ -54,8 +40,6 @@ const ContractMethodsView = ({
       setContractRes(err as Error);
     }
   };
-
-  const handleResClose = () => setTargetIndex(-1);
 
   const handleSubmit = (msgType: string, index: number) => async ({ formData }: any) => {
     setTargetIndex(index);
@@ -82,13 +66,13 @@ const ContractMethodsView = ({
             </Button>
           </Form>
           {JSON.stringify(contractRes) !== '{}' && !isLoading && index === targetIndex && (
-            <>
-              <CloseIcon onClick={handleResClose} />
+            <div className="flex flex-col center-items mb-2">
+              <CloseIcon onClick={handleResClose} className="cursor-pointer w-4" />
               <ReactJson
                 collapsed={1}
                 src={contractRes}
               />
-            </>
+            </div>
           )}
         </>
       ))}
