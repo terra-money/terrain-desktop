@@ -3,7 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { FaPlus } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { SelectWallet, ContractView, LinearLoad } from '../components';
+import {
+  SelectWallet, ContractView, LinearLoad,
+} from '../components';
 import { useTerra } from '../hooks/terra';
 import {
   IMPORT_SAVED_CONTRACTS, IMPORT_NEW_CONTRACTS, DELETE_CONTRACT, REFRESH_CONTRACT_REFS,
@@ -13,7 +15,7 @@ function ContractsPage() {
   const [contracts, setContracts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { wallets } = useTerra();
-  const [selectedWallet, setSelectedWallet] = useState('test1');
+  const [selectedWallet, setSelectedWallet] = useState('validator');
 
   const wallet = wallets[selectedWallet];
 
@@ -63,7 +65,7 @@ function ContractsPage() {
         <button
           type="button"
           onClick={handleNewContractsImport}
-          className="main-button add-contracts flex items-center gap-2.5 py-3.5 px-5 rounded-lg text-white bg-terra-dark-blue"
+          className="main-button tour__add-contracts flex items-center gap-2.5 py-3.5 px-5 rounded-lg text-white bg-terra-dark-blue"
         >
           <FaPlus className="flex-none w-3 text-white" />
           Add Contracts

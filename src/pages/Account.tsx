@@ -18,7 +18,7 @@ export default function AccountsPage({
   return (
     <div className="flex flex-col w-full">
       <div
-        className="bg-white shadow-nav grid  w-full px-4 py-5 pl-8 text-blue-600 z-30"
+        className="bg-white shadow-nav grid w-full px-4 py-5 pl-8 text-blue-600 z-30"
         style={{ gridTemplateColumns }}
       >
         <div className="text-md lg:text-lg font-bold uppercase">Address</div>

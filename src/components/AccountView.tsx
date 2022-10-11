@@ -4,7 +4,8 @@ import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg'
 import { useTerraBlockUpdate, useLocalTerraStarted } from '../hooks/terra';
 import { demicrofy, nFormatter } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
-import { KeyViewModal } from '.';
+import { KeyViewModal, TextCopyButton } from '.';
+import { ReactComponent as KeyIcon } from '../assets/icons/menu/key.svg';
 
 function AccountView({
   wallet,
@@ -38,7 +39,7 @@ function AccountView({
         className="bg-white grid items-center shadow-row rounded-2xl border-2 border-blue-200"
         style={{ gridTemplateColumns }}
       >
-        <div className="bg-blue-200 p-5 py-4 rounded-l-xl">
+        <div className="flex flex-row p-5 py-4 rounded-l-xl">
           <a
             href={`${REACT_APP_FINDER_URL}/address/${accAddress}`}
             target="_blank"
@@ -46,8 +47,9 @@ function AccountView({
             rel="noreferrer"
           >
             <p className="mr-2">{accAddress}</p>
-            <ExternalLinkIcon />
+            <ExternalLinkIcon className="mr-5" />
           </a>
+          <TextCopyButton text={accAddress} />
         </div>
         <div className="flex px-8 items-center">
           <p className="text-lg font-semibold text-blue-700">
@@ -64,20 +66,7 @@ function AccountView({
           )}
           className="flex justify-end text-blue-700 hover:text-blue-500 px-5 pr-7"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-            />
-          </svg>
+          <KeyIcon className="h-6 w-6" />
         </button>
       </div>
     </div>

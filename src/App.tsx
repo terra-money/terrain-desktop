@@ -109,7 +109,7 @@ const App = () => {
             </h1>
           </div>
           <div
-            className={`search flex items-center rounded-md mt-6 bg-light-white py-2 ${
+            className={`tour__search flex items-center rounded-md mt-6 bg-light-white py-2 ${
               !open ? 'px-2.5' : 'px-4'
             }`}
           >
@@ -189,7 +189,7 @@ const App = () => {
         <div className="relative flex-auto bg-gray-background w-full h-screen overflow-hidden">
           <header className="absolute w-full bg-white shadow-md z-40 flex justify-between p-6 lg:pl-12">
             <ul className="flex flex-row w-full gap-1 lg:gap-10 xl:gap-20 items-center font-medium">
-              <li className="current-block flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
+              <li className="tour__current-block flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
                 <p className="text-md md:text-[15px] md:leading-7 lg:text-xl xl:text-2xl text-terra-mid-blue">
                   {latestHeight}
                 </p>
@@ -212,7 +212,7 @@ const App = () => {
                   type="button"
                   onClick={toggleLocalTerra}
                   className={`${isLoading ? 'cursor-pointer' : ''}
-                  toggle-terra flex items-center justify-center space-x-3 text-xs rounded-lg w-28 md:w-40 h-10 border-4 border-gray-brackground`}
+                  tour__toggle-terra flex items-center justify-center space-x-3 text-xs rounded-lg w-28 md:w-40 h-10 border-4 border-gray-brackground`}
                 >
                   <BsCircleFill
                     className={
