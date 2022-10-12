@@ -10,14 +10,15 @@ import EventInfo from './EventInfo';
 const BlockView = (props: {
   data: TerrariumBlockInfo;
   index: number;
+  gridTemplateColumns: string;
   onToggleEventDetails: (index: number) => void;
-  width: number;
 }) => {
   const { height, time } = props.data.block.header;
-  const { result_begin_block } = props.data;
+  const { result_begin_block, hasEventsOpenInUi } = props.data;
+  const { gridTemplateColumns } = props;
   const blockHref = `${REACT_APP_FINDER_URL}/blocks/${height}`;
 
-  const [open, setOpen] = React.useState(props.data.hasEventsOpenInUi);
+  const [open, setOpen] = React.useState(hasEventsOpenInUi);
 
   const txInfos = useGetTxFromHeight(parseInt(height, 10));
   const dateString = `${new Date(time).toDateString()} | ${new Date(
@@ -35,23 +36,21 @@ const BlockView = (props: {
   };
 
   return (
-    <ul className="m-2">
+    <ul
+      className="m-2"
+    >
       <li
-        className="bg-white grid items-center shadow-row rounded-2xl border-2 border-blue-200"
-        style={{
-          gridTemplateColumns: `
-            ${props.width <= 767 ? '95px' : '140px'}
-            ${props.width < 1100 ? 'minmax(150px, 1fr)' : '2fr'} ${
-            props.width <= 860
-              ? 'minmax(75px, 80px)'
-              : 'minmax(75px, 180px)'
-          } minmax(85px, 1fr) 0.5fr`,
-        }}
+        className="bg-white grid cursor-pointer items-center shadow-row rounded-2xl border-2 border-blue-200 "
+        style={{ gridTemplateColumns }}
+        onClick={toggleBlocksRow}
       >
-        <div className="bg-blue-200 p-5 px-2 md:p-5 rounded-l-xl">
+        <div
+          className="bg-blue-200 p-5 px-2 md:p-5 rounded-l-xl"
+        >
           <a
             href={blockHref}
             target="_blank"
+            onClick={(e) => e.stopPropagation()}
             className="flex items-center text-blue-700 font-semibold text-sm md:text-lg hover:text-blue-500 hover:underline"
             rel="noreferrer"
           >
@@ -72,7 +71,6 @@ const BlockView = (props: {
         <div className="flex justify-end pr-2 md:px-5">
           <KeyboardArrowDownIcon
             className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
-            onClick={toggleBlocksRow}
           />
         </div>
       </li>
