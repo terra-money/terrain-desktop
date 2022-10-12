@@ -217,7 +217,7 @@ const App = () => {
                   <BsCircleFill
                     className={
                       isLoading
-                        ? 'animate-bounce text-is-loading-grey'
+                        ? 'text-is-loading-yellow'
                         : hasStartedLocalTerra.get()
                           ? 'text-is-connected-green'
                           : 'text-not-connected-red'

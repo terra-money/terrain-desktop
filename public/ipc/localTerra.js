@@ -33,15 +33,17 @@ module.exports = (win) => {
     win.webContents.send(LOCAL_TERRA_IS_RUNNING, globals.localTerra.isRunning);
   });
 
-  ipcMain.secureHandle(TOGGLE_LOCAL_TERRA, async (e, localTerraStatus) => {
+  ipcMain.secureHandle(TOGGLE_LOCAL_TERRA, async (_, localTerraStatus) => {
     const localTerraPath = store.getLocalTerraPath();
 
-    if (localTerraStatus) {
-      await startLocalTerra(localTerraPath);
-      globals.localTerra.process = await subscribeToLocalTerraEvents(win);
-    } else {
-      stopLocalTerra();
-    }
-    return localTerraStatus;
+    const toggleLocalTerra = async () => {
+      if (localTerraStatus) {
+        await startLocalTerra(localTerraPath);
+        globals.localTerra.process = await subscribeToLocalTerraEvents(win);
+      } else { stopLocalTerra(); }
+      return localTerraStatus;
+    };
+    toggleLocalTerra();
+    await new Promise((resolve) => setTimeout(() => resolve(toggleLocalTerra()), 10000));
   });
 };

@@ -14,7 +14,7 @@ module.exports = {
         'gray-background': '#ededf2',
         'not-connected-red': '#CC0202',
         'is-connected-green': '#26BF0E',
-        'is-loading-grey': '#ededf2',
+        'is-loading-yellow': '#FEF08A',
       },
     },
     boxShadow: {
