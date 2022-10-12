@@ -4,7 +4,7 @@ import { Close as CloseIcon } from '@mui/icons-material';
 import { MsgExecuteContract, Wallet } from '@terra-money/terra.js';
 import ReactJson from 'react-json-view';
 import { useTerra } from '../hooks/terra';
-import ObjectFieldTemplate from './ObjectFieldTemplate';
+import { ObjectFieldTemplate, GenericContractCall } from '.';
 
 const ContractMethodsView = ({
   schemas, address, wallet, setIsLoading, isLoading,
@@ -50,6 +50,7 @@ const ContractMethodsView = ({
 
   return (
     <>
+      <GenericContractCall handleSubmit={handleSubmit} />
       {schemas.map((schema: any, index: number) => (
         <>
           <Form
