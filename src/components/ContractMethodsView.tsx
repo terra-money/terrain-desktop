@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Form from '@rjsf/material-ui';
-import { Button } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { MsgExecuteContract, Wallet } from '@terra-money/terra.js';
 import ReactJson from 'react-json-view';
@@ -61,9 +60,13 @@ const ContractMethodsView = ({
             className="border-t-2 mb-8 border-blue-900 first:border-none"
             onSubmit={handleSubmit(schema.msgType, index)}
           >
-            <Button variant="contained" type="submit">
+            <button
+              className={`${schema.msgType === 'query' ? 'bg-gray-400 border-gray-500 hover:bg-gray-700' : 'bg-blue-500 border-blue-700 hover:bg-terra-dark-blue'} 
+              text-white font-bold py-2 px-4 border rounded uppercase`}
+              type="submit"
+            >
               {schema.msgType}
-            </Button>
+            </button>
           </Form>
           {JSON.stringify(contractRes) !== '{}' && !isLoading && index === targetIndex && (
             <div className="flex flex-col center-items mb-2">
