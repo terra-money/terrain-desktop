@@ -30,8 +30,9 @@ const TransactionView = ({
   return (
     <ul className="m-2">
       <li
-        className="bg-white grid shadow-row rounded-2xl border-2 border-blue-200"
+        className="cursor-pointer bg-white grid shadow-row rounded-2xl border-2 border-blue-200"
         style={{ gridTemplateColumns }}
+        onClick={toggleEventsRow}
       >
         <div className="bg-blue-200 p-5 px-2 lg:p-5 rounded-l-xl">
           <a
@@ -39,6 +40,7 @@ const TransactionView = ({
             target="_blank"
             href={txHref}
             rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="mr-2">
               {truncate(txhash, [6, 6])}
@@ -51,7 +53,7 @@ const TransactionView = ({
             {data.msg['@type']}
           </div>
         </div>
-        <div className="flex items-center px-1 md:px-3 text-sm lg:text-md">
+        <div className="flex justify-center items-center px-1 md:px-3 text-sm lg:text-md">
           {height}
         </div>
         <div className="flex items-center px-1 md:px-3 text-sm lg:text-md">
@@ -64,17 +66,12 @@ const TransactionView = ({
         </div>
         <div className="flex items-center justify-end pr-2 pl-0 lg:px-5">
           <KeyboardArrowDownIcon
-            className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
-            onClick={toggleEventsRow}
+            className={open ? 'rotate-180' : 'rotate-0'}
           />
         </div>
       </li>
 
-      <li
-        className={`rounded-2xl shadow-row ${
-          open ? 'border-2 border-blue-200 rounded-2xl' : ''
-        }`}
-      >
+      <li className={`rounded-2xl shadow-row ${open ? 'border-2 border-blue-200 rounded-2xl' : ''}`}>
         <Collapse in={open} timeout="auto" unmountOnExit className="px-16 py-8">
           <EventInfo title="Events" events={result.events} />
         </Collapse>

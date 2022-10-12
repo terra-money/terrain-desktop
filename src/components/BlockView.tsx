@@ -36,15 +36,21 @@ const BlockView = (props: {
   };
 
   return (
-    <ul className="m-2">
+    <ul
+      className="m-2"
+    >
       <li
-        className="bg-white grid items-center shadow-row rounded-2xl border-2 border-blue-200"
+        className="bg-white grid cursor-pointer items-center shadow-row rounded-2xl border-2 border-blue-200 "
         style={{ gridTemplateColumns }}
+        onClick={toggleBlocksRow}
       >
-        <div className="bg-blue-200 p-5 px-2 md:p-5 rounded-l-xl">
+        <div
+          className="bg-blue-200 p-5 px-2 md:p-5 rounded-l-xl"
+        >
           <a
             href={blockHref}
             target="_blank"
+            onClick={(e) => e.stopPropagation()}
             className="flex items-center text-blue-700 font-semibold text-sm md:text-lg hover:text-blue-500 hover:underline"
             rel="noreferrer"
           >
@@ -65,7 +71,6 @@ const BlockView = (props: {
         <div className="flex justify-end pr-2 md:px-5">
           <KeyboardArrowDownIcon
             className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
-            onClick={toggleBlocksRow}
           />
         </div>
       </li>

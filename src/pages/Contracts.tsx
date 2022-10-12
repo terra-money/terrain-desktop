@@ -32,12 +32,14 @@ function ContractsPage() {
     setContracts(newContracts);
   };
 
-  const handleDeleteContract = async (codeId: string) => {
+  const handleDeleteContract = async (codeId: string, e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
     const updContracts = await ipcRenderer.invoke(DELETE_CONTRACT, codeId);
     setContracts(updContracts);
   };
 
-  const handleRefreshRefs = async (path: string) => {
+  const handleRefreshRefs = async (path: string, e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
     const updContracts = await ipcRenderer.invoke(REFRESH_CONTRACT_REFS, path);
     setContracts(updContracts);
   };
