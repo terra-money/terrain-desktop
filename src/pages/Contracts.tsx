@@ -44,7 +44,6 @@ function ContractsPage() {
 
   const importSavedContracts = async () => {
     const savedContracts = await ipcRenderer.invoke(IMPORT_SAVED_CONTRACTS);
-    console.log('savedContracts', savedContracts);
     setContracts(savedContracts);
   };
 
