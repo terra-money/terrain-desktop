@@ -1,11 +1,13 @@
 import React, { useState, FormEvent } from 'react';
 import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/src-noconflict/worker-json';
+import 'ace-builds/webpack-resolver';
 import { isJson } from '../utils';
 
 const ContractMethodsView = ({ handleSubmit }: { handleSubmit: Function }) => {
   const [query, setQuery] = useState<string>();
-  const [data, setData] = useState<string>();
-  const [error, setError] = useState<Error>();
 
   const ACE_PROPS = {
     mode: 'json',
@@ -21,22 +23,16 @@ const ContractMethodsView = ({ handleSubmit }: { handleSubmit: Function }) => {
   };
 
   const submit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    try {
-      setData(await handleSubmit(data));
-    } catch (err) {
-      setError(err as Error);
-    }
+    e.stopPropagation();
+    await handleSubmit({ msgType: 'query', index: -1, customMsg: query });
   };
 
   return (
     <section>
       <form onSubmit={submit}>
-        <h2>QueryMsg JSON</h2>
-
         <AceEditor
           {...ACE_PROPS}
+          className="border-blue-500 border p-4 mb-2"
           defaultValue={query}
           onChange={(value: string) => setQuery(value)}
           onLoad={(editor: any) => {
@@ -48,10 +44,11 @@ const ContractMethodsView = ({ handleSubmit }: { handleSubmit: Function }) => {
         />
 
         <button
+          className={`${!isJson(query) ? 'bg-gray-200' : 'bg-gray-500 border-gray-600 hover:bg-gray-700'} text-white mb-4 font-bold py-2 px-4 border rounded uppercase`}
           disabled={!isJson(query)}
           type="submit"
         >
-          Next
+          Query
         </button>
       </form>
     </section>

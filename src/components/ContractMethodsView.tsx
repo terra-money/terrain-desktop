@@ -22,29 +22,25 @@ const ContractMethodsView = ({
   const handleResClose = () => setTargetIndex(-1);
 
   const handleQuery = async (msgData: Object) => {
-    try {
-      setContractRes(await terra.wasm.contractQuery(address, msgData));
-    } catch (err) {
-      setContractRes(err as Error);
-    }
+    setContractRes(await terra.wasm.contractQuery(address, msgData));
   };
 
   const handleExecute = async (msgData: Object) => {
+    const execMsg = await wallet.createAndSignTx({
+      msgs: [new MsgExecuteContract(wallet.key.accAddress, address, msgData)],
+    });
+    setContractRes(await terra.tx.broadcast(execMsg));
+  };
+
+  const handleSubmit = (msgType: string, index: number, customMsg = null) => async ({ formData }: any) => {
     try {
-      const execMsg = await wallet.createAndSignTx({
-        msgs: [new MsgExecuteContract(wallet.key.accAddress, address, msgData)],
-      });
-      setContractRes(await terra.tx.broadcast(execMsg));
+      setTargetIndex(index);
+      setIsLoading(true);
+      if (msgType === 'query') await handleQuery(customMsg || formData);
+      else await handleExecute(customMsg || formData);
     } catch (err) {
       setContractRes(err as Error);
     }
-  };
-
-  const handleSubmit = (msgType: string, index: number) => async ({ formData }: any) => {
-    setTargetIndex(index);
-    setIsLoading(true);
-    if (msgType === 'query') await handleQuery(formData);
-    else await handleExecute(formData);
     setIsLoading(false);
   };
 
