@@ -1,12 +1,13 @@
 import React, { useState, FormEvent } from 'react';
 import AceEditor from 'react-ace';
+import 'ace-builds';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/worker-json';
 import 'ace-builds/webpack-resolver';
 import { isJson } from '../utils';
 
-const ContractMethodsView = ({ handleSubmit }: { handleSubmit: Function }) => {
+const GenericContractCall = ({ handleGenericQuery }: { handleGenericQuery: Function }) => {
   const [query, setQuery] = useState<string>();
 
   const ACE_PROPS = {
@@ -22,37 +23,35 @@ const ContractMethodsView = ({ handleSubmit }: { handleSubmit: Function }) => {
     editorProps: { $blockScrolling: true },
   };
 
-  const submit = async (e: FormEvent) => {
-    e.stopPropagation();
-    await handleSubmit({ msgType: 'query', index: -1, customMsg: query });
-  };
+  // const submit = async (e: FormEvent) => {
+  //   await handleGenericQuery(query);
+  // };
 
   return (
     <section>
-      <form onSubmit={submit}>
-        <AceEditor
-          {...ACE_PROPS}
-          className="border-blue-500 border p-4 mb-2"
-          defaultValue={query}
-          onChange={(value: string) => setQuery(value)}
-          onLoad={(editor: any) => {
-            editor.renderer.setPadding(15);
-            editor.renderer.setScrollMargin(15, 15, 15, 15);
-            editor.focus();
-            editor.selectAll();
-          }}
-        />
+      <AceEditor
+        {...ACE_PROPS}
+        className="border-blue-500 border p-4 mb-2"
+        defaultValue={query}
+        onChange={(value: string) => setQuery(value)}
+        onLoad={(editor: any) => {
+          editor.renderer.setPadding(15);
+          editor.renderer.setScrollMargin(15, 15, 15, 15);
+          editor.focus();
+          editor.selectAll();
+        }}
+      />
 
-        <button
-          className={`${!isJson(query) ? 'bg-gray-200' : 'bg-gray-500 border-gray-600 hover:bg-gray-700'} text-white mb-4 font-bold py-2 px-4 border rounded uppercase`}
-          disabled={!isJson(query)}
-          type="submit"
-        >
-          Query
-        </button>
-      </form>
+      <button
+        className={`${!isJson(query) ? 'bg-gray-200' : 'bg-gray-500 border-gray-600 hover:bg-gray-700'} text-white mb-4 font-bold py-2 px-4 border rounded uppercase`}
+        disabled={!isJson(query)}
+        onClick={() => handleGenericQuery(query)}
+        type="button"
+      >
+        Query
+      </button>
     </section>
   );
 };
 
-export default React.memo(ContractMethodsView);
+export default React.memo(GenericContractCall);

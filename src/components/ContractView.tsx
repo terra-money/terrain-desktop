@@ -88,27 +88,26 @@ const ContractView = ({
           )}
         </div>
       </li>
-      {schemas && (
-        <li
-          className={`bg-white ${
-            open ? 'border-2 border-blue-200 rounded-2xl shadow-row' : ''
-          }`}
+
+      <li
+        className={`bg-white ${
+          open ? 'border-2 border-blue-200 rounded-2xl shadow-row' : ''
+        }`}
+      >
+        <Collapse
+          in={open}
+          timeout="auto"
+          className={open ? 'px-16 py-8' : 'hidden'}
         >
-          <Collapse
-            in={open}
-            timeout="auto"
-            className={open ? 'px-16 py-8' : 'hidden'}
-          >
-            <ContractMethodsView
-              schemas={schemas}
-              setIsLoading={setIsLoading}
-              address={address}
-              wallet={wallet}
-              isLoading={isLoading}
-            />
-          </Collapse>
-        </li>
-      )}
+          <ContractMethodsView
+            schemas={schemas}
+            setIsLoading={setIsLoading}
+            address={address}
+            wallet={wallet}
+            isLoading={isLoading}
+          />
+        </Collapse>
+      </li>
     </ul>
   );
 };

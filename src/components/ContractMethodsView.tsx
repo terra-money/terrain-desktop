@@ -9,7 +9,7 @@ import { ObjectFieldTemplate, GenericContractCall } from '.';
 const ContractMethodsView = ({
   schemas, address, wallet, setIsLoading, isLoading,
 }: {
-  schemas: Object[],
+  schemas: Object[] | null,
   address: string,
   wallet: Wallet,
   setIsLoading: Function
@@ -17,11 +17,14 @@ const ContractMethodsView = ({
 }) => {
   const { terra } = useTerra();
   const [contractRes, setContractRes] = useState({});
-  const [targetIndex, setTargetIndex] = useState(-1);
+  const [targetIndex, setTargetIndex] = useState<number>();
 
   const handleResClose = () => setTargetIndex(-1);
 
   const handleQuery = async (msgData: Object) => {
+    console.log('msgData', msgData);
+    console.log('msgData', typeof msgData);
+    console.log('address', address);
     setContractRes(await terra.wasm.contractQuery(address, msgData));
   };
 
@@ -32,12 +35,24 @@ const ContractMethodsView = ({
     setContractRes(await terra.tx.broadcast(execMsg));
   };
 
-  const handleSubmit = (msgType: string, index: number, customMsg = null) => async ({ formData }: any) => {
+  const handleSubmit = (msgType: string, index: number) => async ({ formData }: any) => {
     try {
       setTargetIndex(index);
       setIsLoading(true);
-      if (msgType === 'query') await handleQuery(customMsg || formData);
-      else await handleExecute(customMsg || formData);
+      if (msgType === 'query') await handleQuery(formData);
+      else await handleExecute(formData);
+    } catch (err) {
+      setContractRes(err as Error);
+    }
+    setIsLoading(false);
+  };
+
+  const handleGenericQuery = async (query: string) => {
+    console.log('query', query);
+    try {
+      setTargetIndex(-1);
+      setIsLoading(true);
+      await handleQuery(JSON.parse(query));
     } catch (err) {
       setContractRes(err as Error);
     }
@@ -46,8 +61,8 @@ const ContractMethodsView = ({
 
   return (
     <>
-      <GenericContractCall handleSubmit={handleSubmit} />
-      {schemas.map((schema: any, index: number) => (
+      <GenericContractCall handleGenericQuery={handleGenericQuery} />
+      {schemas && schemas.map((schema: any, index: number) => (
         <>
           <Form
             schema={schema}
