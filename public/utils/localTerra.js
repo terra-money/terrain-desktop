@@ -133,19 +133,23 @@ const subscribeToLocalTerraEvents = async (win) => {
 };
 
 const stopLocalTerra = async () => {
-  const localTerraPath = await store.getLocalTerraPath();
-  txWs.destroy();
-  blockWs.destroy();
+  try {
+    const localTerraPath = await store.getLocalTerraPath();
+    txWs.destroy();
+    blockWs.destroy();
 
-  await exec('docker compose stop', {
-    cwd: localTerraPath,
-    env: {
-      PATH: `${process.env.PATH}:/usr/local/bin/`,
-    },
-  });
+    await exec('docker compose stop', {
+      cwd: localTerraPath,
+      env: {
+        PATH: `${process.env.PATH}:/usr/local/bin/`, // TODO: this is a hack, find a better way to do this
+      },
+    });
 
-  globals.localTerra.isRunning = false;
-  showLocalTerraStopNotif();
+    globals.localTerra.isRunning = false;
+    showLocalTerraStopNotif();
+  } catch (err) {
+    await showCustomDialog(JSON.stringify(err));
+  }
 };
 
 const shutdown = async (win, restart = false) => {

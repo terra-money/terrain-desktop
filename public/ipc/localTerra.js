@@ -36,14 +36,12 @@ module.exports = (win) => {
   ipcMain.secureHandle(TOGGLE_LOCAL_TERRA, async (_, localTerraStatus) => {
     const localTerraPath = store.getLocalTerraPath();
 
-    const toggleLocalTerra = async () => {
-      if (localTerraStatus) {
-        await startLocalTerra(localTerraPath);
-        globals.localTerra.process = await subscribeToLocalTerraEvents(win);
-      } else { stopLocalTerra(); }
-      return localTerraStatus;
-    };
-    toggleLocalTerra();
-    await new Promise((resolve) => setTimeout(() => resolve(toggleLocalTerra()), 10000));
+    if (localTerraStatus) {
+      await startLocalTerra(localTerraPath);
+      globals.localTerra.process = await subscribeToLocalTerraEvents(win);
+    } else {
+      stopLocalTerra();
+    }
+    return localTerraStatus;
   });
 };
