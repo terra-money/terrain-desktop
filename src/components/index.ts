@@ -12,3 +12,5 @@ export { default as TransactionView } from './TransactionView';
 export { default as ContractView } from './ContractView';
 export { default as TextCopyButton } from './TextCopyButton';
 export { default as ContractMethodsView } from './ContractMethodsView';
+export { default as GenericContractCall } from './GenericContractCall';
+export { default as ObjectFieldTemplate } from './ObjectFieldTemplate';
