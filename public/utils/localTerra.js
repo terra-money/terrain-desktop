@@ -92,6 +92,9 @@ const subscribeToLocalTerraEvents = async (win) => {
     try {
       if (win && win.isDestroyed()) { return; }
       win.webContents.send(NEW_LOG, data.toString());
+      if (data.toString().includes('localterra-terrad-1 exited with code 0')) {
+        win.webContents.send(LOCAL_TERRA_IS_RUNNING, false); // TODO: this is a hack, find a better way to do this
+      }
       if (!globals.localTerra.isRunning) {
         txWs.subscribeTx({}, async ({ value }) => {
           const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
@@ -153,8 +156,7 @@ const stopLocalTerra = async () => {
 };
 
 const shutdown = async (win, restart = false) => {
-  // Force shutdown after 20 seconds.
-  setTimeout(() => {
+  setTimeout(() => { // Force shutdown after 20 seconds.
     app.exit();
   }, 20000);
 
