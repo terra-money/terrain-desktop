@@ -19,12 +19,9 @@ const ContractMethodsView = ({
   const [contractRes, setContractRes] = useState({});
   const [targetIndex, setTargetIndex] = useState<number>();
 
-  const handleResClose = () => setTargetIndex(-1);
+  const handleResClose = () => setTargetIndex(undefined);
 
   const handleQuery = async (msgData: Object) => {
-    console.log('msgData', msgData);
-    console.log('msgData', typeof msgData);
-    console.log('address', address);
     setContractRes(await terra.wasm.contractQuery(address, msgData));
   };
 
@@ -48,7 +45,6 @@ const ContractMethodsView = ({
   };
 
   const handleGenericQuery = async (query: string) => {
-    console.log('query', query);
     try {
       setTargetIndex(-1);
       setIsLoading(true);
@@ -59,9 +55,24 @@ const ContractMethodsView = ({
     setIsLoading(false);
   };
 
+  const ContractResponse = () => (
+    <>
+      {JSON.stringify(contractRes) !== '{}' && !isLoading && (
+      <div className="flex flex-col center-items mb-2">
+        <CloseIcon onClick={handleResClose} className="cursor-pointer w-4" />
+        <ReactJson
+          collapsed={1}
+          src={contractRes}
+        />
+      </div>
+      )}
+    </>
+  );
+
   return (
     <>
       <GenericContractCall handleGenericQuery={handleGenericQuery} />
+      {targetIndex === -1 && (<ContractResponse />)}
       {schemas && schemas.map((schema: any, index: number) => (
         <>
           <Form
@@ -80,15 +91,7 @@ const ContractMethodsView = ({
               {schema.msgType}
             </button>
           </Form>
-          {JSON.stringify(contractRes) !== '{}' && !isLoading && index === targetIndex && (
-            <div className="flex flex-col center-items mb-2">
-              <CloseIcon onClick={handleResClose} className="cursor-pointer w-4" />
-              <ReactJson
-                collapsed={1}
-                src={contractRes}
-              />
-            </div>
-          )}
+          {index === targetIndex && (<ContractResponse />)}
         </>
       ))}
     </>
