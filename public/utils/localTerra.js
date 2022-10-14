@@ -119,7 +119,6 @@ const subscribeToLocalTerraEvents = async (win) => {
   });
 
   localTerraProcess.stderr.on('data', (data) => {
-    console.log('ASDFASDFSFSD', data.toString());
     console.error(`stderr: ${data}`);
   });
 
