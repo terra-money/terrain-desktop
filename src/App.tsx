@@ -1,11 +1,14 @@
-import React, { useEffect, useState, memo } from 'react';
+import React, {
+  useEffect, useState, memo, useCallback,
+} from 'react';
 import { BsArrowLeftShort, BsSearch, BsCircleFill } from 'react-icons/bs';
 import { ipcRenderer } from 'electron';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Modal } from '@material-ui/core';
 import { useTour } from '@reactour/tour';
+import { debounce } from 'lodash';
 import { NavLink, SettingsModal } from './components';
-import { GET_LOCAL_TERRA_STATUS, TOGGLE_LOCAL_TERRA } from './constants';
+import { GET_LOCAL_TERRA_STATUS, TOGGLE_LOCAL_TERRA, TOGGLE_DEBOUNCE_MS } from './constants';
 import {
   useTerraBlockUpdate, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
 } from './hooks/terra';
@@ -66,12 +69,15 @@ const App = () => {
     }
   };
 
-  const toggleLocalTerra = async () => {
-    if (isLoading) return;
+  const toggleLocalTerra = () => {
     setIsLoading(true);
     ipcRenderer.invoke(TOGGLE_LOCAL_TERRA, !hasStartedLocalTerra.get());
     hasStartedLocalTerra.set(null); // We're not started or stopped.
   };
+
+  const debouncedToggleLocalTerra = useCallback(debounce(() => toggleLocalTerra(),
+    TOGGLE_DEBOUNCE_MS, { leading: true, trailing: false, maxWait: TOGGLE_DEBOUNCE_MS }),
+  []);
 
   const { routes, menu } = useAppRoutes({
     handleToggleClose,
@@ -210,14 +216,14 @@ const App = () => {
               <li className="ml-auto">
                 <button
                   type="button"
-                  onClick={toggleLocalTerra}
+                  onClick={debouncedToggleLocalTerra}
                   className={`${isLoading ? 'cursor-pointer' : ''}
                   tour__toggle-terra flex items-center justify-center space-x-3 text-xs rounded-lg w-28 md:w-40 h-10 border-4 border-gray-brackground`}
                 >
                   <BsCircleFill
                     className={
                       isLoading
-                        ? 'animate-bounce text-is-loading-grey'
+                        ? 'text-is-loading-yellow'
                         : hasStartedLocalTerra.get()
                           ? 'text-is-connected-green'
                           : 'text-not-connected-red'
