@@ -78,7 +78,8 @@ const startLocalTerra = async (localTerraPath) => {
 
 const subscribeToLocalTerraEvents = async (win) => {
   const localTerraPath = await store.getLocalTerraPath();
-  const localTerraProcess = spawn('docker', ['compose', 'logs', '-f'], {
+  const liteMode = await store.getLiteMode();
+  const localTerraProcess = spawn('docker', ['compose', 'logs', liteMode ? 'terrad' : '', '-f'], {
     cwd: localTerraPath,
     env: {
       PATH: `${process.env.PATH}:/usr/local/bin/`,
@@ -92,9 +93,7 @@ const subscribeToLocalTerraEvents = async (win) => {
     try {
       if (win && win.isDestroyed()) { return; }
       win.webContents.send(NEW_LOG, data.toString());
-      if (data.toString().includes('localterra-terrad-1 exited with code 0')) {
-        win.webContents.send(LOCAL_TERRA_IS_RUNNING, false); // TODO: this is a hack, find a better way to do this
-      }
+
       if (!globals.localTerra.isRunning) {
         txWs.subscribeTx({}, async ({ value }) => {
           const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
@@ -120,6 +119,7 @@ const subscribeToLocalTerraEvents = async (win) => {
   });
 
   localTerraProcess.stderr.on('data', (data) => {
+    console.log('ASDFASDFSFSD', data.toString());
     console.error(`stderr: ${data}`);
   });
 
