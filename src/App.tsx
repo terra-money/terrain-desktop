@@ -8,7 +8,7 @@ import { Modal } from '@material-ui/core';
 import { useTour } from '@reactour/tour';
 import { debounce } from 'lodash';
 import { NavLink, SettingsModal } from './components';
-import { GET_LOCAL_TERRA_STATUS, TOGGLE_LOCAL_TERRA } from './constants';
+import { GET_LOCAL_TERRA_STATUS, TOGGLE_LOCAL_TERRA, TOGGLE_DEBOUNCE_MS } from './constants';
 import {
   useTerraBlockUpdate, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
 } from './hooks/terra';
@@ -50,7 +50,6 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    console.log(hasStartedLocalTerra.get());
     if (hasStartedLocalTerra.get() === null) setIsLoading(true);
     else setIsLoading(false);
   }, [hasStartedLocalTerra, latestHeight]);
@@ -71,14 +70,13 @@ const App = () => {
   };
 
   const toggleLocalTerra = () => {
-    console.log('IS CLICKEDs');
     setIsLoading(true);
     ipcRenderer.invoke(TOGGLE_LOCAL_TERRA, !hasStartedLocalTerra.get());
     hasStartedLocalTerra.set(null); // We're not started or stopped.
   };
 
   const debouncedToggleLocalTerra = useCallback(debounce(() => toggleLocalTerra(),
-    3000, { leading: true, trailing: false, maxWait: 3000 }),
+    TOGGLE_DEBOUNCE_MS, { leading: true, trailing: false, maxWait: TOGGLE_DEBOUNCE_MS }),
   []);
 
   const { routes, menu } = useAppRoutes({
