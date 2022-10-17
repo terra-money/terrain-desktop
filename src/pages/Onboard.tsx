@@ -26,6 +26,7 @@ export default function Onboard() {
 
   const onLocalTerraInstall = async () => {
     try {
+      if (isLoading) { return; }
       setIsLoading(true);
       await ipcRenderer.invoke(INSTALL_LOCAL_TERRA);
       navigate('/', { state: { firstOpen: true } });
@@ -68,6 +69,7 @@ export default function Onboard() {
             {isLoading && <CircularProgress size={20} />}
             {!isLoading && 'Install LocalTerra'}
           </Button>
+          {isLoading && <h3>Installing. This may take a few minutes...</h3>}
         </FormGroup>
       </div>
     </div>

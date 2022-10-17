@@ -36,9 +36,7 @@ const BlockView = (props: {
   };
 
   return (
-    <ul
-      className="m-2"
-    >
+    <ul className="m-2 pb-1">
       <li
         className="bg-white grid cursor-pointer items-center shadow-row rounded-2xl border-2 border-blue-200 "
         style={{ gridTemplateColumns }}
@@ -74,12 +72,7 @@ const BlockView = (props: {
           />
         </div>
       </li>
-
-      <li
-        className={`rounded-2xl shadow-row ${
-          open ? 'border-2 border-blue-200 rounded-2xl' : ''
-        }`}
-      >
+      <li className={`rounded-2xl shadow-row ${open ? 'border-2 border-blue-200 rounded-2xl' : ''}`}>
         <Collapse in={open} timeout="auto" unmountOnExit className="px-16 py-8">
           <EventInfo
             title="Begin block event"
