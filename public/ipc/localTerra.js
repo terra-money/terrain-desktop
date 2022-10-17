@@ -23,9 +23,9 @@ module.exports = (win) => {
     } catch (err) {
       if (err.message.includes('LocalTerra already exists')) {
         await showLocalTerraAlreadyExistsDialog();
-      } else {
-        await showCustomDialog(JSON.stringify(err));
+        throw err;
       }
+      await showCustomDialog(JSON.stringify(err));
     }
   });
 

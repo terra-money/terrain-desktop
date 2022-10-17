@@ -4,6 +4,7 @@ import {
 } from '@mui/material';
 import { useTerra } from '../hooks/terra';
 import { TextCopyButton } from '.';
+import { truncate } from '../utils';
 
 const SelectWallet = ({ handleWalletChange, selectedWallet }: { handleWalletChange: any, selectedWallet: string }) => {
   const { wallets } = useTerra();
@@ -14,8 +15,8 @@ const SelectWallet = ({ handleWalletChange, selectedWallet }: { handleWalletChan
         {Object.keys(wallets).map((name: any) => (
           <MenuItem key={name} value={name}>
             {name}
-            {'       ...'}
-            {wallets[name].key.accAddress.slice(-5)}
+            {'       '}
+            {truncate(wallets[name].key.accAddress, [0, 8])}
             {name !== selectedWallet && <TextCopyButton text={wallets[name].key.accAddress} />}
           </MenuItem>
         ))}
