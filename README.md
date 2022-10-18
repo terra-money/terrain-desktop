@@ -1,6 +1,6 @@
 # Terrarium
 
-Terrarium is a complementary UI tool for Terra 2.0 development with [LocalTerra](https://github.com/terra-money/LocalTerra/), a locally run Terra testnet. Terrarium requires Docker.
+Terrarium is a complementary UI tool for Terra development with [LocalTerra](https://github.com/terra-money/LocalTerra/), a locally run Terra testnet. Terrarium requires Docker.
 
 Use Terraium to:
 
