@@ -97,7 +97,11 @@ export default function Onboard() {
             {isLoading && <CircularProgress size={20} />}
             {!isLoading && 'Install LocalTerra'}
           </button>
-          {isLoading && <h3>Installing. This may take a few minutes...</h3>}
+          {isLoading && (
+            <h3 className="text-sm text-white font-normal font-gotham mt-4 ml-3.5">
+              Installing. This may take a few minutes...
+            </h3>
+          )}
         </FormGroup>
       </div>
     </div>

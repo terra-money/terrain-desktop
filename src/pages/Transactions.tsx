@@ -12,7 +12,7 @@ export default function TransactionsPage() {
   if (txs.length === 0) {
     return (
       <div className="flex w-full items-center justify-center">
-        <h1 className="text-2xl font-bold text-blue-800 uppercase">
+        <h1 className="text-xl font-bold text-terra-text uppercase">
           There are no transactions yet.
         </h1>
       </div>

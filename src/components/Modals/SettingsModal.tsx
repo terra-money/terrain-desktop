@@ -69,10 +69,10 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
       tabIndex={-1}
       className="absolute top-2/4 left-2/4 transform -translate-x-2/4 -translate-y-2/4 w-5/12"
     >
-      <div className="relative w-full">
+      <div className="relative w-full max-w-xl">
         <div className="relative bg-white h-full rounded-lg shadow">
           <div className="flex justify-between items-center p-7 pb-5 rounded-t border-b">
-            <h3 className="text-base font-medium text-terra-text">Settings</h3>
+            <h3 className="text-lg font-medium text-terra-text">Settings</h3>
             <button type="button" className="ml-auto">
               <Close
                 onClick={() => handleToggleClose()}
