@@ -43,8 +43,12 @@ export default function Onboard() {
         <FormGroup>
           <FormControlLabel
             onChange={handleOnChangeDeps}
-            control={<Checkbox color="primary" />}
+            control={
+              <Checkbox color="primary" className="onboard-checkbox p-0" />
+            }
+            className="text-white text-sm gap-2 ml-0"
             label="Docker is installed and running"
+            classes={{ label: 'text-sm font-normal font-gotham' }}
           />
           {!isDockerSetup && (
             <a

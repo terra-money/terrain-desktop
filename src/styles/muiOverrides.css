@@ -28,3 +28,7 @@
 .custom-select-settings .MuiOutlinedInput-notchedOutline {
   border: none !important;
 }
+
+.onboard-checkbox .MuiIconButton-label .MuiSvgIcon-root {
+  fill: white;
+}
