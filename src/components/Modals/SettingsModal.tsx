@@ -12,6 +12,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import { PROMPT_USER_RESTART, RESET_APP } from '../../constants';
+import { ReactComponent as Close } from '../../assets/icons/close.svg';
 
 export default function SettingsModal({ handleToggleClose }: { handleToggleClose: Function }) {
   const navigate = useNavigate();
@@ -69,60 +70,44 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
       className="absolute top-2/4 left-2/4 transform -translate-x-2/4 -translate-y-2/4 w-5/12"
     >
       <div className="relative w-full">
-        <div className="relative bg-white h-full rounded-lg shadow dark:bg-gray-700">
-          <div className="flex justify-between items-center p-5 rounded-t border-b dark:border-gray-600">
-            <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-              Settings
-            </h3>
-            <button
-              type="button"
-              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg
-              text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              data-modal-toggle="top-left-modal"
-            >
-              <svg
+        <div className="relative bg-white h-full rounded-lg shadow">
+          <div className="flex justify-between items-center p-7 pb-5 rounded-t border-b">
+            <h3 className="text-base font-medium text-terra-text">Settings</h3>
+            <button type="button" className="ml-auto">
+              <Close
                 onClick={() => handleToggleClose()}
-                aria-hidden="true"
-                className="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1
-                   1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
+                className="w-6 h-6 fill-terra-text hover:fill-terra-navy"
+              />
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          <div className="p-6 pb-12 space-y-6">
-            <form>
+          <div className="p-5 pl-3 py-7 space-y-6 text-sm font-medium text-terra-text">
+            <form className="flex flex-col items-start gap-0.5">
               <FormControlLabel
                 labelPlacement="start"
                 control={(
                   <Checkbox
                     defaultChecked={openAtLogin}
+                    classes={{ root: 'p-0' }}
                     {...register('openAtLogin')}
                   />
                 )}
                 label="Open Terrarium at startup"
+                classes={{ label: 'text-sm font-medium font-gotham mr-2' }}
               />
               <br />
-              <Tooltip
-                title="Disable LiteMode to run the FCD and maintain transaction history."
-              >
+              <Tooltip title="Disable LiteMode to run the FCD and maintain transaction history.">
                 <FormControlLabel
                   labelPlacement="start"
                   control={(
                     <Checkbox
                       defaultChecked={liteMode}
+                      classes={{ root: 'p-0' }}
                       {...register('liteMode')}
                     />
-                )}
+                  )}
                   label="Run LocalTerra in LiteMode"
+                  classes={{ label: 'text-sm font-medium font-gotham mr-2' }}
                 />
               </Tooltip>
               <br />
@@ -131,6 +116,7 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
                 control={(
                   <>
                     <Button
+                      className="custom-browse-button text-terra-link text-sm font-medium font-gotham p-[2px]"
                       onClick={async () => {
                         const newPath = await ipcRenderer.invoke(
                           'SetLocalTerraPath',
@@ -141,13 +127,18 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
                       Browse
                     </Button>
                     <Input
-                      className="ml-2 pl-1 pr-1"
+                      className="custom-input mx-3"
                       defaultValue={localTerraPath}
+                      classes={{
+                        input:
+                          'text-sm text-terra-text font-normal font-gotham p-0 decoration-terra-text',
+                      }}
                       {...register('localTerraPath')}
                     />
                   </>
                 )}
                 label="Path to LocalTerra"
+                classes={{ label: 'text-sm font-medium font-gotham' }}
               />
               <br />
               <FormControlLabel
@@ -158,7 +149,12 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
                       size="small"
                       defaultValue={blocktime}
                       {...register('blocktime')}
-                      className="flex p-2"
+                      className="custom-select-settings"
+                      classes={{
+                        select:
+                          'text-sm text-terra-text leading-[18px] pl-1.5 py-[3px] rounded border border-[#CFD8EA]',
+                        icon: 'text-[16px] my-1 text-terra-text',
+                      }}
                     >
                       <MenuItem value="default">Default (5 seconds)</MenuItem>
                       <MenuItem value="1s">1 second</MenuItem>
@@ -167,6 +163,7 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
                   </div>
                 )}
                 label="Time between Terra blocks"
+                classes={{ label: 'text-sm font-medium font-gotham' }}
               />
               <br />
               <Tooltip title="Reset Factory Settings">
@@ -175,35 +172,23 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
                     resetApplication();
                   }}
                   type="button"
-                  className="text-red-500 bg-white hover:bg-red-100 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg border border-red-200
-              text-sm font-medium ml-4 px-5 py-2.5 hover:text-red-900 focus:z-10 dark:bg-red-700 dark:text-red-300 dark:border-red-500 dark:hover:text-white
-              dark:hover:bg-red-600 dark:focus:ring-red-600"
+                  className="text-not-connected-red text-sm font-medium ml-4 px-8 py-1.5 rounded-3xl border border-not-connected-red
+                    hover:bg-red-100 focus:ring-4 focus:outline-none focus:ring-red-200 focus:z-10"
                 >
                   Reset
                 </button>
               </Tooltip>
-
             </form>
           </div>
-          <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
+          <div className="flex items-center py-5 px-7 rounded-b border-t border-gray-200">
             <button
               data-modal-toggle="top-left-modal"
               type="button"
               onClick={() => handleSubmit(saveSettings)()}
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg
-              text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="bg-terra-button-primary text-white text-sm font-medium ml-auto px-14 py-3.5 rounded-3xl
+              hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
             >
               Save
-            </button>
-            <button
-              onClick={() => handleToggleClose()}
-              data-modal-toggle="top-left-modal"
-              type="button"
-              className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200
-              text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white
-              dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-            >
-              Cancel
             </button>
           </div>
         </div>

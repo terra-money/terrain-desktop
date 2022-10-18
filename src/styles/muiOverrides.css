@@ -1,0 +1,30 @@
+.custom-select {
+  min-width: 280px !important;
+}
+.custom-select .MuiInputBase-root {
+  box-shadow: inset 0 0 0 1.15px #cfd8ea, 0px 0.65px 2px 0px rgb(0 0 0 / 11%);
+}
+.custom-select .MuiInputBase-root:hover, .custom-select .MuiSelect-select:focus {
+  background: #FFFFFF !important;
+  box-shadow: inset 0 0 0 1.15px #0759e7a3, 0px 0.65px 2px 0px rgb(0 0 0 / 34%);
+}
+.custom-select .MuiSvgIcon-root {
+  color: #2043B5 !important;
+  right: 13px !important;
+}
+.custom-select .MuiOutlinedInput-notchedOutline {
+  border: none !important;
+}
+
+.custom-browse-button {
+  padding: 0 !important;
+}
+.custom-input::before {
+  border-color: #2043B5 !important;
+}
+.custom-select-settings .MuiSelect-select {
+  border: 1px solid #CFD8EA;
+}
+.custom-select-settings .MuiOutlinedInput-notchedOutline {
+  border: none !important;
+}

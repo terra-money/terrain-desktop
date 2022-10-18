@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
-import {
-  FormGroup, Button, CircularProgress, FormControlLabel, Checkbox,
-} from '@material-ui/core';
-import { ReactComponent as TerraLogoWithText } from '../assets/logo-with-text.svg';
-import { ReactComponent as ExternalLink } from '../assets/external-link.svg';
+import { CircularProgress, Checkbox } from '@material-ui/core';
+import { ReactComponent as TerraLogoWithText } from '../assets/Terrarium-full-logo.svg';
+import { ReactComponent as ExternalLink } from '../assets/External-link-white.svg';
 import { SET_LOCAL_TERRA_PATH, INSTALL_LOCAL_TERRA, CUSTOM_ERROR_DIALOG } from '../constants';
 
 export default function Onboard() {
@@ -36,39 +34,66 @@ export default function Onboard() {
   };
 
   return (
-    <div
-      className="flex items-center justify-center h-screen"
-      style={{
-        position: 'fixed', top: '0', right: '0', bottom: '0', left: '0', zIndex: '10000', backgroundColor: 'rgba(191, 219, 254, 1)',
-      }}
-    >
+    <div className="bg-terra-navy flex items-center justify-center fixed top-0 left-0 right-0 bottom-0 h-screen z-50">
       <div className="flex flex-col items-center justify-center block space-x-4">
-        <TerraLogoWithText />
-        <FormGroup>
-          <FormControlLabel onChange={handleOnChangeDeps} control={<Checkbox color="primary" />} label="Docker is installed and running" />
-          {!isDockerSetup && (
-          <Button>
-            <a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noreferrer">Install Docker</a>
+        <TerraLogoWithText className="mb-12" />
+        <div className="flex flex-col">
+          <div className="flex items-center">
+            <Checkbox
+              className="onboard-checkbox p-0 mr-2"
+              onChange={handleOnChangeDeps}
+            />
+            <span className="text-white text-sm gap-2">
+              Docker is installed and running
+            </span>
+          </div>
+
+          <a
+            href="https://www.docker.com/products/docker-desktop/"
+            target="_blank"
+            rel="noreferrer"
+            className="
+              bg-terra-button-primary
+              text-white text-sm normal-case font-medium
+              inline-flex justify-center items-center
+              py-3 px-16 mt-4 rounded-3xl transition-all
+              hover:brightness-90"
+          >
+            Install Docker
             <ExternalLink style={{ marginLeft: 10 }} />
-          </Button>
-          )}
-          <Button
-            variant="contained"
-            style={{ margin: '20px 0px' }}
+          </a>
+
+          <button
+            type="button"
             disabled={!isDockerSetup}
             onClick={onSetLocalTerraPath}
+            className="
+              bg-terra-button-secondary
+              text-terra-text text-sm normal-case font-medium
+              inline-flex justify-center items-center
+              py-3 px-16 mt-4 rounded-3xl transition-all
+              enabled:hover:brightness-90
+              disabled:opacity-50"
           >
             Select LocalTerra directory
-          </Button>
-          <Button
-            variant="contained"
+          </button>
+
+          <button
+            type="button"
             disabled={!isDockerSetup}
             onClick={onLocalTerraInstall}
+            className="
+              bg-terra-button-secondary
+              text-terra-text text-sm normal-case font-medium
+              inline-flex justify-center items-center
+              py-3 px-16 mt-4 rounded-3xl transition-all
+              enabled:hover:brightness-90
+              disabled:opacity-50"
           >
             {isLoading && <CircularProgress size={20} />}
             {!isLoading && 'Install LocalTerra'}
-          </Button>
-        </FormGroup>
+          </button>
+        </div>
       </div>
     </div>
   );

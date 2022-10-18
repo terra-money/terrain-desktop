@@ -9,7 +9,7 @@ const TextCopyButton = (props: any) => {
   return (
     <CopyToClipboard
       {...props}
-      className="text-blue-700 float-right"
+      className="text-blue-700 float-right ml-1"
       onCopy={() => setCopied(true)}
     >
       <button onClick={(e) => e.stopPropagation()} type="button">

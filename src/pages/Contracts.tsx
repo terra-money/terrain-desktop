@@ -54,10 +54,7 @@ function ContractsPage() {
 
   return (
     <div className="flex flex-col w-full">
-      <div
-        className="bg-white flex flex-row w-full text-left items-center px-4 py-5 gap-8 text-blue-600 shadow-nav"
-        style={{ background: '#ffffffe0' }}
-      >
+      <div className="flex flex-row w-full text-left items-center px-4 py-5 gap-4 text-blue-600">
         <SelectWallet
           selectedWallet={selectedWallet}
           handleWalletChange={handleWalletChange}
@@ -65,25 +62,21 @@ function ContractsPage() {
         <button
           type="button"
           onClick={handleNewContractsImport}
-          className="main-button tour__add-contracts flex items-center gap-2.5 py-3.5 px-5 rounded-lg text-white bg-terra-dark-blue"
+          className="main-button tour__add-contracts flex items-center h-8 gap-2 px-5 rounded-3xl text-white font-medium text-sm bg-terra-button-primary hover:bg-[#0f40b9]"
         >
-          <FaPlus className="flex-none w-3 text-white" />
+          <FaPlus className="flex-none w-2.5 text-white" />
           Add Contracts
         </button>
       </div>
-      {isLoading && (<LinearLoad />)}
+      {isLoading && <LinearLoad />}
       <div
         className="bg-white grid items-center w-full px-4 py-5 md:pl-8 text-blue-600 font-bold z-50 shadow-nav"
         style={{ gridTemplateColumns }}
       >
-        <div className="text-md lg:text-lg font-bold uppercase">Name</div>
-        <div className="flex text-md font-bold uppercase">
-          Code ID
-        </div>
-        <div className="flex font-bold uppercase">
-          Address
-        </div>
-        <div className="flex px-5 text-md lg:text-lg font-bold uppercase" />
+        <div className="text-md font-bold uppercase">Name</div>
+        <div className="flex text-md font-bold uppercase">Code ID</div>
+        <div className="flex font-bold uppercase">Address</div>
+        <div className="flex px-5 text-md font-bold uppercase" />
       </div>
       {contracts && (
         <Virtuoso

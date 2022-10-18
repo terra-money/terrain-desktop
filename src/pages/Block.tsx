@@ -23,22 +23,24 @@ export default function BlocksPage() {
   return (
     <div className="flex flex-col w-full">
       <FormControlLabel
-        control={<Checkbox checked={filter} onChange={handleToggleFilter} />}
+        control={(
+          <Checkbox
+            checked={filter}
+            onChange={handleToggleFilter}
+            classes={{ root: 'p-0' }}
+          />
+        )}
         label="Filter Empty Blocks"
-        className="bg-white flex flex-row w-full text-left items-center px-4 py-2 shadow-nav"
-        style={{
-          margin: '0px',
-        }}
+        className="flex flex-row w-full text-left items-center px-8 py-5 gap-2 text-blue-600 m-0"
+        classes={{ label: 'text-sm text-terra-text font-gotham' }}
       />
       <div
         className="bg-white grid items-center w-full px-4 py-5 md:pl-8 pr-3 text-blue-600 font-bold z-50 shadow-nav"
         style={{
-          gridTemplateColumns: `${
-            width <= 767 ? '88px' : '117px'
-          } ${width < 1100 ? 'minmax(150px, 1fr)' : '2fr'} ${
-            width <= 860
-              ? 'minmax(75px, 80px)'
-              : 'minmax(75px, 180px)'
+          gridTemplateColumns: `${width <= 767 ? '88px' : '117px'} ${
+            width < 1100 ? 'minmax(150px, 1fr)' : '2fr'
+          } ${
+            width <= 860 ? 'minmax(75px, 80px)' : 'minmax(75px, 180px)'
           } minmax(85px, 1fr) 0.5fr`,
         }}
       >
