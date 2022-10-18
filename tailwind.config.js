@@ -20,6 +20,7 @@ module.exports = {
         'terra-link': '#459CF4',
         'is-connected-green': '#1DAA8E',
         'not-connected-red': '#FF5561',
+        'is-loading-yellow': '#FEF08A',
         'is-loading-grey': '#ededf2',
       },
       boxShadow: {

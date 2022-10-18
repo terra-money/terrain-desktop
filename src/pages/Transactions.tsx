@@ -27,7 +27,7 @@ export default function TransactionsPage() {
   return (
     <div className="flex flex-col w-full">
       <div
-        className="bg-white shadow-nav grid w-full items-center py-5 pl-8 pr-3 text-blue-600 font-bold z-30"
+        className="bg-white shadow-nav grid w-full py-5 pl-8 pr-3 text-blue-600 font-bold z-30"
         style={{ gridTemplateColumns }}
       >
         <div className="text-md lg:text-lg font-bold uppercase">Hash</div>

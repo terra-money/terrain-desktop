@@ -78,7 +78,8 @@ const startLocalTerra = async (localTerraPath) => {
 
 const subscribeToLocalTerraEvents = async (win) => {
   const localTerraPath = await store.getLocalTerraPath();
-  const localTerraProcess = spawn('docker', ['compose', 'logs', '-f'], {
+  const liteMode = await store.getLiteMode();
+  const localTerraProcess = spawn('docker', ['compose', 'logs', liteMode ? 'terrad' : '', '-f'], {
     cwd: localTerraPath,
     env: {
       PATH: `${process.env.PATH}:/usr/local/bin/`,
@@ -92,6 +93,7 @@ const subscribeToLocalTerraEvents = async (win) => {
     try {
       if (win && win.isDestroyed()) { return; }
       win.webContents.send(NEW_LOG, data.toString());
+
       if (!globals.localTerra.isRunning) {
         txWs.subscribeTx({}, async ({ value }) => {
           const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
@@ -133,24 +135,27 @@ const subscribeToLocalTerraEvents = async (win) => {
 };
 
 const stopLocalTerra = async () => {
-  const localTerraPath = await store.getLocalTerraPath();
-  txWs.destroy();
-  blockWs.destroy();
+  try {
+    const localTerraPath = await store.getLocalTerraPath();
+    txWs.destroy();
+    blockWs.destroy();
 
-  await exec('docker compose stop', {
-    cwd: localTerraPath,
-    env: {
-      PATH: `${process.env.PATH}:/usr/local/bin/`,
-    },
-  });
+    await exec('docker compose stop', {
+      cwd: localTerraPath,
+      env: {
+        PATH: `${process.env.PATH}:/usr/local/bin/`, // TODO: this is a hack, find a better way to do this
+      },
+    });
 
-  globals.localTerra.isRunning = false;
-  showLocalTerraStopNotif();
+    globals.localTerra.isRunning = false;
+    showLocalTerraStopNotif();
+  } catch (err) {
+    await showCustomDialog(JSON.stringify(err));
+  }
 };
 
 const shutdown = async (win, restart = false) => {
-  // Force shutdown after 20 seconds.
-  setTimeout(() => {
+  setTimeout(() => { // Force shutdown after 20 seconds.
     app.exit();
   }, 20000);
 

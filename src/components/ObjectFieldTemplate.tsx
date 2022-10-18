@@ -1,11 +1,11 @@
 import React from 'react';
 
-export default function ObjectFieldTemplate(props: any) {
+function ObjectFieldTemplate(props: any) {
   if (props.properties.length === 0) { return null; }
   return (
     <div className="py-6">
       <div className="text-2xl capitalize text-blue-700 font-semibold">
-        {props.title}
+        {Object.keys(props.formData)[0]}
       </div>
       {props.description}
       {props.properties.map((element: any) => (
@@ -16,3 +16,5 @@ export default function ObjectFieldTemplate(props: any) {
     </div>
   );
 }
+
+export default React.memo(ObjectFieldTemplate);

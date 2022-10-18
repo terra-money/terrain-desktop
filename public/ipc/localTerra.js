@@ -23,9 +23,9 @@ module.exports = (win) => {
     } catch (err) {
       if (err.message.includes('LocalTerra already exists')) {
         await showLocalTerraAlreadyExistsDialog();
-      } else {
-        await showCustomDialog(JSON.stringify(err));
+        throw err;
       }
+      await showCustomDialog(JSON.stringify(err));
     }
   });
 
@@ -33,7 +33,7 @@ module.exports = (win) => {
     win.webContents.send(LOCAL_TERRA_IS_RUNNING, globals.localTerra.isRunning);
   });
 
-  ipcMain.secureHandle(TOGGLE_LOCAL_TERRA, async (e, localTerraStatus) => {
+  ipcMain.secureHandle(TOGGLE_LOCAL_TERRA, async (_, localTerraStatus) => {
     const localTerraPath = store.getLocalTerraPath();
 
     if (localTerraStatus) {
