@@ -25,6 +25,7 @@ const App = () => {
   const latestHeight = useGetLatestHeight();
   const isLocalTerraPathConfigured = useLocalTerraPathConfigured();
   const hasStartedLocalTerra = useLocalTerraStarted();
+  console.log('asdfs');
 
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
