@@ -18,9 +18,9 @@ const SelectWallet = ({ handleWalletChange, selectedWallet }: { handleWalletChan
         classes={{ select: 'rounded-lg leading-[21px] py-3.5 pr-8 pl-3' }}
       >
         {Object.keys(wallets).map((name: any) => (
-          <MenuItem key={name} value={name}>
+          <MenuItem key={name} value={name} classes={{ root: 'justify-between' }}>
             {name}
-            {'       '}
+            {'        '}
             {truncate(wallets[name].key.accAddress, [0, 8])}
             {name !== selectedWallet && <TextCopyButton text={wallets[name].key.accAddress} />}
           </MenuItem>

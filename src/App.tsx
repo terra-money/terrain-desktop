@@ -134,7 +134,7 @@ const App = () => {
               onChange={handleSearchInput}
               onKeyDown={handleSearch}
               type="search"
-              placeholder="hash, height, documentation..."
+              placeholder="Txs, blocks, addresses..."
               className={`text-sm bg-transparent w-full text-white placeholder:text-terra-text-muted focus:outline-none duration-300 ${
                 !open && 'hidden'
               }`}

@@ -77,9 +77,8 @@ const startLocalTerra = async (localTerraPath) => {
 };
 
 const subscribeToLocalTerraEvents = async (win) => {
-  const localTerraPath = await store.getLocalTerraPath();
-  const liteMode = await store.getLiteMode();
-  const localTerraProcess = spawn('docker', ['compose', 'logs', liteMode ? 'terrad' : '', '-f'], {
+  const [localTerraPath, liteMode] = await Promise.all([store.getLocalTerraPath(), store.getLiteMode()]);
+  const localTerraProcess = spawn('docker', ['compose', 'logs', ...(liteMode ? ['terrad'] : []), '-f'], {
     cwd: localTerraPath,
     env: {
       PATH: `${process.env.PATH}:/usr/local/bin/`,
