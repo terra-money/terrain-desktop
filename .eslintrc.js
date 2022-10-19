@@ -14,16 +14,24 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  ignorePatterns: ['node_modules/**/*', 'extensions/**/*'],
+  ignorePatterns: ['extensions/**/*'],
   plugins: [
     '@typescript-eslint',
   ],
+  overrides: [
+    {
+      files: ['public/**/*.js'],
+      rules: {
+        'import/no-unresolved': 0,
+      },
+    }],
   rules: {
     'max-len': ['error', { code: 175 }],
     '@typescript-eslint/no-unused-vars': ['error'],
     'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'react/jsx-props-no-spreading': 0,
     camelcase: 0,
+    'class-methods-use-this': 0,
     'jsx-a11y/click-events-have-key-events': 0,
     'jsx-a11y/no-noninteractive-element-interactions': 0,
     'no-param-reassign': 0,

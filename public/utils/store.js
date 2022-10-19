@@ -22,29 +22,24 @@ class TerrariumStore extends Store {
     return this.get('localTerraPath');
   }
 
-  // eslint-disable-next-line class-methods-use-this
   getBlocktime() {
     return window.ipcRenderer.invoke(GET_BLOCKTIME);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   setBlocktime(newBlocktime) {
     return window.ipcRenderer.invoke(SET_BLOCKTIME, newBlocktime);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   getOpenAtLogin() {
     return window.ipcRenderer.invoke(GET_OPEN_AT_LOGIN);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   setOpenAtLogin(status) {
     return window.ipcRenderer.invoke(SET_OPEN_AT_LOGIN, status);
   }
 
   getLiteMode() {
-    return false;
-    // return this.get('liteMode') || true;
+    return this.get('liteMode') || true;
   }
 
   setLiteMode(status) {

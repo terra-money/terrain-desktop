@@ -113,12 +113,12 @@ const subscribeToLocalTerraEvents = async (win) => {
         showLocalTerraStartNotif();
       }
     } catch (err) {
-      console.error(`Error with stdout data: ${err}`);
+      console.error(`Error with stdout data: ${err}`); // eslint-disable-line no-console
     }
   });
 
   localTerraProcess.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
+    console.error(`stderr: ${data}`); // eslint-disable-line no-console
   });
 
   localTerraProcess.on('close', () => {
@@ -127,7 +127,7 @@ const subscribeToLocalTerraEvents = async (win) => {
       globals.localTerra.isRunning = false;
       win.webContents.send(LOCAL_TERRA_IS_RUNNING, false);
     } catch (err) {
-      console.error(`Error closing LocalTerra process: ${err}`);
+      console.error(`Error closing LocalTerra process: ${err}`); // eslint-disable-line no-console
     }
   });
   return localTerraProcess;
