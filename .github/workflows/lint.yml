@@ -21,6 +21,7 @@ jobs:
           LINTER_RULES_PATH: /
           JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.js
           VALIDATE_TYPESCRIPT_ES: true
+          IGNORE_GITIGNORED_FILES: true
           VALIDATE_JAVASCRIPT_ES: true
           VALIDATE_JSX: true
           DEFAULT_BRANCH: main
