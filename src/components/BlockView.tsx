@@ -43,7 +43,7 @@ const BlockView = (props: {
         onClick={toggleBlocksRow}
       >
         <div
-          className="bg-blue-200 p-5 px-2 md:p-5 rounded-l-xl"
+          className="p-5 px-2 md:p-5 rounded-l-xl"
         >
           <a
             href={blockHref}

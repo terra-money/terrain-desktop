@@ -14,6 +14,7 @@ import {
 } from './hooks/terra';
 import { parseSearchUrl } from './utils';
 import { ReactComponent as TerraLogo } from './assets/terra-logo.svg';
+import TerrariumLettersImg from './assets/TerrariumLettersImg.png';
 import useAppRoutes from './hooks/routes';
 
 const App = () => {
@@ -85,15 +86,15 @@ const App = () => {
   });
 
   return (
-    <div className="flex flex-col w-screen h-screen">
+    <div className="flex flex-col w-screen h-screen bg-terra-background-gray">
       <div className="flex">
         <div
-          className={`left-nav bg-terra-dark-blue h-screen p-5 pt-7 ${
-            open ? 'w-72' : 'w-20'
+          className={`left-nav bg-terra-navy h-screen p-5 pt-7 ${
+            open ? 'w-72 min-w-[260px]' : 'w-20 min-w-20'
           } duration-300 relative`}
         >
           <BsArrowLeftShort
-            className={`bg-white text-terra-dark-blue text-3xl rounded-full absolute -right-4 top-8 border border-terra-dark-blue cursor-pointer z-50 ${
+            className={`bg-white text-terra-navy text-3xl rounded-full absolute -right-4 top-8 border border-terra-navy cursor-pointer z-50 ${
               !open && 'rotate-180'
             }`}
             onClick={() => setOpen(!open)}
@@ -111,11 +112,15 @@ const App = () => {
                 !open && 'scale-0'
               }`}
             >
-              Terrarium
+              <img
+                src={TerrariumLettersImg}
+                alt="name"
+                className="max-w-none"
+              />
             </h1>
           </div>
           <div
-            className={`tour__search flex items-center rounded-md mt-6 bg-light-white py-2 ${
+            className={`tour__search flex items-center mt-6 bg-terra-darknavy border border-terra-text-muted rounded-lg py-3 ${
               !open ? 'px-2.5' : 'px-4'
             }`}
           >
@@ -129,58 +134,63 @@ const App = () => {
               onChange={handleSearchInput}
               onKeyDown={handleSearch}
               type="search"
-              placeholder="hash, height, documentation..."
-              className={`text-base bg-transparent w-full text-white focus:outline-none duration-300 ${
+              placeholder="Txs, blocks, addresses..."
+              className={`text-sm bg-transparent w-full text-white placeholder:text-terra-text-muted focus:outline-none duration-300 ${
                 !open && 'hidden'
               }`}
             />
           </div>
           <ul className={`py-2 mt-2 ${open ? '' : ''}`}>
-            {menu.map((menuItem, index) => {
+            {menu.map((menuItem) => {
               if (menuItem.name === 'Settings') {
                 return (
-                  <button
-                    key={menuItem.name}
-                    type="button"
-                    onClick={() => handleToggleOpen(
-                      <SettingsModal handleToggleClose={handleToggleClose} />,
-                    )}
-                    className={`flex ${menuItem.name}
-                      ${open ? 'px-3' : 'justify-center'}
-                      px-8 h-16 absolute bottom-0 left-0 w-full rounded-none space-x-1 items-center rounded-md mt-2 text-blue-200
-                      `}
-                  >
-                    <div className={`float-left h-15 w-15 ${open ? 'mr-2' : 'block'}`}>
-                      {menuItem.icon}
-                    </div>
-                    <div
-                      className={`text-white text-base font-medium items-center cursor-pointer ${
-                        !open && 'hidden'
+                  <div className="absolute bottom-0 left-0 w-full p-5">
+                    <button
+                      key={menuItem.name}
+                      type="button"
+                      onClick={() => handleToggleOpen(
+                        <SettingsModal
+                          handleToggleClose={handleToggleClose}
+                        />,
+                      )}
+                      className={`flex bg-terra-darknavy h-[52px] w-full space-x-1 items-center rounded-md hover:border-2 hover:border-terra-text-muted
+                      ${
+                        open
+                          ? 'px-3 hover:px-[calc(0.75rem-2px)]'
+                          : 'justify-center'
                       }`}
                     >
-                      <p>{menuItem.name}</p>
-                    </div>
-                  </button>
+                      <div
+                        className={`float-left h-15 w-15 ${
+                          open ? 'mr-2' : 'block'
+                        }`}
+                      >
+                        {menuItem.icon}
+                      </div>
+                      <div
+                        className={`text-white text-base font-medium items-center cursor-pointer ${
+                          !open && 'hidden'
+                        }`}
+                      >
+                        <p>{menuItem.name}</p>
+                      </div>
+                    </button>
+                  </div>
                 );
               }
               return (
                 <NavLink
                   key={menuItem.name}
                   to={menuItem.path}
-                  className={`${menuItem.name}
-                ${open ? 'px-3' : 'justify-center'}
-                ${
-                  index === menu.length - 1
-                    ? 'px-8 h-16 absolute bottom-0 left-0 w-full rounded-none'
-                    : 'h-12'
-                }
-                `}
+                  className={`${menuItem.name} ${
+                    open ? 'px-3' : 'justify-center'
+                  } h-12`}
                 >
                   <div className={`float-left ${open ? 'mr-2' : 'block'}`}>
                     {menuItem.icon}
                   </div>
                   <div
-                    className={`text-base font-medium flex-1 items-center cursor-pointer ${
+                    className={`text-base font-medium flex-1 items-center cursor-pointer leading-[21px] ${
                       !open && 'hidden'
                     }`}
                   >
@@ -192,51 +202,55 @@ const App = () => {
           </ul>
         </div>
 
-        <div className="relative flex-auto bg-gray-background w-full h-screen overflow-hidden">
-          <header className="absolute w-full bg-white shadow-md z-40 flex justify-between p-6 lg:pl-12">
+        <div className="relative flex-auto w-full h-screen overflow-hidden">
+          <header className="absolute w-full bg-white z-40 flex justify-between p-6 pl-12 border-b border-[#CFD8EA] shadow-extra-light-bottom">
             <ul className="flex flex-row w-full gap-1 lg:gap-10 xl:gap-20 items-center font-medium">
-              <li className="tour__current-block flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                <p className="text-md md:text-[15px] md:leading-7 lg:text-xl xl:text-2xl text-terra-mid-blue">
+              <li className="tour__current-block flex-col px-2 font-medium text-xs text-terra-navy whitespace-nowrap">
+                <p className="text-terra-text-muted md:text-md">
+                  Current Block
+                </p>
+                <p className="text-lg md:leading-7 text-terra-text">
                   {latestHeight}
                 </p>
-                <p className="md:text-md">Current Block</p>
               </li>
-              <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                <p className="text-md md:text-[15px] md:leading-7 lg:text-xl xl:text-2xl text-terra-mid-blue">
+              <li className="flex-col px-2 font-medium text-xs text-terra-navy whitespace-nowrap">
+                <p className="text-terra-text-muted md:text-md">Network ID</p>
+                <p className="text-lg md:leading-7 text-terra-text">
                   {terra.config.chainID}
                 </p>
-                <p className="md:text-md">Network ID</p>
               </li>
-              <li className="flex-col px-2 font-bold text-xs text-terra-dark-blue whitespace-nowrap">
-                <p className="text-md md:text-[15px] md:leading-7 lg:text-xl xl:text-2xl text-terra-mid-blue">
+              <li className="flex-col px-2 font-medium text-xs text-terra-navy whitespace-nowrap">
+                <p className="text-terra-text-muted md:text-md">RPC Server</p>
+                <p className="text-lg md:leading-7 text-terra-text">
                   {terra.config.URL}
                 </p>
-                <p className="md:text-md">RPC Server</p>
               </li>
               <li className="ml-auto">
                 <button
                   type="button"
                   onClick={debouncedToggleLocalTerra}
                   className={`${isLoading ? 'cursor-pointer' : ''}
-                  tour__toggle-terra flex items-center justify-center space-x-3 text-xs rounded-lg w-28 md:w-40 h-10 border-4 border-gray-brackground`}
+                  tour__toggle-terra flex items-center justify-center py-1.5 px-3 space-x-1.5 rounded bg-terra-background-gray border-2 border-terra-button-secondary`}
                 >
                   <BsCircleFill
-                    className={
-                      isLoading
-                        ? 'text-is-loading-yellow'
-                        : hasStartedLocalTerra.get()
-                          ? 'text-is-connected-green'
-                          : 'text-not-connected-red'
-                    }
+                    className={`w-[8px]
+                      ${
+                        isLoading
+                          ? 'text-is-loading-yellow'
+                          : hasStartedLocalTerra.get()
+                            ? 'text-is-connected-green'
+                            : 'text-not-connected-red'
+                      }
+                    `}
                   />
-                  <p className="text-terra-dark-blue text-md lg:text-lg font-bold">
-                    LocalTerra
+                  <p className="text-terra-text text-xs font-normal">
+                    Local Terra
                   </p>
                 </button>
               </li>
             </ul>
           </header>
-          <main className="flex w-full h-full overflow-hidden pt-[88px] md:pt-[92px] xl:pt-[96px]">
+          <main className="flex w-full h-full overflow-hidden pt-[92px]">
             {routes}
           </main>
         </div>

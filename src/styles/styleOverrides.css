@@ -1,87 +1,16 @@
 .left-nav ul a {
   transition:
     background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-    color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-    fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-}
-.left-nav ul a:hover {
-  background-color: #0f40b9;
-  color: white !important;
-}
-.left-nav ul a.selected {
-  background-color: #0f40b9;
-  color: white;
-}
-
-.left-nav ul a svg {
-  fill: rgba(191, 219, 254, 1);
-}
-.left-nav ul a:hover svg {
-  fill: white !important;
-}
-.left-nav ul a.selected svg {
-  background-color: #0f40b9;
-  fill: white;
-}
-
-.left-nav .Settings {
-  background: rgb(0 44 149);
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-}
-.left-nav .Settings:hover {
-  background-color: #0f40b9 !important;
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1) 10ms,
+    fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 100ms;
 }
 
 .main-button {
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 .main-button:hover {
-  background-color: #0f40b9 !important;
-  color: white;
-  box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+  box-shadow: 0px 1.65px 2px 0px rgb(0 0 0 / 20%);
 }
-
-/*
-  START of MUI overrides
-*/
-.custom-select .MuiSelect-select {
-  animation-name: mui-auto-fill-cancel;
-  animation-duration: 10ms;
-  padding: 16.5px 14px;
-  width: 250px;
-  height: 1.4375em !important;
-  min-height: 0 !important;
-  line-height: 1.4375em !important;
-}
-.custom-select .MuiInputLabel-root {
-  line-height: 1.4375em !important;
-  letter-spacing: 0.00938em !important;
-  transform: translate(14px, -9px) scale(0.75) !important;
-}
-
-.MuiPaper-root {
-  min-width: 296px !important;
-}
-.MuiPaper-root .MuiMenuItem-root{
-  display: block !important;
-  padding: 6px 16px !important;
-  justify-content: start !important;
-}
-
-.MuiButtonBase-root {
-  margin: 0.25rem 0;
-}
-
-.MuiButton-root {
-  min-width: 64px !important;
-  padding: 6px 16px !important;
-  border-radius: 4px !important;
-  color: #fff !important;
-  background-color: #1976d2 !important;
-}
-/*
-  END of MUI overrides
-*/
 
 /*
   START of RS-TABLE overrides

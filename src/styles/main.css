@@ -1,0 +1,9 @@
+@import './fonts.css';
+@import './muiOverrides.css';
+@import './styleOverrides.css';
+
+html {
+  font-family: "Gotham", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: .2px;
+}

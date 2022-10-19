@@ -30,7 +30,7 @@ const EventInfo = ({ events, title }: {
                 <div key={_index} className="ml-6">
                   <span
                     style={{ minWidth: '60px' }}
-                    className="mr-2 min-w-60 inline-block text-terra-mid-blue"
+                    className="mr-2 min-w-60 inline-block text-terra-text"
                   >
                     {attribute.key}
                   </span>
