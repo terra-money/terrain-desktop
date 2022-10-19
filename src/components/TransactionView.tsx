@@ -17,6 +17,7 @@ const TransactionView = ({
 }) => {
   const { txhash, result, height } = data.TxResult;
   const txHref = `${REACT_APP_FINDER_URL}/tx/${txhash}`;
+  const isLiteMode = window.store.getLiteMode();
 
   const [open, setOpen] = React.useState(data.hasEventsOpenInUi);
 
@@ -34,9 +35,9 @@ const TransactionView = ({
         style={{ gridTemplateColumns }}
         onClick={toggleEventsRow}
       >
-        <div className="bg-blue-200 p-5 px-2 lg:p-5 rounded-l-xl">
+        <div className="p-5 px-2 lg:p-5 rounded-l-xl">
           <a
-            className="flex items-center text-sm lg:text-base text-blue-700 font-semibold hover:text-blue-500 hover:underline"
+            className={`${isLiteMode && 'pointer-events-none'} flex items-center text-sm lg:text-base text-blue-700 font-semibold hover:text-blue-500 hover:underline`}
             target="_blank"
             href={txHref}
             rel="noreferrer"
@@ -45,7 +46,7 @@ const TransactionView = ({
             <div className="mr-2">
               {truncate(txhash, [6, 6])}
             </div>
-            <ExternalLinkIcon />
+            {!isLiteMode && <ExternalLinkIcon />}
           </a>
         </div>
         <div className="flex items-center px-1 md:px-3 text-sm lg:text-md">

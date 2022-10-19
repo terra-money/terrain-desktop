@@ -17,6 +17,7 @@ const BlockView = (props: {
   const { result_begin_block, hasEventsOpenInUi } = props.data;
   const { gridTemplateColumns } = props;
   const blockHref = `${REACT_APP_FINDER_URL}/blocks/${height}`;
+  const isLiteMode = window.store.getLiteMode();
 
   const [open, setOpen] = React.useState(hasEventsOpenInUi);
 
@@ -49,11 +50,11 @@ const BlockView = (props: {
             href={blockHref}
             target="_blank"
             onClick={(e) => e.stopPropagation()}
-            className="flex items-center text-blue-700 font-semibold text-sm md:text-lg hover:text-blue-500 hover:underline"
+            className={`${isLiteMode && 'pointer-events-none'} flex items-center text-blue-700 font-semibold text-sm md:text-lg hover:text-blue-500 hover:underline`}
             rel="noreferrer"
           >
             <div className="mr-1 md:mr-2">{height}</div>
-            <ExternalLinkIcon />
+            {!isLiteMode && <ExternalLinkIcon /> }
           </a>
         </div>
 
