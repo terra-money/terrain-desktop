@@ -5,6 +5,7 @@ import { ContentCopy as ContentCopyIcon, FileCopy as FileCopyIcon } from '@mui/i
 const TextCopyButton = (props: any) => {
   const [copied, setCopied] = React.useState(false);
   setTimeout(() => setCopied(false), copied ? 500 : 0);
+  console.log('props in TextCopyButton', props);
 
   return (
     <CopyToClipboard
