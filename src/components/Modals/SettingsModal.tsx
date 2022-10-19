@@ -96,7 +96,7 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
                 classes={{ label: 'text-sm font-medium font-gotham mr-2' }}
               />
               <br />
-              <Tooltip title="Disable LiteMode to run the FCD (maintain transaction history and use finder with blocks).">
+              <Tooltip title="disable LiteMode to run the FCD and access transactions and blocks with finder">
                 <FormControlLabel
                   labelPlacement="start"
                   control={(
