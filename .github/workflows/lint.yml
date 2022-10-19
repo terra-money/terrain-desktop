@@ -1,17 +1,23 @@
-name: Lint
-
-on: pull_request
+---
+name: Lint Code Base
+on:
+  pull_request:
+    branches: main
 
 jobs:
-  eslint:
+  lint:
+    name: Lint Code Base
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: mrdivyansh/eslint-action@v1.0.7
-        if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+      - name: Checkout Code
+        uses: actions/checkout@v2
         with:
-          repo-token: ${{secrets.GITHUB_TOKEN}}
-          eslint-rc: .eslintrc.js
-          execute-on-files:
-            - ./src
-            - ./public
+          fetch-depth: 0
+
+      - name: Lint Code Base
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
