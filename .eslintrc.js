@@ -14,6 +14,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
+  ignorePatterns: ['node_modules/**/*', 'extensions/**/*'],
   plugins: [
     '@typescript-eslint',
   ],
