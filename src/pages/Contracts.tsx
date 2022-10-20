@@ -62,6 +62,7 @@ function ContractsPage() {
           selectedWallet={selectedWallet}
           handleWalletChange={handleWalletChange}
         />
+
         <Tooltip title="import a Terrain project directory to access contract methods">
           <button
             type="button"

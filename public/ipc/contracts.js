@@ -1,7 +1,6 @@
 const { ipcMain } = require('../utils/ipcMain');
 const { getSmartContractData } = require('../utils/contracts');
 const { store } = require('../utils/store');
-const { validateIpcSender } = require('../utils/misc');
 const { showSmartContractDialog, showMissingSchemaDialog } = require('../utils/messages');
 
 const {

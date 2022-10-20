@@ -1,3 +1,5 @@
+[![GitHub Super-Linter](https://github.com/terra-money/terrarium/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
+
 # Terrarium
 
 Terrarium is a complementary UI tool for Terra development with [LocalTerra](https://github.com/terra-money/LocalTerra/), a locally run Terra testnet. Terrarium requires Docker.
