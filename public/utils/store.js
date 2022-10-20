@@ -39,7 +39,8 @@ class TerrariumStore extends Store {
   }
 
   getLiteMode() {
-    return this.get('liteMode') || true;
+    return false;
+    // return this.get('liteMode') || true;
   }
 
   setLiteMode(status) {

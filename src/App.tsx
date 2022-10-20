@@ -76,6 +76,7 @@ const App = () => {
     hasStartedLocalTerra.set(null); // We're not started or stopped.
   };
 
+
   const debouncedToggleLocalTerra = useCallback(
     debounce(
       () => toggleLocalTerra(),
@@ -84,6 +85,7 @@ const App = () => {
     ),
     [],
   );
+
 
   const { routes, menu } = useAppRoutes({
     handleToggleClose,
