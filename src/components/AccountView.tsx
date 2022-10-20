@@ -43,14 +43,14 @@ function AccountView({
           <a
             href={`${REACT_APP_FINDER_URL}/address/${accAddress}`}
             target="_blank"
-            className="flex items-center text-blue-700 font-semibold hover:text-blue-500 hover:underline"
+            className="flex items-center text-blue-700 mr-4 font-semibold hover:text-blue-500 hover:underline"
             rel="noreferrer"
           >
             <p className="mr-2">{accAddress}</p>
-            <ExternalLinkIcon className="mr-5" />
+            <ExternalLinkIcon />
           </a>
-          <TextCopyButton text={accAddress} />
         </div>
+        <TextCopyButton text={accAddress} />
         <div className="flex px-8 items-center">
           <p className="text-lg font-semibold text-blue-700">
             {nFormatter(balance)}

@@ -13,7 +13,7 @@ import { ReactComponent as BlocksIcon } from '../assets/icons/menu/blocks.svg';
 import { ReactComponent as TransactionsIcon } from '../assets/icons/menu/transactions.svg';
 import { ReactComponent as ContractsIcon } from '../assets/icons/menu/contracts.svg';
 import { ReactComponent as LogsIcon } from '../assets/icons/menu/logs.svg';
-import { ReactComponent as CogIcon } from '../assets/icons/menu/cog.svg';
+import { ReactComponent as SettingsIcon } from '../assets/icons/menu/settings.svg';
 
 const useAppRoutes = ({
   handleToggleClose,
@@ -60,7 +60,7 @@ const useAppRoutes = ({
     },
     {
       name: 'Settings',
-      icon: <CogIcon className="w-6 h-6" />,
+      icon: <SettingsIcon className="w-6 h-6" />,
       path: '/settings',
     },
   ];

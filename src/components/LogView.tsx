@@ -10,7 +10,7 @@ const LogItemView = ({ log }: { log: any }) => {
   const isBeginningOfBlock = log.includes('Timed out');
   return (
     <>
-      {isBeginningOfBlock && <div className="w-full h-1 bg-black my-1" />}
+      {isBeginningOfBlock && <div style={{ height: '0.1rem' }} className="w-full bg-terra-dark-blue my-1" />}
       <pre
         className="break-words whitespace-pre-line"
         dangerouslySetInnerHTML={{

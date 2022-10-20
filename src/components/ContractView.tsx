@@ -35,14 +35,16 @@ const ContractView = ({
   return (
     <ul className="m-2">
       <li
-        className="bg-white tour__contract-view grid items-center shadow-row rounded-2xl border-2 border-blue-200"
+        className="bg-white cursor-pointer tour__contract-view grid items-center shadow-row rounded-2xl border-2 border-blue-200"
         style={{ gridTemplateColumns }}
+        onClick={toggleContractRow}
       >
         <a
           className="flex items-center text-blue-700 font-semibold text-sm md:text-base hover:text-blue-500 hover:underline rounded-l-xl"
           target="_blank"
           href={`${REACT_APP_FINDER_URL}/address/${address}`}
           rel="noreferrer"
+          onClick={(e) => e.stopPropagation()}
         >
           <div className="px-2 py-8 md:pl-5 overflow-ellipsis overflow-hidden">
             {name}
@@ -65,14 +67,14 @@ const ContractView = ({
         <div className="flex justify-end pl-3">
           <button
             type="button"
-            onClick={() => handleDeleteContract(codeId)}
+            onClick={(e) => handleDeleteContract(codeId, e)}
             className="text-blue"
           >
             <DeleteIcon className="text-blue" />
           </button>
           <button
             type="button"
-            onClick={() => handleRefreshRefs(path)}
+            onClick={(e) => handleRefreshRefs(path, e)}
             className="text-blue"
           >
             <RefreshIcon className="text-blue" />
@@ -81,35 +83,31 @@ const ContractView = ({
             <div className="p-3 pl-2">
               <KeyboardArrowDownIcon
                 className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
-                onClick={toggleContractRow}
               />
             </div>
           )}
         </div>
       </li>
-      {schemas && (
-        <li
-          className={`bg-white ${
-            open ? 'border-2 border-blue-200 rounded-2xl shadow-row' : ''
-          }`}
+
+      <li
+        className={`bg-white ${
+          open ? 'border-2 border-blue-200 rounded-2xl shadow-row' : ''
+        }`}
+      >
+        <Collapse
+          in={open}
+          timeout="auto"
+          className={open ? 'px-16 py-8' : 'hidden'}
         >
-          <Collapse
-            in={open}
-            timeout="auto"
-            className={`
-              ${open ? 'px-16 py-8' : 'hidden'}
-            `}
-          >
-            <ContractMethodsView
-              schemas={schemas}
-              setIsLoading={setIsLoading}
-              address={address}
-              wallet={wallet}
-              isLoading={isLoading}
-            />
-          </Collapse>
-        </li>
-      )}
+          <ContractMethodsView
+            schemas={schemas}
+            setIsLoading={setIsLoading}
+            address={address}
+            wallet={wallet}
+            isLoading={isLoading}
+          />
+        </Collapse>
+      </li>
     </ul>
   );
 };

@@ -19,6 +19,7 @@ const showPathSelectionDialog = async () => dialog.showOpenDialog({
   message: 'Select your LocalTerra directory.',
   title: 'Terrarium',
   type: 'info',
+  defaultPath: app.getPath('appData'),
   properties: ['openDirectory'],
 });
 
