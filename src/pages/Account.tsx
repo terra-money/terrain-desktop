@@ -13,7 +13,8 @@ export default function AccountsPage({
   const { getTestAccounts } = useTerra();
   const accounts = getTestAccounts();
 
-  const gridTemplateColumns = 'minmax(550px, 2fr) 1fr 0.5fr';
+  // const gridTemplateColumns = 'minmax(550px, 2fr) 1fr 0.5fr';
+  const gridTemplateColumns = '500px 20px 1fr 1fr';
 
   return (
     <div className="flex flex-col w-full">
@@ -23,6 +24,7 @@ export default function AccountsPage({
       >
         <div>Address</div>
         <div>Luna</div>
+        <div />
         <div className="flex justify-end">Key</div>
       </div>
       <Virtuoso

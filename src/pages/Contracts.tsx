@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { FaPlus } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { Tooltip } from '@mui/material';
 import {
   SelectWallet, ContractView, LinearLoad,
 } from '../components';
@@ -61,14 +62,17 @@ function ContractsPage() {
           selectedWallet={selectedWallet}
           handleWalletChange={handleWalletChange}
         />
-        <button
-          type="button"
-          onClick={handleNewContractsImport}
-          className="main-button tour__add-contracts flex items-center h-8 gap-2 px-5 rounded-3xl text-white font-medium text-sm bg-terra-button-primary hover:bg-[#0f40b9]"
-        >
-          <FaPlus className="flex-none w-2.5 text-white" />
-          Add Contracts
-        </button>
+
+        <Tooltip title="import a Terrain project directory to access contract methods">
+          <button
+            type="button"
+            onClick={handleNewContractsImport}
+            className="main-button tour__add-contracts flex items-center h-8 gap-2 px-5 rounded-3xl text-white font-medium text-sm bg-terra-button-primary hover:bg-[#0f40b9]"
+          >
+            <FaPlus className="flex-none w-2.5 text-white" />
+            Add Contracts
+          </button>
+        </Tooltip>
       </div>
       {isLoading && <LinearLoad />}
       <div

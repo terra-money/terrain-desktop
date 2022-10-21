@@ -1,5 +1,6 @@
 import React from 'react';
 import { ReactComponent as Close } from '../../assets/icons/close.svg';
+import { TextCopyButton } from '../index';
 
 function KeyViewModal({
   mnemonic,
@@ -15,6 +16,7 @@ function KeyViewModal({
           <h3 className="text-lg font-medium text-terra-text">
             Account Mnemonic
           </h3>
+
           <button type="button" className="ml-auto">
             <Close
               onClick={handleClose}
@@ -23,11 +25,13 @@ function KeyViewModal({
             <span className="sr-only">Close modal</span>
           </button>
         </div>
+
         <h4
           id="modal-description"
           className="leading-7 bg-terra-background-gray text-terra-text text-left rounded-lg p-4"
         >
           {mnemonic}
+          <TextCopyButton className="m-2" text={mnemonic} />
         </h4>
       </div>
     </div>

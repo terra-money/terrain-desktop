@@ -2,7 +2,7 @@ import { Collapse } from '@mui/material';
 import React from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { TerrariumTx } from '../models/TerrariumTx';
-import { ReactComponent as ExternalLinkIcon } from '../assets/External-link.svg';
+import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
 import EventInfo from './EventInfo';
 import { truncate } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
@@ -17,6 +17,7 @@ const TransactionView = ({
 }) => {
   const { txhash, result, height } = data.TxResult;
   const txHref = `${REACT_APP_FINDER_URL}/tx/${txhash}`;
+  const isLiteMode = window.store.getLiteMode();
 
   const [open, setOpen] = React.useState(data.hasEventsOpenInUi);
 
@@ -38,7 +39,7 @@ const TransactionView = ({
         onClick={toggleEventsRow}
       >
         <a
-          className="flex items-center text-terra-link hover:underline"
+          className={`${isLiteMode && 'pointer-events-none'} flex items-center text-terra-link hover:underline`}
           target="_blank"
           href={txHref}
           rel="noreferrer"
