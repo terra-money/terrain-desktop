@@ -13,24 +13,21 @@ export default function AccountsPage({
   const { getTestAccounts } = useTerra();
   const accounts = getTestAccounts();
 
-  const gridTemplateColumns = '500px 1fr 1fr';
+  const gridTemplateColumns = 'minmax(550px, 2fr) 1fr 0.5fr';
 
   return (
     <div className="flex flex-col w-full">
       <div
-        className="bg-white shadow-nav grid w-full px-4 py-5 pl-8 text-blue-600 z-30"
+        className="bg-white grid items-center w-full px-10 py-5 text-terra-text-muted font-medium text-sm uppercase z-30 border-b border-[#EBEFF8] shadow-very-light-border"
         style={{ gridTemplateColumns }}
       >
-        <div className="text-md lg:text-lg font-bold uppercase">Address</div>
-        <div className="px-5 text-md lg:text-lg font-bold uppercase">
-          Luna
-        </div>
-        <div className="flex justify-end px-5 text-md lg:text-lg font-bold uppercase">
-          Key
-        </div>
+        <div>Address</div>
+        <div>Luna</div>
+        <div className="flex justify-end">Key</div>
       </div>
       <Virtuoso
         className="flex flex-col w-full"
+        style={{ overflow: 'overlay' }}
         followOutput
         initialTopMostItemIndex={accounts.length}
         data={accounts}

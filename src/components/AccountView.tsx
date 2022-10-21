@@ -1,11 +1,11 @@
 import { Denom } from '@terra-money/terra.js';
 import React, { useEffect, useState } from 'react';
-import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
+import { ReactComponent as ExternalLinkIcon } from '../assets/External-link.svg';
 import { useTerraBlockUpdate, useLocalTerraStarted } from '../hooks/terra';
 import { demicrofy, nFormatter } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
 import { KeyViewModal, TextCopyButton } from '.';
-import { ReactComponent as KeyIcon } from '../assets/icons/menu/key.svg';
+import { ReactComponent as KeyIcon } from '../assets/icons/key.svg';
 
 function AccountView({
   wallet,
@@ -34,28 +34,27 @@ function AccountView({
   }, [hasStartedLocalTerra]);
 
   return (
-    <div className="m-2">
-      <div
-        className="bg-white grid items-center shadow-row rounded-2xl border-2 border-blue-200"
-        style={{ gridTemplateColumns }}
-      >
-        <div className="flex flex-row p-5 py-4 rounded-l-xl">
-          <a
-            href={`${REACT_APP_FINDER_URL}/address/${accAddress}`}
-            target="_blank"
-            className="flex items-center text-blue-700 font-semibold hover:text-blue-500 hover:underline"
-            rel="noreferrer"
-          >
-            <p className="mr-2">{accAddress}</p>
-            <ExternalLinkIcon className="mr-5" />
-          </a>
-          <TextCopyButton text={accAddress} />
-        </div>
-        <div className="flex px-8 items-center">
-          <p className="text-lg font-semibold text-blue-700">
-            {nFormatter(balance)}
-          </p>
-        </div>
+    <div
+      role="row"
+      tabIndex={0}
+      className="px-10 py-5 grid items-center bg-terra-background-secondary text-terra-text font-medium
+          border-b border-[#EBEFF8] shadow-very-light-border"
+      style={{ gridTemplateColumns }}
+    >
+      <div className="flex flex-row">
+        <a
+          href={`${REACT_APP_FINDER_URL}/address/${accAddress}`}
+          target="_blank"
+          className="flex items-center text-terra-link hover:underline"
+          rel="noreferrer"
+        >
+          <p>{accAddress}</p>
+          <ExternalLinkIcon className="fill-terra-link mx-1" />
+        </a>
+        <TextCopyButton text={accAddress} />
+      </div>
+      <p>{nFormatter(balance)}</p>
+      <div className="flex justify-end">
         <button
           type="button"
           onClick={() => handleToggleOpen(
@@ -64,9 +63,8 @@ function AccountView({
               handleClose={handleToggleClose}
             />,
           )}
-          className="flex justify-end text-blue-700 hover:text-blue-500 px-5 pr-7"
         >
-          <KeyIcon className="h-6 w-6" />
+          <KeyIcon className="h-6 w-6 fill-terra-text hover:fill-terra-button-primary" />
         </button>
       </div>
     </div>

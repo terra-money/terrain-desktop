@@ -203,7 +203,7 @@ const App = () => {
         </div>
 
         <div className="relative flex-auto w-full h-screen overflow-hidden">
-          <header className="absolute w-full bg-white z-40 flex justify-between p-6 pl-12 border-b border-[#CFD8EA] shadow-extra-light-bottom">
+          <header className="absolute w-full bg-white z-40 flex justify-between p-6 pl-12 border-b border-[#CFD8EA] shadow-light-bottom">
             <ul className="flex flex-row w-full gap-1 lg:gap-10 xl:gap-20 items-center font-medium">
               <li className="tour__current-block flex-col px-2 font-medium text-xs text-terra-navy whitespace-nowrap">
                 <p className="text-terra-text-muted md:text-md">

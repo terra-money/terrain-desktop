@@ -7,7 +7,7 @@ export default function TransactionsPage() {
   const { get: getTxs, set: setTxs } = useTxs();
   const txs = getTxs();
 
-  const gridTemplateColumns = '200px minmax(250px, 1fr) 100px minmax(100px, 1fr) 30px';
+  const gridTemplateColumns = '200px minmax(275px, 1fr) 100px minmax(100px, 1fr) 50px';
 
   if (txs.length === 0) {
     return (
@@ -27,36 +27,29 @@ export default function TransactionsPage() {
   return (
     <div className="flex flex-col w-full">
       <div
-        className="bg-white shadow-nav grid w-full py-5 pl-8 pr-3 text-blue-600 font-bold z-30"
+        className="bg-white grid items-center w-full px-10 py-5 text-terra-text-muted font-medium text-sm uppercase z-30 border-b border-[#EBEFF8] shadow-very-light-border"
         style={{ gridTemplateColumns }}
       >
-        <div className="text-md lg:text-lg font-bold uppercase">Hash</div>
-        <div className="px-1 md:px-3 text-md font-bold uppercase">
-          Type
-        </div>
-        <div className="px-1 md:px-3 text-md font-bold uppercase">
-          Block
-        </div>
-        <div className="px-1 md:px-3 text-md font-bold uppercase">
-          Gas Used
-        </div>
+        <div>Hash</div>
+        <div>Type</div>
+        <div>Block</div>
+        <div>Gas Used</div>
       </div>
-      <div className="bg-white" style={{ flexGrow: 1 }}>
-        <Virtuoso
-          followOutput
-          className="flex flex-col w-full"
-          data={txs}
-          itemContent={(index, data) => (
-            <TransactionView
-              onToggleEventDetails={toggleEventDetails}
-              data={data}
-              key={index}
-              index={index}
-              gridTemplateColumns={gridTemplateColumns}
-            />
-          )}
-        />
-      </div>
+      <Virtuoso
+        followOutput
+        className="flex flex-col w-full"
+        style={{ overflow: 'overlay' }}
+        data={txs}
+        itemContent={(index, data) => (
+          <TransactionView
+            onToggleEventDetails={toggleEventDetails}
+            data={data}
+            key={index}
+            index={index}
+            gridTemplateColumns={gridTemplateColumns}
+          />
+        )}
+      />
     </div>
   );
 }
