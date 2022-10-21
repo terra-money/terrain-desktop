@@ -14,7 +14,7 @@ import {
 } from './hooks/terra';
 import { parseSearchUrl } from './utils';
 import { ReactComponent as TerraLogo } from './assets/terra-logo.svg';
-import TerrariumLettersImg from './assets/TerrariumLettersImg.png';
+import TerrariumLettersImg from './assets/terrarium-letters-logo.png';
 import useAppRoutes from './hooks/routes';
 
 const App = () => {
