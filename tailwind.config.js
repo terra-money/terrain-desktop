@@ -24,7 +24,8 @@ module.exports = {
         'is-loading-grey': '#ededf2',
       },
       boxShadow: {
-        'extra-light-bottom': '0px 0.65px 1px 0px #cfd8ea',
+        'light-bottom': '0px 0.65px 1px 0px #cfd8ea',
+        'very-light-border': '0px 0.25px 0.5px 0px #cfd8ea',
         row: 'rgb(156 163 175 / 45%) 0px 0px 5px 1px',
       },
       fontFamily: {

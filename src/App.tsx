@@ -19,7 +19,7 @@ import useAppRoutes from './hooks/routes';
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalComponent, setModalComponent] = useState(<></>);
+  const [modalComponent, setModalComponent] = useState<any>();
   const navigate = useNavigate();
   const { terra } = useTerraBlockUpdate();
   const latestHeight = useGetLatestHeight();
@@ -76,9 +76,14 @@ const App = () => {
     hasStartedLocalTerra.set(null); // We're not started or stopped.
   };
 
-  const debouncedToggleLocalTerra = useCallback(debounce(() => toggleLocalTerra(),
-    TOGGLE_DEBOUNCE_MS, { leading: true, trailing: false, maxWait: TOGGLE_DEBOUNCE_MS }),
-  []);
+  const debouncedToggleLocalTerra = useCallback(
+    debounce(
+      () => toggleLocalTerra(),
+      TOGGLE_DEBOUNCE_MS,
+      { leading: true, trailing: false, maxWait: TOGGLE_DEBOUNCE_MS },
+    ),
+    [],
+  );
 
   const { routes, menu } = useAppRoutes({
     handleToggleClose,
@@ -203,7 +208,7 @@ const App = () => {
         </div>
 
         <div className="relative flex-auto w-full h-screen overflow-hidden">
-          <header className="absolute w-full bg-white z-40 flex justify-between p-6 pl-12 border-b border-[#CFD8EA] shadow-extra-light-bottom">
+          <header className="absolute w-full bg-white z-40 flex justify-between p-6 pl-12 border-b border-[#CFD8EA] shadow-light-bottom">
             <ul className="flex flex-row w-full gap-1 lg:gap-10 xl:gap-20 items-center font-medium">
               <li className="tour__current-block flex-col px-2 font-medium text-xs text-terra-navy whitespace-nowrap">
                 <p className="text-terra-text-muted md:text-md">

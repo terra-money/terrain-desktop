@@ -5,7 +5,7 @@ import {
   CircularProgress, Checkbox, FormGroup, FormControlLabel,
 } from '@material-ui/core';
 import { ReactComponent as TerraLogoWithText } from '../assets/Terrarium-full-logo.svg';
-import { ReactComponent as ExternalLink } from '../assets/External-link-white.svg';
+import { ReactComponent as ExternalLink } from '../assets/external-link.svg';
 import { SET_LOCAL_TERRA_PATH, INSTALL_LOCAL_TERRA, CUSTOM_ERROR_DIALOG } from '../constants';
 
 export default function Onboard() {
@@ -63,7 +63,7 @@ export default function Onboard() {
                 hover:brightness-90"
             >
               Install Docker
-              <ExternalLink style={{ marginLeft: 10 }} />
+              <ExternalLink className="fill-white ml-2.5" />
             </a>
           )}
 

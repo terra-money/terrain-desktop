@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { FaPlus } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { Tooltip } from '@mui/material';
 import {
   SelectWallet, ContractView, LinearLoad,
 } from '../components';
@@ -19,7 +20,7 @@ function ContractsPage() {
 
   const wallet = wallets[selectedWallet];
 
-  const gridTemplateColumns = 'minmax(150px, max-content) 100px 2.5fr 50px';
+  const gridTemplateColumns = 'minmax(175px, max-content) minmax(100px, 1fr) 2.5fr 150px';
 
   useEffect(() => {
     const cachedWallet = window.localStorage.getItem('prevWalletSelection');
@@ -56,34 +57,38 @@ function ContractsPage() {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-row w-full text-left items-center px-4 py-5 gap-4 text-blue-600">
+      <div className="flex flex-row w-full text-left items-center px-4 py-5 gap-4">
         <SelectWallet
           selectedWallet={selectedWallet}
           handleWalletChange={handleWalletChange}
         />
-        <button
-          type="button"
-          onClick={handleNewContractsImport}
-          className="main-button tour__add-contracts flex items-center h-8 gap-2 px-5 rounded-3xl text-white font-medium text-sm bg-terra-button-primary hover:bg-[#0f40b9]"
-        >
-          <FaPlus className="flex-none w-2.5 text-white" />
-          Add Contracts
-        </button>
+
+        <Tooltip title="import a Terrain project directory to access contract methods">
+          <button
+            type="button"
+            onClick={handleNewContractsImport}
+            className="main-button tour__add-contracts flex items-center h-8 gap-2 px-5 rounded-3xl text-white font-medium text-sm bg-terra-button-primary hover:bg-[#0f40b9]"
+          >
+            <FaPlus className="flex-none w-2.5 text-white" />
+            Add Contracts
+          </button>
+        </Tooltip>
       </div>
       {isLoading && <LinearLoad />}
       <div
-        className="bg-white grid items-center w-full px-4 py-5 md:pl-8 text-blue-600 font-bold z-50 shadow-nav"
+        className="bg-white grid items-center w-full px-10 py-5 text-terra-text-muted font-medium text-sm uppercase z-30 border-b border-[#EBEFF8] shadow-very-light-border"
         style={{ gridTemplateColumns }}
       >
-        <div className="text-md font-bold uppercase">Name</div>
-        <div className="flex text-md font-bold uppercase">Code ID</div>
-        <div className="flex font-bold uppercase">Address</div>
-        <div className="flex px-5 text-md font-bold uppercase" />
+        <div>Name</div>
+        <div>Code ID</div>
+        <div>Address</div>
+        <div />
       </div>
       {contracts && (
         <Virtuoso
           followOutput
           className="flex flex-col w-full"
+          style={{ overflow: 'overlay' }}
           data={contracts}
           itemContent={(index, data) => (
             <ContractView
