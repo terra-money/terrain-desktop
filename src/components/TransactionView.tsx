@@ -6,6 +6,7 @@ import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg'
 import EventInfo from './EventInfo';
 import { truncate } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
+import { TextCopyButton } from '.';
 
 const TransactionView = ({
   data, index, onToggleEventDetails, gridTemplateColumns,
@@ -35,7 +36,7 @@ const TransactionView = ({
         style={{ gridTemplateColumns }}
         onClick={toggleEventsRow}
       >
-        <div className="p-5 px-2 lg:p-5 rounded-l-xl">
+        <div className="p-5 px-2 lg:p-5 rounded-l-xl flex mr-5 justify-around">
           <a
             className={`${isLiteMode && 'pointer-events-none'} flex items-center text-sm lg:text-base text-blue-700 font-semibold hover:text-blue-500 hover:underline`}
             target="_blank"
@@ -44,10 +45,11 @@ const TransactionView = ({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mr-2">
-              {truncate(txhash, [6, 6])}
+              {truncate(txhash, [5, 5])}
             </div>
             {!isLiteMode && <ExternalLinkIcon />}
           </a>
+          <TextCopyButton text={txhash} />
         </div>
         <div className="flex items-center px-1 md:px-3 text-sm lg:text-md">
           <div className="text-ellipsis overflow-hidden">
