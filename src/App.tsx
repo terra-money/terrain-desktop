@@ -19,7 +19,7 @@ import useAppRoutes from './hooks/routes';
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalComponent, setModalComponent] = useState(<></>);
+  const [modalComponent, setModalComponent] = useState<any>();
   const navigate = useNavigate();
   const { terra } = useTerraBlockUpdate();
   const latestHeight = useGetLatestHeight();
@@ -76,9 +76,14 @@ const App = () => {
     hasStartedLocalTerra.set(null); // We're not started or stopped.
   };
 
-  const debouncedToggleLocalTerra = useCallback(debounce(() => toggleLocalTerra(),
-    TOGGLE_DEBOUNCE_MS, { leading: true, trailing: false, maxWait: TOGGLE_DEBOUNCE_MS }),
-  []);
+  const debouncedToggleLocalTerra = useCallback(
+    debounce(
+      () => toggleLocalTerra(),
+      TOGGLE_DEBOUNCE_MS,
+      { leading: true, trailing: false, maxWait: TOGGLE_DEBOUNCE_MS },
+    ),
+    [],
+  );
 
   const { routes, menu } = useAppRoutes({
     handleToggleClose,
@@ -134,7 +139,7 @@ const App = () => {
               onChange={handleSearchInput}
               onKeyDown={handleSearch}
               type="search"
-              placeholder="hash, height, documentation..."
+              placeholder="Txs, blocks, addresses..."
               className={`text-sm bg-transparent w-full text-white placeholder:text-terra-text-muted focus:outline-none duration-300 ${
                 !open && 'hidden'
               }`}
