@@ -7,3 +7,12 @@ html {
   -webkit-font-smoothing: antialiased;
   letter-spacing: .2px;
 }
+
+.scrollbar::-webkit-scrollbar {
+  width: 11px;
+}
+.scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0,0,0,0.2);
+  border: 2px solid #ffffff;
+}

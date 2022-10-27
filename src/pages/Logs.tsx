@@ -9,7 +9,7 @@ export default function LogsPage() {
   return (
     <div className="pl-4 w-full">
       <Virtuoso
-        className="flex flex-col w-full"
+        className="flex flex-col w-full scrollbar"
         initialTopMostItemIndex={logs.length}
         data={logs}
         itemContent={(index, log) => <LogView key={index} log={log} />}

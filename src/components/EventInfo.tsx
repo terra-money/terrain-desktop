@@ -9,7 +9,7 @@ const EventInfo = ({ events, title }: {
   const eventsAtts = EventUtils.parseEventsAttributes(events);
   return (
     <>
-      <h3 className="text-2xl font-medium mb-4">{title}</h3>
+      <h3 className="text-xl text-terra-text font-medium mb-3">{title}</h3>
       <List>
         {eventsAtts.map((event, index) => (
           <ListItem
@@ -17,24 +17,24 @@ const EventInfo = ({ events, title }: {
             style={{ alignItems: 'start', flexDirection: 'column' }}
             key={index}
           >
-            <div className="text-blue-800 w-40 text-lg mb-2 mt-2">
+            <div className="text-terra-text font-medium w-40 text-sm mb-2">
               <h4>
                 [
                 {index}
                 ]
+                {' '}
                 {event.type}
               </h4>
             </div>
             <div>
               {event.attributes.map((attribute, _index) => (
-                <div key={_index} className="ml-6">
+                <div key={_index} className="ml-6 mb-1 text-sm">
                   <span
-                    style={{ minWidth: '60px' }}
-                    className="mr-2 min-w-60 inline-block text-terra-text"
+                    className="mr-5 mb-1 min-w-[63px] inline-block text-terra-link"
                   >
                     {attribute.key}
                   </span>
-                  <span>{attribute.value}</span>
+                  <span className="text-terra-text">{attribute.value}</span>
                 </div>
               ))}
             </div>

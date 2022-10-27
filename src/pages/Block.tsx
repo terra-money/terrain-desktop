@@ -8,7 +8,7 @@ export default function BlocksPage() {
   const [filter, setFilter] = React.useState(false);
   const { get: getBlocks, set: setBlocks } = useBlocks();
   const data = getBlocks();
-  const gridTemplateColumns = '120px minmax(125px, 1fr) minmax(25px, 0.5fr) minmax(25px, 0.5fr) 30px';
+  const gridTemplateColumns = '120px minmax(125px, 1fr) minmax(25px, 0.5fr) minmax(25px, 0.5fr) 75px';
 
   const handleToggleFilter = () => setFilter(!filter);
 
@@ -34,23 +34,16 @@ export default function BlocksPage() {
         classes={{ label: 'text-sm text-terra-text font-gotham' }}
       />
       <div
-        className="bg-white grid items-center w-full px-4 py-5 md:pl-8 pr-3 text-blue-600 font-bold z-50 shadow-nav"
+        className="bg-white grid items-center w-full px-10 py-5 text-terra-text-muted font-medium text-sm uppercase z-30 border-b border-[#EBEFF8] shadow-very-light-border"
         style={{ gridTemplateColumns }}
       >
-        <div className="text-md lg:text-lg font-bold uppercase">Number</div>
-        <div className="flex justify-center px-5 text-md lg:text-lg font-bold uppercase">
-          Time
-        </div>
-        <div className="flex justify-center px-5 text-md lg:text-lg font-bold uppercase">
-          Transactions
-        </div>
-        <div className="flex justify-center px-5 text-md lg:text-lg font-bold uppercase">
-          Gas used
-        </div>
-        <div className="flex justify-center px-5 text-md lg:text-lg font-bold uppercase" />
+        <div>Number</div>
+        <div>Time</div>
+        <div>Transactions</div>
+        <div>Gas used</div>
+        <div />
       </div>
-      <div className="bg-white" style={{ flexGrow: 1 }}>
-        <Virtuoso
+             <Virtuoso
           className="flex flex-col w-full"
           data={filter ? getFilteredBlocks() : data.blocks}
           itemContent={(index, block) => (
@@ -63,7 +56,6 @@ export default function BlocksPage() {
             />
           )}
         />
-      </div>
     </div>
   );
 }
