@@ -37,51 +37,44 @@ const BlockView = (props: {
   };
 
   return (
-    <ul className="m-2 pb-1">
-      <li
-        className="bg-white grid cursor-pointer items-center shadow-row rounded-2xl border-2 border-blue-200 "
+    <div>
+      <div
+        role="row"
+        tabIndex={0}
+        className="cursor-pointer px-10 py-5 grid items-center bg-terra-background-secondary text-terra-text font-medium
+          border-b border-[#EBEFF8] shadow-very-light-border"
         style={{ gridTemplateColumns }}
         onClick={toggleBlocksRow}
       >
-        <div
-          className="p-5 px-2 md:p-5 rounded-l-xl"
+        <a
+          href={blockHref}
+          target="_blank"
+          onClick={(e) => e.stopPropagation()}
+          className={`${isLiteMode && 'pointer-events-none'} flex items-center text-terra-link hover:underline`}
+          rel="noreferrer"
         >
-          <a
-            href={blockHref}
-            target="_blank"
-            onClick={(e) => e.stopPropagation()}
-            className={`${isLiteMode && 'pointer-events-none'} flex items-center text-blue-700 font-semibold text-sm md:text-lg hover:text-blue-500 hover:underline`}
-            rel="noreferrer"
-          >
-            <div className="mr-1 md:mr-2">{height}</div>
-            {!isLiteMode && <ExternalLinkIcon /> }
-          </a>
-        </div>
+          <div>{height}</div>
+          {!isLiteMode && <ExternalLinkIcon className="fill-terra-link mx-1" />}
+        </a>
 
-        <div className="flex justify-center items-center px-5 text-sm md:text-[16px]">
-          {dateString}
-        </div>
-        <div className="flex justify-center items-center px-5 text-sm md:text-lg">
-          {txInfos.length}
-        </div>
-        <div className="flex justify-center items-center px-5 text-sm md:text-lg">
-          {gasUsed}
-        </div>
-        <div className="flex justify-end pr-2 md:px-5">
+        <div>{dateString}</div>
+        <div>{txInfos.length}</div>
+        <div>{gasUsed}</div>
+        <div className="flex justify-end">
           <KeyboardArrowDownIcon
             className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
           />
         </div>
-      </li>
-      <li className={`rounded-2xl shadow-row ${open ? 'border-2 border-blue-200 rounded-2xl' : ''}`}>
-        <Collapse in={open} timeout="auto" unmountOnExit className="px-16 py-8">
+      </div>
+      <div className="bg-white">
+        <Collapse in={open} timeout="auto" unmountOnExit className="px-20 py-7">
           <EventInfo
             title="Begin block event"
             events={result_begin_block.events}
           />
         </Collapse>
-      </li>
-    </ul>
+      </div>
+    </div>
   );
 };
 

@@ -20,7 +20,7 @@ function ContractsPage() {
 
   const wallet = wallets[selectedWallet];
 
-  const gridTemplateColumns = 'minmax(150px, max-content) 100px 2.5fr 50px';
+  const gridTemplateColumns = 'minmax(175px, max-content) minmax(100px, 1fr) 2.5fr 150px';
 
   useEffect(() => {
     const cachedWallet = window.localStorage.getItem('prevWalletSelection');
@@ -57,7 +57,7 @@ function ContractsPage() {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-row w-full text-left items-center px-4 py-5 gap-4 text-blue-600">
+      <div className="flex flex-row w-full text-left items-center px-4 py-5 gap-4">
         <SelectWallet
           selectedWallet={selectedWallet}
           handleWalletChange={handleWalletChange}
@@ -76,18 +76,19 @@ function ContractsPage() {
       </div>
       {isLoading && <LinearLoad />}
       <div
-        className="bg-white grid items-center w-full px-4 py-5 md:pl-8 text-blue-600 font-bold z-50 shadow-nav"
+        className="bg-white grid items-center w-full px-10 py-5 text-terra-text-muted font-medium text-sm uppercase z-30 border-b border-[#EBEFF8] shadow-very-light-border"
         style={{ gridTemplateColumns }}
       >
-        <div className="text-md font-bold uppercase">Name</div>
-        <div className="flex text-md font-bold uppercase">Code ID</div>
-        <div className="flex font-bold uppercase">Address</div>
-        <div className="flex px-5 text-md font-bold uppercase" />
+        <div>Name</div>
+        <div>Code ID</div>
+        <div>Address</div>
+        <div />
       </div>
       {contracts && (
         <Virtuoso
           followOutput
-          className="flex flex-col w-full"
+          className="flex flex-col w-full scrollbar"
+          style={{ overflow: 'overlay' }}
           data={contracts}
           itemContent={(index, data) => (
             <ContractView
