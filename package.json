@@ -111,6 +111,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
+        "osxSign": {},
         "icon": "./src/assets/icons/icon.icns",
         "name": "Terrarium"
       },

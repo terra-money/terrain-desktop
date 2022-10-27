@@ -52,8 +52,6 @@ export default function BlocksPage() {
       <div className="bg-white" style={{ flexGrow: 1 }}>
         <Virtuoso
           className="flex flex-col w-full"
-          followOutput
-          initialTopMostItemIndex={data.blocks.length}
           data={filter ? getFilteredBlocks() : data.blocks}
           itemContent={(index, block) => (
             <BlockView
