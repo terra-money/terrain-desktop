@@ -14,3 +14,4 @@ export { default as TextCopyButton } from './TextCopyButton';
 export { default as ContractMethodsView } from './ContractMethodsView';
 export { default as GenericContractCall } from './GenericContractCall';
 export { default as ObjectFieldTemplate } from './ObjectFieldTemplate';
+export { default as EventInfo } from './EventInfo';

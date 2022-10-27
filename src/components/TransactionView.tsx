@@ -3,9 +3,9 @@ import React from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { TerrariumTx } from '../models/TerrariumTx';
 import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
-import EventInfo from './EventInfo';
 import { truncate } from '../utils';
 import { REACT_APP_FINDER_URL } from '../constants';
+import { TextCopyButton, EventInfo } from '.';
 
 const TransactionView = ({
   data, index, onToggleEventDetails, gridTemplateColumns,
@@ -38,17 +38,20 @@ const TransactionView = ({
         style={{ gridTemplateColumns }}
         onClick={toggleEventsRow}
       >
-        <a
-          className={`${isLiteMode && 'pointer-events-none'} flex items-center text-terra-link hover:underline`}
-          target="_blank"
-          href={txHref}
-          rel="noreferrer"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div>{truncate(txhash, [6, 6])}</div>
-          {!isLiteMode && <ExternalLinkIcon className="fill-terra-link mx-1" />}
-        </a>
-        <div>{data.msg['@type']}</div>
+        <div className="flex">
+          <a
+            className={`${isLiteMode && 'pointer-events-none'} flex items-center justify-around mr-5 text-terra-link hover:underline`}
+            target="_blank"
+            href={txHref}
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div>{truncate(txhash, [5, 5])}</div>
+            {!isLiteMode && <ExternalLinkIcon className="fill-terra-link mx-1" />}
+          </a>
+          <TextCopyButton text={txhash} />
+        </div>
+        <div>{data.msg['@type'].split('.').slice(-1)}</div>
         <div>{height}</div>
         <div className="flex items-center">
           {result.gas_wanted}
