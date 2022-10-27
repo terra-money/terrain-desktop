@@ -16,9 +16,8 @@ export const logsState = createState<string[]>([]);
 export const StateListeners = () => {
   useEffect(() => {
     ipcRenderer.on(NEW_BLOCK, ((_: any, block: TerrariumBlockInfo) => {
-      const bHeight = Number(block.block.header.height);
-      blockState.latestHeight.set(bHeight);
-      blockState.blocks.merge([{ ...block }]);
+      blockState.latestHeight.set(Number(block.block.header.height));
+      blockState.blocks.set((p) => [block, ...p]);
     }));
 
     ipcRenderer.on(TX, (_: any, tx: TerrariumTx) => {

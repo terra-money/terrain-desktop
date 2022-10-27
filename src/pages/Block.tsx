@@ -46,8 +46,6 @@ export default function BlocksPage() {
       <Virtuoso
         className="flex flex-col w-full scrollbar"
         style={{ overflow: 'overlay' }}
-        followOutput
-        initialTopMostItemIndex={data.blocks.length}
         data={filter ? getFilteredBlocks() : data.blocks}
         itemContent={(index, block) => (
           <BlockView
