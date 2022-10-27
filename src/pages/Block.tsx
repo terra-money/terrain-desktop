@@ -44,7 +44,7 @@ export default function BlocksPage() {
         <div />
       </div>
              <Virtuoso
-          className="flex flex-col w-full"
+          className="flex flex-col w-full scrollbar"
           data={filter ? getFilteredBlocks() : data.blocks}
           itemContent={(index, block) => (
             <BlockView
