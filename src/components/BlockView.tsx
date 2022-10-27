@@ -1,7 +1,7 @@
 import { Collapse } from '@mui/material';
 import React from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { ReactComponent as ExternalLinkIcon } from '../assets/External-link.svg';
+import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
 import { useGetTxFromHeight } from '../hooks/terra';
 import { TerrariumBlockInfo } from '../models';
 import { REACT_APP_FINDER_URL } from '../constants';

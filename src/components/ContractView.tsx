@@ -6,7 +6,7 @@ import {
 import { useTour } from '@reactour/tour';
 import { Wallet } from '@terra-money/terra.js';
 import { SmartContract } from '../models/Contract';
-import { ReactComponent as ExternalLinkIcon } from '../assets/External-link.svg';
+import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
 import { ReactComponent as TrashIcon } from '../assets/icons/trash.svg';
 import { ReactComponent as RefreshIcon } from '../assets/icons/refresh.svg';
 import { REACT_APP_FINDER_URL } from '../constants';
