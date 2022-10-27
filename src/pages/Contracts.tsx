@@ -83,7 +83,7 @@ function ContractsPage() {
       {contracts && (
         <Virtuoso
           followOutput
-          className="flex flex-col w-full"
+          className="flex flex-col w-full scrollbar"
           style={{ overflow: 'overlay' }}
           data={contracts}
           itemContent={(index, data) => (

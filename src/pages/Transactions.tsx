@@ -37,7 +37,7 @@ export default function TransactionsPage() {
       </div>
       <Virtuoso
         followOutput
-        className="flex flex-col w-full"
+        className="flex flex-col w-full scrollbar"
         style={{ overflow: 'overlay' }}
         data={txs}
         itemContent={(index, data) => (

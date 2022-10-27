@@ -44,7 +44,7 @@ export default function BlocksPage() {
         <div />
       </div>
       <Virtuoso
-        className="flex flex-col w-full"
+        className="flex flex-col w-full scrollbar"
         style={{ overflow: 'overlay' }}
         followOutput
         initialTopMostItemIndex={data.blocks.length}

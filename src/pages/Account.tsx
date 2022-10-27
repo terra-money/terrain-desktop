@@ -26,7 +26,7 @@ export default function AccountsPage({
         <div className="flex justify-end">Key</div>
       </div>
       <Virtuoso
-        className="flex flex-col w-full"
+        className="flex flex-col w-full scrollbar"
         style={{ overflow: 'overlay' }}
         followOutput
         initialTopMostItemIndex={accounts.length}
