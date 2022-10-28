@@ -1,6 +1,6 @@
 {
   "name": "terrarium",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "homepage": "./",
   "main": "public/electron.js",
   "engines": {
@@ -23,7 +23,8 @@
     "make:ia32": "npm run make -- --arch ia32",
     "make:universal": "npm run make -- --arch universal",
     "make:x64": "npm run make -- --arch x64",
-    "make:arm64": "npm run make -- --arch arm64"
+    "make:arm64": "npm run make -- --arch arm64",
+    "create-dmgs": "node create-dmgs.js"
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
@@ -77,6 +78,7 @@
     "concurrently": "^6.5.1",
     "electron": "^21.0.0",
     "electron-builder": "^23.3.3",
+    "electron-installer-dmg": "^4.0.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-react-app": "^6.0.0",
