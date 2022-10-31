@@ -10,3 +10,4 @@ extensions
 out
 .vscode/settings.json
 .docker
+installers
