@@ -20,6 +20,7 @@
     "watch:css": "TAILWIND_MODE=watch tailwind -i public/styles.css -o src/index.css --watch",
     "package": "electron-forge package",
     "make": "npm run build:css && npm run build && electron-forge make",
+    "forge-make": "electron-forge make",
     "make:ia32": "npm run make -- --arch ia32",
     "make:universal": "npm run make -- --arch universal",
     "make:x64": "npm run make -- --arch x64",
@@ -66,6 +67,7 @@
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.64",
     "@electron-forge/maker-deb": "^6.0.0-beta.64",
+    "@electron-forge/maker-dmg": "^6.0.0-beta.74",
     "@electron-forge/maker-rpm": "^6.0.0-beta.64",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.64",
     "@electron-forge/maker-zip": "^6.0.0-beta.66",
@@ -115,28 +117,31 @@
     "forge": {
       "packagerConfig": {
         "icon": "./src/assets/icons/icon.icns",
-        "name": "Terrarium"
+        "name": "Terrarium",
+        "osxSign": {
+          "identity": "Developer ID Application: Jason Stallings (75EGRT7282)"
+        },
+        "overwrite": true,
+        "ignore": [
+          "^(\/src$)",
+          "^(\/public$)",
+          "^(\/.docker$)",
+          "^(\/out$)",
+          "^(\/.github$)",
+          "^(\/extensions$)",
+          ".gitignore",
+          "package-lock.json",
+          "^(\/README.md$)",
+          "tsconfig.json",
+          "tailwind.config.json"
+        ]
       },
       "makers": [
         {
-          "name": "@electron-forge/maker-squirrel",
+          "name": "@electron-forge/maker-dmg",
           "config": {
-            "name": "terrarium"
+            "format": "ULFO"
           }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
         }
       ]
     }

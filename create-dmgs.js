@@ -23,6 +23,6 @@ fs.readdirSync('./out').forEach(async (file) => {
       icon: './src/assets/icons/icon.icns',
     });
   } catch (err) {
-    console.log(`Error building DMG ${file}: `, err);
+    console.log(`Error building or signing DMG ${file}: `, err);
   }
 });
