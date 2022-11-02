@@ -30,7 +30,6 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
   const saveSettings = (data: FieldValues) => {
     window.store.setOpenAtLogin(data.openAtLogin);
     window.store.setLiteMode(data.liteMode);
-    console.log('data.liteMode', data.liteMode);
     window.store.setLocalTerraPath(data.localTerraPath);
     window.store.setBlocktime(data.blocktime);
     if (
@@ -52,7 +51,6 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
         window.store.getBlocktime(),
       ]);
       setOpenAtLogin(currentOpenAtLogin);
-      console.log('currentLiteMode', currentLiteMode);
       setLiteMode(currentLiteMode);
       setLocalTerraPath(currentLocalTerraPath);
       setBlocktime(currentBlocktime);

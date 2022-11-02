@@ -12,14 +12,15 @@ class TerrariumStore extends Store {
     super();
     this.contracts = this.get('contracts') || [];
     this.localTerraPath = this.get('localTerraPath');
-  }
-
-  setLocalTerraPath(path) {
-    return this.set('localTerraPath', path);
+    this.liteMode = this.get('liteMode') || true;
   }
 
   getLocalTerraPath() {
     return this.get('localTerraPath');
+  }
+
+  setLocalTerraPath(path) {
+    return this.set('localTerraPath', path);
   }
 
   getBlocktime() {
@@ -39,7 +40,7 @@ class TerrariumStore extends Store {
   }
 
   getLiteMode() {
-    return this.get('liteMode') || true;
+    return this.get('liteMode');
   }
 
   setLiteMode(status) {

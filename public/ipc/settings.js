@@ -16,8 +16,6 @@ const {
   CUSTOM_ERROR_DIALOG,
   GET_OPEN_AT_LOGIN,
   SET_OPEN_AT_LOGIN,
-  GET_LITE_MODE,
-  SET_LITE_MODE,
 } = require('../constants');
 const {
   startLocalTerra,
@@ -43,12 +41,6 @@ module.exports = (win) => {
     () => app.getLoginItemSettings().openAtLogin,
   );
   ipcMain.secureHandle(SET_OPEN_AT_LOGIN, (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
-
-  ipcMain.secureHandle(GET_LITE_MODE, () => store.getLiteMode());
-  ipcMain.secureHandle(SET_LITE_MODE, (_, status) => {
-    console.log('status in lite mode', status);
-    store.setLiteMode(status);
-  });
 
   ipcMain.secureHandle(SET_LOCAL_TERRA_PATH, async (save = true) => {
     const { filePaths } = await showPathSelectionDialog();
