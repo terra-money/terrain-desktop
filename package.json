@@ -2,7 +2,9 @@
   "name": "terrarium",
   "version": "0.2.1",
   "homepage": "./",
+  "author": "@terra-money",
   "main": "public/electron.js",
+  "description": "Interface for contract and app development on LocalTerra",
   "engines": {
     "node": "^16"
   },
@@ -25,6 +27,14 @@
     "make:x64": "npm run make -- --arch x64",
     "make:arm64": "npm run make -- --arch arm64",
     "create-dmgs": "node create-dmgs.js"
+  },
+  "build": {
+    "appId": "com.terrarium.app",
+    "productName": "Terrarium",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ]
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",

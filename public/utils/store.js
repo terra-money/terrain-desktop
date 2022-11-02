@@ -5,7 +5,7 @@ const {
   SET_BLOCKTIME,
   GET_OPEN_AT_LOGIN,
   SET_OPEN_AT_LOGIN,
-} = require('../../src/constants');
+} = require('../constants');
 
 class TerrariumStore extends Store {
   constructor() {
@@ -39,8 +39,7 @@ class TerrariumStore extends Store {
   }
 
   getLiteMode() {
-    return false;
-    // return this.get('liteMode') || true;
+    return this.get('liteMode') || true;
   }
 
   setLiteMode(status) {
@@ -59,7 +58,9 @@ class TerrariumStore extends Store {
   }
 
   refreshContracts(updRefs, path) {
-    this.contracts = this.contracts.filter((contract) => contract.path !== path);
+    this.contracts = this.contracts.filter(
+      (contract) => contract.path !== path,
+    );
     this.contracts = [...this.contracts, ...updRefs];
     return this.setContracts();
   }
@@ -72,7 +73,9 @@ class TerrariumStore extends Store {
   }
 
   deleteContract(codeId) {
-    this.contracts = this.contracts.filter((contract) => contract.codeId !== codeId);
+    this.contracts = this.contracts.filter(
+      (contract) => contract.codeId !== codeId,
+    );
     return this.setContracts();
   }
 
