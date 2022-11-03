@@ -35,7 +35,6 @@ app.setAboutPanelOptions({
 });
 
 async function init() {
-  store.clear();
   const win = new BrowserWindow({
     width: Number(BROWSER_WINDOW_WIDTH),
     height: Number(BROWSER_WINDOW_HEIGHT),
@@ -49,7 +48,7 @@ async function init() {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-  tray = new Tray(path.join(__dirname, 'trayTemplate@3x.png'));
+  tray = new Tray(path.join(__dirname, '../', 'src', 'assets', 'trayTemplate@3x.png'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Open',

@@ -7,8 +7,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Modal } from '@material-ui/core';
 import { useTour } from '@reactour/tour';
 import { debounce } from 'lodash';
+import { TOGGLE_LOCAL_TERRA, TOGGLE_DEBOUNCE_MS, GET_LOCAL_TERRA_STATUS } from '@public/constants';
 import { NavLink, SettingsModal } from './components';
-import { GET_LOCAL_TERRA_STATUS, TOGGLE_LOCAL_TERRA, TOGGLE_DEBOUNCE_MS } from './constants';
 import {
   useTerraBlockUpdate, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
 } from './hooks/terra';

@@ -30,7 +30,10 @@
       "build/**/*"
     ],
     "directories": {
-      "buildResources": "src/assets"
+      "buildResources": [
+        "src/assets",
+        "src/constants"
+      ]
     }
   },
   "config-overrides-path": "config/config-overrides.js",
@@ -73,7 +76,6 @@
     "react-router-dom": "^6.4.1",
     "react-scripts": "^5.0.1",
     "react-virtuoso": "^2.19.0",
-    "rsuite-table": "^5.7.1",
     "semver": "^7.3.7",
     "wait-on": "^6.0.1"
   },
@@ -95,6 +97,8 @@
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
     "postcss": "^8.4.17",
+    "react-app-alias": "^2.2.2",
+    "react-app-rewire-alias": "^1.1.7",
     "react-app-rewired": "^2.2.1",
     "tailwindcss": "^3.1.8",
     "typescript": "^4.8.4"
