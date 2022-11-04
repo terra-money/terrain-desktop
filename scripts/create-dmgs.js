@@ -12,6 +12,7 @@ glob(`${__dirname}/../dist/**/Terrarium.app`, {}, (err, appPaths) => {
         name: `terrarium-${version}${appPath.includes('arm64') ? '-arm64' : ''}`,
         overwrite: true,
         debug: true,
+        icon: '../assets/icon.icns',
       });
     } catch (e) {
       console.error(`Error building DMG ${appPath}: `, e);

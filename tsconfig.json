@@ -1,5 +1,4 @@
 {
-  "extends": "./config/paths.json",
   "compilerOptions": {
     "target": "es5",
     "lib": [
