@@ -20,7 +20,6 @@ const TransactionView = ({
 }) => {
   const { txhash, result, height } = data.TxResult;
   const txHref = `${REACT_APP_FINDER_URL}/tx/${txhash}`;
-  const isLiteMode = window.store.getLiteMode();
 
   const [open, setOpen] = React.useState(data.hasEventsOpenInUi);
 
@@ -43,18 +42,14 @@ const TransactionView = ({
       >
         <div className="flex">
           <a
-            className={`${
-              isLiteMode && 'pointer-events-none'
-            } flex items-center justify-around mr-5 text-terra-link hover:underline`}
+            className="pointer-events-none flex items-center justify-around mr-5 text-terra-link hover:underline"
             target="_blank"
             href={txHref}
             rel="noreferrer"
             onClick={(e) => e.stopPropagation()}
           >
             <div>{truncate(txhash, [5, 5])}</div>
-            {!isLiteMode && (
-              <ExternalLinkIcon className="fill-terra-link mx-1" />
-            )}
+            <ExternalLinkIcon className="fill-terra-link mx-1" />
           </a>
           <TextCopyButton text={txhash} />
         </div>

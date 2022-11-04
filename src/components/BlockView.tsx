@@ -50,13 +50,11 @@ const BlockView = (props: {
           href={blockHref}
           target="_blank"
           onClick={(e) => e.stopPropagation()}
-          className={`${
-            isLiteMode && 'pointer-events-none'
-          } flex items-center text-terra-link hover:underline`}
+          className="pointer-events-none flex items-center text-terra-link hover:underline"
           rel="noreferrer"
         >
           <div>{height}</div>
-          {!isLiteMode && <ExternalLinkIcon className="fill-terra-link mx-1" />}
+          <ExternalLinkIcon className="fill-terra-link mx-1" />
         </a>
 
         <div>{dateString}</div>
