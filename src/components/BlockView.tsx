@@ -17,7 +17,6 @@ const BlockView = (props: {
   const { result_begin_block, hasEventsOpenInUi } = props.data;
   const { gridTemplateColumns } = props;
   const blockHref = `${REACT_APP_FINDER_URL}/blocks/${height}`;
-  const isLiteMode = window.store.getLiteMode();
 
   const [open, setOpen] = React.useState(hasEventsOpenInUi);
 
