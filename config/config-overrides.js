@@ -1,5 +1,5 @@
 const semver = require('semver');
-const { aliasWebpack } = require('react-app-alias');
+const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const pkg = require('../package.json');
 
 if (!semver.satisfies(process.version, pkg.engines.node)) {
@@ -8,8 +8,8 @@ if (!semver.satisfies(process.version, pkg.engines.node)) {
 }
 
 module.exports = {
-  ...aliasWebpack({}),
   webpack(config) {
+    config.resolve.plugins = config.resolve.plugins.filter((plugin) => !(plugin instanceof ModuleScopePlugin));
     config.target = 'electron-renderer';
     config.ignoreWarnings = [/Failed to parse source map/];
     return config;

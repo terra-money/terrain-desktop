@@ -1,10 +1,10 @@
 import { Collapse } from '@mui/material';
 import React from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
+import { ReactComponent as ExternalLinkIcon } from '../../assets/external-link.svg';
 import { useGetTxFromHeight } from '../hooks/terra';
 import { TerrariumBlockInfo } from '../models';
-import { REACT_APP_FINDER_URL } from '../constants';
+import { REACT_APP_FINDER_URL } from '../../public/constants';
 import EventInfo from './EventInfo';
 
 const BlockView = (props: {
@@ -50,7 +50,9 @@ const BlockView = (props: {
           href={blockHref}
           target="_blank"
           onClick={(e) => e.stopPropagation()}
-          className={`${isLiteMode && 'pointer-events-none'} flex items-center text-terra-link hover:underline`}
+          className={`${
+            isLiteMode && 'pointer-events-none'
+          } flex items-center text-terra-link hover:underline`}
           rel="noreferrer"
         >
           <div>{height}</div>

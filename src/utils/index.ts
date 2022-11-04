@@ -1,5 +1,5 @@
 import { bech32 } from 'bech32';
-import { REACT_APP_FINDER_URL, REACT_APP_DOCS_URL } from '../constants';
+import { REACT_APP_FINDER_URL, REACT_APP_DOCS_URL } from '../../public/constants';
 
 function isValidTerraAddress(address: string) {
   try {
@@ -21,17 +21,19 @@ export function isJson(param: any) {
 export const parseSearchUrl = (searchQuery: string) => {
   if (Number(searchQuery)) {
     return `${REACT_APP_FINDER_URL}/blocks/${searchQuery}`;
-  } if (isValidTerraAddress(searchQuery)) {
+  }
+  if (isValidTerraAddress(searchQuery)) {
     return `${REACT_APP_FINDER_URL}/address/${searchQuery}`;
-  } if (searchQuery.length === 64) {
+  }
+  if (searchQuery.length === 64) {
     return `${REACT_APP_FINDER_URL}/tx/${searchQuery}`;
   }
   return `${REACT_APP_DOCS_URL}?q=${searchQuery}`;
 };
 
 export const MICRO = 1000000;
-export const microfy = (num: number) => num * MICRO as number;
-export const demicrofy = (num: number) => num / MICRO as number;
+export const microfy = (num: number) => (num * MICRO) as number;
+export const demicrofy = (num: number) => (num / MICRO) as number;
 
 export function truncate(
   text: string = '',
@@ -50,8 +52,13 @@ export function nFormatter(num: number) {
     { value: 1e6, symbol: 'M' },
   ];
   const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-  const item = lookup.slice().reverse().find((x: any) => num >= x.value);
-  return item ? (num / item.value).toFixed(digits).replace(rx, '$1') + item.symbol : '0';
+  const item = lookup
+    .slice()
+    .reverse()
+    .find((x: any) => num >= x.value);
+  return item
+    ? (num / item.value).toFixed(digits).replace(rx, '$1') + item.symbol
+    : '0';
 }
 
 export const tourProviderProps = {
@@ -68,12 +75,14 @@ export const tourProviderProps = {
   steps: [
     {
       selector: '.tour__search',
-      content: 'Search for blocks, transactions, and addresses with the Finder block explorer.',
+      content:
+        'Search for blocks, transactions, and addresses with the Finder block explorer.',
     },
     {
       selector: '.Contracts',
       page: '/',
-      content: 'Interact with contracts you have imported from your terrain project.',
+      content:
+        'Interact with contracts you have imported from your terrain project.',
     },
     {
       selector: '.Accounts',
@@ -97,12 +106,14 @@ export const tourProviderProps = {
     },
     {
       selector: '.Settings',
-      content: 'Manage your settings here. Like open at login, your LocalTerra path, and your desired block time.',
+      content:
+        'Manage your settings here. Like open at login, your LocalTerra path, and your desired block time.',
     },
     {
       selector: '.tour__current-block',
       page: '/',
-      content: 'This is the current block of your LocalTerra instance. If it it\'s not incrementing then LocalTerra is not running.',
+      content:
+        "This is the current block of your LocalTerra instance. If it it's not incrementing then LocalTerra is not running.",
     },
     {
       selector: '.tour__toggle-terra',
@@ -110,7 +121,8 @@ export const tourProviderProps = {
     },
     {
       selector: '.tour__add-contracts',
-      content: 'Click here to import contracts from your Terrain project to call them from Terrarium.',
+      content:
+        'Click here to import contracts from your Terrain project to call them from Terrarium.',
     },
     {
       selector: '.tour__contract-view',
@@ -118,7 +130,8 @@ export const tourProviderProps = {
     },
     {
       selector: '#tour__pre-baked-contract-0',
-      content: 'This is a method on the cw-20 token base contract that ships with LocalTerra. Call your execute and query methods here.',
+      content:
+        'This is a method on the cw-20 token base contract that ships with LocalTerra. Call your execute and query methods here.',
     },
   ],
 };

@@ -11,8 +11,8 @@ import {
   Button,
   Tooltip,
 } from '@mui/material';
-import { PROMPT_USER_RESTART, RESET_APP } from '../../constants';
-import { ReactComponent as Close } from '../../assets/icons/close.svg';
+import { PROMPT_USER_RESTART, RESET_APP } from '../../../public/constants';
+import { ReactComponent as Close } from '../../../assets/icons/close.svg';
 
 export default function SettingsModal({ handleToggleClose }: { handleToggleClose: Function }) {
   const navigate = useNavigate();

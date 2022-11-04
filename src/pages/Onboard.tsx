@@ -2,11 +2,18 @@ import React, { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import {
-  CircularProgress, Checkbox, FormGroup, FormControlLabel,
+  CircularProgress,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
 } from '@material-ui/core';
-import { ReactComponent as TerraLogoWithText } from '../assets/Terrarium-full-logo.svg';
-import { ReactComponent as ExternalLink } from '../assets/external-link.svg';
-import { SET_LOCAL_TERRA_PATH, INSTALL_LOCAL_TERRA, CUSTOM_ERROR_DIALOG } from '../constants';
+import { ReactComponent as TerraLogoWithText } from '../../assets/Terrarium-full-logo.svg';
+import { ReactComponent as ExternalLink } from '../../assets/external-link.svg';
+import {
+  SET_LOCAL_TERRA_PATH,
+  INSTALL_LOCAL_TERRA,
+  CUSTOM_ERROR_DIALOG,
+} from '../../public/constants';
 
 export default function Onboard() {
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +33,9 @@ export default function Onboard() {
 
   const onLocalTerraInstall = async () => {
     try {
-      if (isLoading) { return; }
+      if (isLoading) {
+        return;
+      }
       setIsLoading(true);
       await ipcRenderer.invoke(INSTALL_LOCAL_TERRA);
       navigate('/', { state: { firstOpen: true } });

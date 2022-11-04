@@ -5,9 +5,13 @@ import { ipcRenderer } from 'electron';
 import { TerraContext } from '../components/Provider';
 import { ITerraHook, ITerraHookBlockUpdate } from '../models/TerraHook';
 import {
-  localTerraStarted, localTerraPathConfigured, logsState, blockState, txState,
+  localTerraStarted,
+  localTerraPathConfigured,
+  logsState,
+  blockState,
+  txState,
 } from '../context/ElectronContextProvider';
-import { TX } from '../constants';
+import { TX } from '../../public/constants';
 
 export function useTerra() {
   const terra = useContext(TerraContext) as LocalTerra;
@@ -25,13 +29,15 @@ export function useTerraBlockUpdate() {
   const hookExport: ITerraHookBlockUpdate = {
     ...useTerra(),
     getBalance: async (address: string) => {
-      const [coins] = (await terra.bank.balance(address));
+      const [coins] = await terra.bank.balance(address);
       return coins.toData();
     },
     listenToAccountTx(address: string, cb: Function) {
       const listener = (_: any, tx: any) => {
         const { from_address: add } = tx.msg;
-        if (add === address) { cb(add); }
+        if (add === address) {
+          cb(add);
+        }
       };
       ipcRenderer.on(TX, listener);
       return () => {

@@ -4,13 +4,14 @@ import { Virtuoso } from 'react-virtuoso';
 import { FaPlus } from 'react-icons/fa';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { Tooltip } from '@mui/material';
-import {
-  SelectWallet, ContractView, LinearLoad,
-} from '../components';
+import { SelectWallet, ContractView, LinearLoad } from '../components';
 import { useTerra } from '../hooks/terra';
 import {
-  IMPORT_SAVED_CONTRACTS, IMPORT_NEW_CONTRACTS, DELETE_CONTRACT, REFRESH_CONTRACT_REFS,
-} from '../constants';
+  IMPORT_SAVED_CONTRACTS,
+  IMPORT_NEW_CONTRACTS,
+  DELETE_CONTRACT,
+  REFRESH_CONTRACT_REFS,
+} from '../../public/constants';
 
 function ContractsPage() {
   const [contracts, setContracts] = useState([]);
@@ -33,13 +34,19 @@ function ContractsPage() {
     setContracts(newContracts);
   };
 
-  const handleDeleteContract = async (codeId: string, e: React.MouseEvent<HTMLElement>) => {
+  const handleDeleteContract = async (
+    codeId: string,
+    e: React.MouseEvent<HTMLElement>,
+  ) => {
     e.stopPropagation();
     const updContracts = await ipcRenderer.invoke(DELETE_CONTRACT, codeId);
     setContracts(updContracts);
   };
 
-  const handleRefreshRefs = async (path: string, e: React.MouseEvent<HTMLElement>) => {
+  const handleRefreshRefs = async (
+    path: string,
+    e: React.MouseEvent<HTMLElement>,
+  ) => {
     e.stopPropagation();
     const updContracts = await ipcRenderer.invoke(REFRESH_CONTRACT_REFS, path);
     setContracts(updContracts);

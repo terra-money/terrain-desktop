@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as Close } from '../../assets/icons/close.svg';
+import { ReactComponent as Close } from '../../../assets/icons/close.svg';
 import { TextCopyButton } from '../index';
 
 function KeyViewModal({

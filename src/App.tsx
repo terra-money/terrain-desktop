@@ -7,14 +7,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Modal } from '@material-ui/core';
 import { useTour } from '@reactour/tour';
 import { debounce } from 'lodash';
-import { TOGGLE_LOCAL_TERRA, TOGGLE_DEBOUNCE_MS, GET_LOCAL_TERRA_STATUS } from '@public/constants';
+import { TOGGLE_LOCAL_TERRA, TOGGLE_DEBOUNCE_MS, GET_LOCAL_TERRA_STATUS } from '../public/constants';
 import { NavLink, SettingsModal } from './components';
 import {
   useTerraBlockUpdate, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
 } from './hooks/terra';
 import { parseSearchUrl } from './utils';
-import { ReactComponent as TerraLogo } from './assets/terra-logo.svg';
-import TerrariumLettersImg from './assets/TerrariumLettersImg.png';
+import { ReactComponent as TerraLogo } from '../assets/terra-logo.svg';
+import TerrariumLettersImg from '../assets/TerrariumLettersImg.png';
 import useAppRoutes from './hooks/routes';
 
 const App = () => {
