@@ -9,7 +9,11 @@ const util = require('util');
 const waitOn = require('wait-on');
 const exec = util.promisify(require('child_process').exec);
 const {
-  showLocalTerraStartNotif, showMemoryOveruseDialog, showLocalTerraStopNotif, showTxOccuredNotif, showCustomDialog,
+  showLocalTerraStartNotif,
+  showMemoryOveruseDialog,
+  showLocalTerraStopNotif,
+  showTxOccuredNotif,
+  showCustomDialog,
 } = require('./messages');
 const { store } = require('./store');
 const { setDockIconDisplay, parseTxDescriptionAndMsg } = require('./misc');
@@ -24,7 +28,7 @@ const {
   MEM_USE_THRESHOLD,
   NEW_BLOCK,
   TX,
-} = require('../../src/constants');
+} = require('../constants');
 
 let txWs = new WebSocketClient(LOCAL_TERRA_WS);
 let blockWs = new WebSocketClient(LOCAL_TERRA_WS);
@@ -67,35 +71,49 @@ const startMemMonitor = () => {
 
 const startLocalTerra = async (localTerraPath) => {
   const liteMode = await store.getLiteMode();
-  exec(`docker compose up ${liteMode ? 'terrad' : ''} -d --wait --remove-orphans`, {
-    cwd: localTerraPath,
-    env: {
-      PATH: `${process.env.PATH}:/usr/local/bin/`,
+  exec(
+    `docker compose up ${liteMode ? 'terrad' : ''} -d --wait --remove-orphans`,
+    {
+      cwd: localTerraPath,
+      env: {
+        PATH: `${process.env.PATH}:/usr/local/bin/`,
+      },
     },
-  });
+  );
   return waitOn({ resources: ['http://localhost:26657'] });
 };
 
 const subscribeToLocalTerraEvents = async (win) => {
-  const [localTerraPath, liteMode] = await Promise.all([store.getLocalTerraPath(), store.getLiteMode()]);
-  const localTerraProcess = spawn('docker', ['compose', 'logs', ...(liteMode ? ['terrad'] : []), '-f'], {
-    cwd: localTerraPath,
-    env: {
-      PATH: `${process.env.PATH}:/usr/local/bin/`,
+  const [localTerraPath, liteMode] = await Promise.all([
+    store.getLocalTerraPath(),
+    store.getLiteMode(),
+  ]);
+  const localTerraProcess = spawn(
+    'docker',
+    ['compose', 'logs', ...(liteMode ? ['terrad'] : []), '-f'],
+    {
+      cwd: localTerraPath,
+      env: {
+        PATH: `${process.env.PATH}:/usr/local/bin/`,
+      },
     },
-  });
+  );
 
   txWs = new WebSocketClient(LOCAL_TERRA_WS);
   blockWs = new WebSocketClient(LOCAL_TERRA_WS);
 
   localTerraProcess.stdout.on('data', async (data) => {
     try {
-      if (win && win.isDestroyed()) { return; }
+      if (win && win.isDestroyed()) {
+        return;
+      }
       win.webContents.send(NEW_LOG, data.toString());
 
       if (!globals.localTerra.isRunning) {
         txWs.subscribeTx({}, async ({ value }) => {
-          const { description, msg } = parseTxDescriptionAndMsg(value.TxResult.tx);
+          const { description, msg } = parseTxDescriptionAndMsg(
+            value.TxResult.tx,
+          );
           win.webContents.send(TX, { description, msg, ...value });
           showTxOccuredNotif(description);
         });
@@ -123,7 +141,9 @@ const subscribeToLocalTerraEvents = async (win) => {
 
   localTerraProcess.on('close', () => {
     try {
-      if (win && win.isDestroyed()) { return; }
+      if (win && win.isDestroyed()) {
+        return;
+      }
       globals.localTerra.isRunning = false;
       win.webContents.send(LOCAL_TERRA_IS_RUNNING, false);
     } catch (err) {
@@ -154,7 +174,8 @@ const stopLocalTerra = async () => {
 };
 
 const shutdown = async (win, restart = false) => {
-  setTimeout(() => { // Force shutdown after 20 seconds.
+  setTimeout(() => {
+    // Force shutdown after 20 seconds.
     app.exit();
   }, 20000);
 

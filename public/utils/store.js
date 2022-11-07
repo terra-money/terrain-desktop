@@ -5,21 +5,22 @@ const {
   SET_BLOCKTIME,
   GET_OPEN_AT_LOGIN,
   SET_OPEN_AT_LOGIN,
-} = require('../../src/constants');
+} = require('../constants');
 
 class TerrariumStore extends Store {
   constructor() {
     super();
     this.contracts = this.get('contracts') || [];
     this.localTerraPath = this.get('localTerraPath');
-  }
-
-  setLocalTerraPath(path) {
-    return this.set('localTerraPath', path);
+    this.liteMode = this.get('liteMode') || true;
   }
 
   getLocalTerraPath() {
     return this.get('localTerraPath');
+  }
+
+  setLocalTerraPath(path) {
+    return this.set('localTerraPath', path);
   }
 
   getBlocktime() {
@@ -39,8 +40,7 @@ class TerrariumStore extends Store {
   }
 
   getLiteMode() {
-    return false;
-    // return this.get('liteMode') || true;
+    return this.get('liteMode');
   }
 
   setLiteMode(status) {
@@ -59,7 +59,9 @@ class TerrariumStore extends Store {
   }
 
   refreshContracts(updRefs, path) {
-    this.contracts = this.contracts.filter((contract) => contract.path !== path);
+    this.contracts = this.contracts.filter(
+      (contract) => contract.path !== path,
+    );
     this.contracts = [...this.contracts, ...updRefs];
     return this.setContracts();
   }
@@ -72,7 +74,9 @@ class TerrariumStore extends Store {
   }
 
   deleteContract(codeId) {
-    this.contracts = this.contracts.filter((contract) => contract.codeId !== codeId);
+    this.contracts = this.contracts.filter(
+      (contract) => contract.codeId !== codeId,
+    );
     return this.setContracts();
   }
 

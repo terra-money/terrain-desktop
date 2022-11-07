@@ -2,22 +2,24 @@ import { Collapse } from '@mui/material';
 import React from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { TerrariumTx } from '../models/TerrariumTx';
-import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
+import { ReactComponent as ExternalLinkIcon } from '../../assets/external-link.svg';
 import { truncate } from '../utils';
-import { REACT_APP_FINDER_URL } from '../constants';
+import { REACT_APP_FINDER_URL } from '../../public/constants';
 import { TextCopyButton, EventInfo } from '.';
 
 const TransactionView = ({
-  data, index, onToggleEventDetails, gridTemplateColumns,
+  data,
+  index,
+  onToggleEventDetails,
+  gridTemplateColumns,
 }: {
-  data: TerrariumTx,
-  index: number,
-  gridTemplateColumns: string,
-  onToggleEventDetails: (_index: number) => void,
+  data: TerrariumTx;
+  index: number;
+  gridTemplateColumns: string;
+  onToggleEventDetails: (_index: number) => void;
 }) => {
   const { txhash, result, height } = data.TxResult;
   const txHref = `${REACT_APP_FINDER_URL}/tx/${txhash}`;
-  const isLiteMode = window.store.getLiteMode();
 
   const [open, setOpen] = React.useState(data.hasEventsOpenInUi);
 
@@ -40,14 +42,14 @@ const TransactionView = ({
       >
         <div className="flex">
           <a
-            className={`${isLiteMode && 'pointer-events-none'} flex items-center justify-around mr-5 text-terra-link hover:underline`}
+            className="pointer-events-none flex items-center justify-around mr-5 text-terra-link hover:underline"
             target="_blank"
             href={txHref}
             rel="noreferrer"
             onClick={(e) => e.stopPropagation()}
           >
             <div>{truncate(txhash, [5, 5])}</div>
-            {!isLiteMode && <ExternalLinkIcon className="fill-terra-link mx-1" />}
+            <ExternalLinkIcon className="fill-terra-link mx-1" />
           </a>
           <TextCopyButton text={txhash} />
         </div>

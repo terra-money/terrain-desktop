@@ -1,14 +1,15 @@
 {
   "name": "terrarium",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "homepage": "./",
+  "author": "@terra-money",
   "main": "public/electron.js",
+  "description": "Interface for contract and app development on LocalTerra",
   "engines": {
     "node": "^16"
   },
   "scripts": {
     "start": "BROWSER=none react-app-rewired start",
-    "forge-start": "electron-forge start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "lint": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
@@ -16,15 +17,29 @@
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "npm run build",
     "electron-pack": "build -mw",
-    "build:css": "tailwind -i public/styles.css -o src/index.css --minify",
-    "watch:css": "TAILWIND_MODE=watch tailwind -i public/styles.css -o src/index.css --watch",
-    "package": "electron-forge package",
-    "make": "npm run build:css && npm run build && electron-forge make",
-    "make:ia32": "npm run make -- --arch ia32",
-    "make:universal": "npm run make -- --arch universal",
+    "build:css": "tailwind -c config/tailwind.config.js -i public/styles.css -o src/index.css --minify",
+    "watch:css": "TAILWIND_MODE=watch tailwind -c config/tailwind.config.js -i public/styles.css -o src/index.css --watch",
+    "make": "npm run build:css && npm run build && electron-builder --dir",
     "make:x64": "npm run make -- --arch x64",
-    "make:arm64": "npm run make -- --arch arm64",
-    "create-dmgs": "node create-dmgs.js"
+    "create-installers": "node ./scripts/create-dmgs.js"
+  },
+  "build": {
+    "appId": "com.terrarium.app",
+    "productName": "Terrarium",
+    "directories":{
+      "buildResources":"assets"
+  },
+    "files": [
+      "build/**/*",
+      "assets/**/*"
+    ]
+  },
+  "config-overrides-path": "config/config-overrides.js",
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
@@ -59,22 +74,15 @@
     "react-router-dom": "^6.4.1",
     "react-scripts": "^5.0.1",
     "react-virtuoso": "^2.19.0",
-    "rsuite-table": "^5.7.1",
     "semver": "^7.3.7",
     "wait-on": "^6.0.1"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.64",
-    "@electron-forge/maker-deb": "^6.0.0-beta.64",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.64",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.64",
-    "@electron-forge/maker-zip": "^6.0.0-beta.66",
     "@types/lodash": "^4.14.186",
     "@types/node": "^16.11.62",
     "@types/react": "^17.0.50",
     "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/react-dom": "^18.0.6",
-    "autoprefixer": "^10.4.12",
     "concurrently": "^6.5.1",
     "electron": "^21.0.0",
     "electron-builder": "^23.3.3",
@@ -84,19 +92,13 @@
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
-    "eslint-plugin-prettier": "^3.4.1",
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
     "postcss": "^8.4.17",
     "react-app-rewired": "^2.2.1",
+    "react-dev-utils": "^12.0.1",
     "tailwindcss": "^3.1.8",
     "typescript": "^4.8.4"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
@@ -109,35 +111,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "config": {
-    "forge": {
-      "packagerConfig": {
-        "icon": "./src/assets/icons/icon.icns",
-        "name": "Terrarium"
-      },
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "terrarium"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
   }
 }

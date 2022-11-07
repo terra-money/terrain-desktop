@@ -13,7 +13,7 @@ const {
   BROWSER_WINDOW_WIDTH,
   BROWSER_WINDOW_HEIGHT,
   LOCAL_TERRA_PATH_CONFIGURED,
-} = require('../src/constants');
+} = require('./constants');
 const {
   stopLocalTerra,
   startLocalTerra,
@@ -48,7 +48,7 @@ async function init() {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-  tray = new Tray(path.join(__dirname, '../src', 'assets', 'trayTemplate@3x.png'));
+  tray = new Tray(path.join(__dirname, '../assets', 'trayTemplate@3x.png'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Open',

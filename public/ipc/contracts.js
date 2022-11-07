@@ -1,11 +1,18 @@
 const { ipcMain } = require('../utils/ipcMain');
 const { getSmartContractData } = require('../utils/contracts');
 const { store } = require('../utils/store');
-const { showSmartContractDialog, showMissingSchemaDialog } = require('../utils/messages');
+const {
+  showSmartContractDialog,
+  showMissingSchemaDialog,
+} = require('../utils/messages');
 
 const {
-  DELETE_ALL_CONTRACTS, IMPORT_NEW_CONTRACTS, IMPORT_SAVED_CONTRACTS, DELETE_CONTRACT, REFRESH_CONTRACT_REFS,
-} = require('../../src/constants');
+  DELETE_ALL_CONTRACTS,
+  IMPORT_NEW_CONTRACTS,
+  IMPORT_SAVED_CONTRACTS,
+  DELETE_CONTRACT,
+  REFRESH_CONTRACT_REFS,
+} = require('../constants');
 
 module.exports = () => {
   ipcMain.secureHandle(DELETE_ALL_CONTRACTS, () => store.deleteAllContracts());

@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { Collapse } from '@mui/material';
-import {
-  KeyboardArrowDown as KeyboardArrowDownIcon,
-} from '@mui/icons-material';
+import { KeyboardArrowDown as KeyboardArrowDownIcon } from '@mui/icons-material';
 import { useTour } from '@reactour/tour';
 import { Wallet } from '@terra-money/terra.js';
 import { SmartContract } from '../models/Contract';
-import { ReactComponent as ExternalLinkIcon } from '../assets/external-link.svg';
-import { ReactComponent as TrashIcon } from '../assets/icons/trash.svg';
-import { ReactComponent as RefreshIcon } from '../assets/icons/refresh.svg';
-import { REACT_APP_FINDER_URL } from '../constants';
+import { ReactComponent as ExternalLinkIcon } from '../../assets/external-link.svg';
+import { ReactComponent as TrashIcon } from '../../assets/icons/trash.svg';
+import { ReactComponent as RefreshIcon } from '../../assets/icons/refresh.svg';
+import { REACT_APP_FINDER_URL } from '../../public/constants';
 import { TextCopyButton, ContractMethodsView } from '.';
 import { truncate } from '../utils';
 
 const ContractView = ({
-  handleDeleteContract, handleRefreshRefs, data, gridTemplateColumns, wallet, setIsLoading, isLoading,
-}:{
-    data: SmartContract
-    handleDeleteContract: Function
-    handleRefreshRefs: Function
-    gridTemplateColumns: string
-    setIsLoading: Function
-    isLoading: boolean
-    wallet: Wallet
+  handleDeleteContract,
+  handleRefreshRefs,
+  data,
+  gridTemplateColumns,
+  wallet,
+  setIsLoading,
+  isLoading,
+}: {
+  data: SmartContract;
+  handleDeleteContract: Function;
+  handleRefreshRefs: Function;
+  gridTemplateColumns: string;
+  setIsLoading: Function;
+  isLoading: boolean;
+  wallet: Wallet;
 }) => {
   const {
     name, codeId, address, schemas, path,

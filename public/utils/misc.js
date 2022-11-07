@@ -2,7 +2,7 @@ const { Tx } = require('@terra-money/terra.js');
 const { readMsg } = require('@terra-money/msg-reader');
 const { app } = require('electron');
 const isDev = require('electron-is-dev');
-const { FINDER_ORIGIN, DOCS_ORIGIN, DOCKER_ORIGIN } = require('../../src/constants');
+const { FINDER_ORIGIN, DOCS_ORIGIN, DOCKER_ORIGIN } = require('../constants');
 
 const parseTxMsg = (encodedTx) => {
   const unpacked = Tx.unpackAny({
@@ -15,7 +15,10 @@ const parseTxMsg = (encodedTx) => {
 const isValidOrigin = (origin) => {
   const ALLOWED_ORIGINS = [FINDER_ORIGIN, DOCS_ORIGIN, DOCKER_ORIGIN];
   const parsedOrigin = new URL(origin);
-  return parsedOrigin.protocol === 'https:' && ALLOWED_ORIGINS.includes(parsedOrigin.origin);
+  return (
+    parsedOrigin.protocol === 'https:'
+    && ALLOWED_ORIGINS.includes(parsedOrigin.origin)
+  );
 };
 
 const parseTxDescriptionAndMsg = (tx) => {

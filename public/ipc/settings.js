@@ -16,9 +16,7 @@ const {
   CUSTOM_ERROR_DIALOG,
   GET_OPEN_AT_LOGIN,
   SET_OPEN_AT_LOGIN,
-  GET_LITE_MODE,
-  SET_LITE_MODE,
-} = require('../../src/constants');
+} = require('../constants');
 const {
   startLocalTerra,
   subscribeToLocalTerraEvents,
@@ -38,11 +36,11 @@ const globals = require('../utils/globals');
 
 // Register IPC handlers relating to the settings page.
 module.exports = (win) => {
-  ipcMain.secureHandle(GET_OPEN_AT_LOGIN, () => app.getLoginItemSettings().openAtLogin);
+  ipcMain.secureHandle(
+    GET_OPEN_AT_LOGIN,
+    () => app.getLoginItemSettings().openAtLogin,
+  );
   ipcMain.secureHandle(SET_OPEN_AT_LOGIN, (_, status) => app.setLoginItemSettings({ openAtLogin: status }));
-
-  ipcMain.secureHandle(GET_LITE_MODE, () => store.getLiteMode());
-  ipcMain.secureHandle(SET_LITE_MODE, (_, status) => store.setLiteMode(status));
 
   ipcMain.secureHandle(SET_LOCAL_TERRA_PATH, async (save = true) => {
     const { filePaths } = await showPathSelectionDialog();
@@ -50,7 +48,9 @@ module.exports = (win) => {
 
     if (!filePaths.length) {
       await showWrongDirectoryDialog();
-      throw Error(`No directory was selected does not exist under the path '${filePaths[0]}'`);
+      throw Error(
+        `No directory was selected does not exist under the path '${filePaths[0]}'`,
+      );
     } else if (isValid && save) {
       store.setLocalTerraPath(filePaths[0]);
       // eslint-disable-next-line no-param-reassign
@@ -75,7 +75,9 @@ module.exports = (win) => {
 
   ipcMain.secureHandle(GET_BLOCKTIME, () => {
     const localTerraPath = store.getLocalTerraPath();
-    const parsedConfig = toml.parse(fs.readFileSync(path.join(localTerraPath, 'config/config.toml')));
+    const parsedConfig = toml.parse(
+      fs.readFileSync(path.join(localTerraPath, 'config/config.toml')),
+    );
 
     switch (parsedConfig.consensus.timeout_commit) {
       case '5s':

@@ -8,12 +8,12 @@ import {
   OnboardPage,
   AccountsPage,
 } from '../pages';
-import { ReactComponent as AccountsIcon } from '../assets/icons/menu/accounts.svg';
-import { ReactComponent as BlocksIcon } from '../assets/icons/menu/blocks.svg';
-import { ReactComponent as TransactionsIcon } from '../assets/icons/menu/transactions.svg';
-import { ReactComponent as ContractsIcon } from '../assets/icons/menu/contracts.svg';
-import { ReactComponent as LogsIcon } from '../assets/icons/menu/logs.svg';
-import { ReactComponent as SettingsIcon } from '../assets/icons/menu/settings.svg';
+import { ReactComponent as AccountsIcon } from '../../assets/icons/menu/accounts.svg';
+import { ReactComponent as BlocksIcon } from '../../assets/icons/menu/blocks.svg';
+import { ReactComponent as TransactionsIcon } from '../../assets/icons/menu/transactions.svg';
+import { ReactComponent as ContractsIcon } from '../../assets/icons/menu/contracts.svg';
+import { ReactComponent as LogsIcon } from '../../assets/icons/menu/logs.svg';
+import { ReactComponent as SettingsIcon } from '../../assets/icons/menu/settings.svg';
 
 const useAppRoutes = ({
   handleToggleClose,
