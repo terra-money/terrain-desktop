@@ -3,7 +3,9 @@ const { notarize } = require('@electron/notarize');
 const glob = require('glob');
 const { version } = require('../package.json');
 
-const appleIdPassword = '@keychain:AC_PASSWORD';
+const appleIdPassword = '@keychain:Terrarium'; // add to keychain with below command
+// security add-generic-password -a "<APPLDE_DEV_ID_HERE>" -s Terrarium -w "<APP_SPECIFIC_PASSWORD_HERE>"
+
 const appleId = 'Jason Stallings (75EGRT7282)';
 const appBundleId = 'com.terrarium.app';
 
@@ -12,7 +14,9 @@ glob(`${__dirname}/../dist/**/Terrarium.app`, {}, (err, appPaths) => {
     try {
       console.log('Notarizing: ', appPath);
       await notarize({
+        tool: 'notarytool',
         appBundleId,
+        teamId: 'terra.money',
         appPath,
         appleId,
         appleIdPassword,
