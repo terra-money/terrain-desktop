@@ -26,9 +26,9 @@
   "build": {
     "appId": "com.terrarium.app",
     "productName": "Terrarium",
-    "directories":{
-      "buildResources":"assets"
-  },
+    "directories": {
+      "buildResources": "assets"
+    },
     "files": [
       "build/**/*",
       "assets/**/*"
@@ -78,6 +78,7 @@
     "wait-on": "^6.0.1"
   },
   "devDependencies": {
+    "@electron/notarize": "^1.2.3",
     "@types/lodash": "^4.14.186",
     "@types/node": "^16.11.62",
     "@types/react": "^17.0.50",
