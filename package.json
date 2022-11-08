@@ -1,6 +1,6 @@
 {
   "name": "terrarium",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "homepage": "./",
   "author": "@terra-money",
   "main": "public/electron.js",
@@ -21,7 +21,7 @@
     "watch:css": "TAILWIND_MODE=watch tailwind -c config/tailwind.config.js -i public/styles.css -o src/index.css --watch",
     "make": "npm run build:css && npm run build && electron-builder --dir",
     "make:x64": "npm run make -- --arch x64",
-    "create-installers": "node ./scripts/create-dmgs.js"
+    "create-installers": "node ./scripts/create-installers.js"
   },
   "build": {
     "appId": "com.terrarium.app",
