@@ -42,7 +42,7 @@ const TransactionView = ({
       >
         <div className="flex">
           <a
-            className="pointer-events-none flex items-center justify-around mr-5 text-terra-link hover:underline"
+            className="pointer-events-none flex items-center justify-around text-terra-link hover:underline"
             target="_blank"
             href={txHref}
             rel="noreferrer"
@@ -51,8 +51,8 @@ const TransactionView = ({
             <div>{truncate(txhash, [5, 5])}</div>
             <ExternalLinkIcon className="fill-terra-link mx-1" />
           </a>
-          <TextCopyButton text={txhash} />
         </div>
+        <TextCopyButton text={txhash} classes="flex" />
         <div>{data.msg['@type'].split('.').slice(-1)}</div>
         <div>{height}</div>
         <div className="flex items-center">

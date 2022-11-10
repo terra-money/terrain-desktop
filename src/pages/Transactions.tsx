@@ -7,7 +7,7 @@ export default function TransactionsPage() {
   const { get: getTxs, set: setTxs } = useTxs();
   const txs = getTxs();
 
-  const gridTemplateColumns = '200px minmax(275px, 1fr) 100px minmax(100px, 1fr) 50px';
+  const gridTemplateColumns = '150px 50px minmax(275px, 1fr) 100px minmax(100px, 1fr) 50px';
 
   if (txs.length === 0) {
     return (
@@ -31,6 +31,7 @@ export default function TransactionsPage() {
         style={{ gridTemplateColumns }}
       >
         <div>Hash</div>
+        <div />
         <div>Type</div>
         <div>Block</div>
         <div>Gas Used</div>
