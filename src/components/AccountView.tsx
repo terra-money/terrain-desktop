@@ -51,8 +51,8 @@ function AccountView({
           <p>{accAddress}</p>
           <ExternalLinkIcon className="fill-terra-link mx-1" />
         </a>
-        <TextCopyButton text={accAddress} />
       </div>
+      <TextCopyButton text={accAddress} classes="flex" />
       <p>{nFormatter(balance)}</p>
       <div className="flex justify-end">
         <button
