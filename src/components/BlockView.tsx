@@ -17,9 +17,6 @@ const BlockView = (props: {
   const { result_begin_block, hasEventsOpenInUi } = props.data;
   const { gridTemplateColumns } = props;
   const blockHref = `${REACT_APP_FINDER_URL}/blocks/${height}`;
-
-  const [open, setOpen] = React.useState(hasEventsOpenInUi);
-
   const txInfos = useGetTxFromHeight(parseInt(height, 10));
   const dateString = `${new Date(time).toDateString()} | ${new Date(
     time,
@@ -31,7 +28,6 @@ const BlockView = (props: {
   });
 
   const toggleBlocksRow = () => {
-    setOpen(!open);
     props.onToggleEventDetails(props.index);
   };
 
@@ -61,12 +57,12 @@ const BlockView = (props: {
         <div>{gasUsed}</div>
         <div className="flex justify-end">
           <KeyboardArrowDownIcon
-            className={`cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
+            className={`cursor-pointer ${hasEventsOpenInUi ? 'rotate-180' : 'rotate-0'}`}
           />
         </div>
       </div>
       <div className="bg-white">
-        <Collapse in={open} timeout="auto" unmountOnExit className="px-20 py-7">
+        <Collapse in={hasEventsOpenInUi} timeout="auto" unmountOnExit className="px-20 py-7">
           <EventInfo
             title="Begin block event"
             events={result_begin_block.events}
