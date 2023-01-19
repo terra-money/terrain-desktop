@@ -84,8 +84,7 @@ const ContractMethodsView = ({
             onSubmit={handleSubmit(schema.msgType, index)}
           >
             <button
-              className={`${schema.msgType === 'query' ? 'bg-gray-400 border-gray-500 hover:bg-gray-700' : 'bg-blue-500 border-blue-700 hover:bg-terra-dark-blue'} 
-              text-white font-bold py-2 px-4 border rounded uppercase`}
+              className="bg-blue-500 border-blue-700 hover:bg-terra-dark-blue text-white font-bold py-2 px-4 border rounded uppercase"
               type="submit"
             >
               {schema.msgType}
