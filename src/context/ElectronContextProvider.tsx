@@ -27,7 +27,7 @@ export const StateListeners = () => {
   useEffect(() => {
     ipcRenderer.on(NEW_BLOCK, (_: any, block: TerrariumBlockInfo) => {
       blockState.latestHeight.set(Number(block.block.header.height));
-      blockState.blocks.set((p) => [block, ...p]);
+      blockState.blocks.set((p) => [...p, block]);
     });
 
     ipcRenderer.on(TX, (_: any, tx: TerrariumTx) => {

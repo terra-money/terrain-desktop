@@ -45,6 +45,7 @@ export default function BlocksPage() {
         <div />
       </div>
       <Virtuoso
+        followOutput
         className="flex flex-col w-full scrollbar"
         style={{ overflow: 'overlay' }}
         data={filter ? getFilteredBlocks() : data.blocks}
