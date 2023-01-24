@@ -104,9 +104,7 @@ const subscribeToLocalTerraEvents = async (win) => {
 
   localTerraProcess.stdout.on('data', async (data) => {
     try {
-      if (win && win.isDestroyed()) {
-        return;
-      }
+      if (win && win.isDestroyed && win.isDestroyed()) { return; }
       win.webContents.send(NEW_LOG, data.toString());
 
       if (!globals.localTerra.isRunning) {
@@ -141,9 +139,7 @@ const subscribeToLocalTerraEvents = async (win) => {
 
   localTerraProcess.on('close', () => {
     try {
-      if (win && win.isDestroyed()) {
-        return;
-      }
+      if (win && win.isDestroyed && win.isDestroyed()) { return; }
       globals.localTerra.isRunning = false;
       win.webContents.send(LOCAL_TERRA_IS_RUNNING, false);
     } catch (err) {

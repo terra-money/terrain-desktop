@@ -70,7 +70,6 @@ async function init() {
   win.loadURL(APP_URL);
 
   if (isDev) {
-    await session.defaultSession.loadExtension(path.resolve('extensions', 'redux'));
     win.webContents.openDevTools();
   }
 

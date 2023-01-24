@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import { useForm, FieldValues } from 'react-hook-form';
 import {
@@ -15,7 +14,6 @@ import { PROMPT_USER_RESTART, RESET_APP } from '../../../public/constants';
 import { ReactComponent as Close } from '../../../assets/icons/close.svg';
 
 export default function SettingsModal({ handleToggleClose }: { handleToggleClose: Function }) {
-  const navigate = useNavigate();
   const { register, handleSubmit, resetField } = useForm();
   const [openAtLogin, setOpenAtLogin] = useState(false);
   const [liteMode, setLiteMode] = useState(false);
@@ -39,7 +37,8 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
     ) {
       ipcRenderer.invoke(PROMPT_USER_RESTART);
     }
-    navigate('/');
+
+    handleToggleClose();
   };
 
   useEffect(() => {
@@ -50,6 +49,7 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
         window.store.getLocalTerraPath(),
         window.store.getBlocktime(),
       ]);
+
       setOpenAtLogin(currentOpenAtLogin);
       setLiteMode(currentLiteMode);
       setLocalTerraPath(currentLocalTerraPath);
