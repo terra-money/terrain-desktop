@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { useBlocks } from '../hooks/terra';
@@ -6,18 +6,19 @@ import { BlockView } from '../components';
 
 export default function BlocksPage() {
   const [filter, setFilter] = React.useState(false);
-  const { get: getBlocks, set: setBlocks } = useBlocks();
-  const data = getBlocks();
+  const state = useBlocks();
+  const data = state.get();
   const gridTemplateColumns = '120px minmax(125px, 1fr) minmax(25px, 0.5fr) minmax(25px, 0.5fr) 75px';
 
   const handleToggleFilter = () => setFilter(!filter);
 
   const getFilteredBlocks = () => data.blocks.filter(({ block } : {block: any}) => block.data.txs!.length > 0);
 
-  const toggleEventDetails = (index: number) => {
-    data.blocks[index].hasEventsOpenInUi = !data.blocks[index].hasEventsOpenInUi;
-    setBlocks(data);
-  };
+  const toggleEventDetails = useCallback((index: number) => {
+    state.blocks[index].merge({
+      hasEventsOpenInUi: !data.blocks[index].hasEventsOpenInUi,
+    });
+  }, [state]);
 
   return (
     <div className="flex flex-col w-full">
@@ -44,6 +45,7 @@ export default function BlocksPage() {
         <div />
       </div>
       <Virtuoso
+        followOutput
         className="flex flex-col w-full scrollbar"
         style={{ overflow: 'overlay' }}
         data={filter ? getFilteredBlocks() : data.blocks}
