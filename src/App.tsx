@@ -249,7 +249,7 @@ const App = () => {
                     `}
                   />
                   <p className="text-terra-text text-xs font-normal">
-                    Local Terra
+                    LocalTerra
                   </p>
                 </button>
               </li>
