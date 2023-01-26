@@ -151,6 +151,7 @@ const App = () => {
                 return (
                   <div className="absolute bottom-0 left-0 w-full p-5">
                     <button
+                      id={`menuitem-${menuItem.name}`}
                       key={menuItem.name}
                       type="button"
                       onClick={() => handleToggleOpen(

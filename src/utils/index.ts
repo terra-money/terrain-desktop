@@ -105,7 +105,7 @@ export const tourProviderProps = {
       content: 'View incoming logs from LocalTerra.',
     },
     {
-      selector: '.Settings',
+      selector: '#menuitem-Settings',
       content:
         'Manage your settings here. Like open at login, your LocalTerra path, and your desired block time.',
     },

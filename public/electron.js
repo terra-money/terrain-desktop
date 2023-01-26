@@ -1,6 +1,6 @@
 const path = require('path');
 const {
-  app, shell, BrowserWindow, Menu, Tray, MenuItem, session,
+  app, shell, BrowserWindow, Menu, Tray, MenuItem,
 } = require('electron');
 const isDev = require('electron-is-dev');
 const defaultMenu = require('electron-default-menu');
