@@ -131,14 +131,15 @@ async function init() {
   });
 
   win.webContents.once('dom-ready', async () => {
+    win.show();
+    win.focus();
+
     const localTerraPath = await store.getLocalTerraPath();
     if (localTerraPath) {
       win.webContents.send(LOCAL_TERRA_PATH_CONFIGURED, true);
       await startLocalTerra(localTerraPath);
       globals.localTerra.process = await subscribeToLocalTerraEvents(win);
     }
-    win.show();
-    win.focus();
   });
 }
 
