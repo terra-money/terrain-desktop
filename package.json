@@ -31,7 +31,10 @@
     },
     "files": [
       "build/**/*",
-      "assets/**/*"
+      "assets/**/*",
+      "!node_modules/@mui/**/*",
+      "!node_modules/@material-ui/**/*",
+      "!node_modules/ace-builds/**/*"
     ]
   },
   "config-overrides-path": "config/config-overrides.js",
@@ -118,7 +121,7 @@
       "packagerConfig": {
         "icon": "./src/assets/icons/icon.icns",
         "name": "Terrarium",
-        "osxSign": {} 
+        "osxSign": {}
       },
       "makers": [
         {
