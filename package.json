@@ -20,7 +20,7 @@
     "build:css": "tailwind -c config/tailwind.config.js -i public/styles.css -o src/index.css --minify",
     "watch:css": "TAILWIND_MODE=watch tailwind -c config/tailwind.config.js -i public/styles.css -o src/index.css --watch",
     "make": "npm run build:css && npm run build && electron-builder --dir",
-    "make:x64": "npm run make -- --arch x64",
+    "make:x64": "npm run make -- --x64",
     "create-installers": "node ./scripts/create-installers.js"
   },
   "build": {
