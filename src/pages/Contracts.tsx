@@ -74,7 +74,8 @@ function ContractsPage() {
           <button
             type="button"
             onClick={handleNewContractsImport}
-            className="main-button tour__add-contracts flex items-center h-8 gap-2 px-5 rounded-3xl text-white font-medium text-sm bg-terra-button-primary hover:bg-[#0f40b9]"
+            className="main-button tour__add-contracts
+            flex items-center h-8 gap-2 px-5 rounded-3xl text-white font-medium text-sm bg-terra-button-secondary hover:bg-[#0f40b9]"
           >
             <FaPlus className="flex-none w-2.5 text-white" />
             Add Contracts

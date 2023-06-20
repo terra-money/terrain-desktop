@@ -64,7 +64,7 @@ function AccountView({
             />,
           )}
         >
-          <KeyIcon className="h-6 w-6 fill-terra-text hover:fill-terra-button-primary" />
+          <KeyIcon className="h-6 w-6 fill-terra-text hover:fill-terra-button-secondary" />
         </button>
       </div>
     </div>

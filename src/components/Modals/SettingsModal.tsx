@@ -76,7 +76,7 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
             <button type="button" className="ml-auto">
               <Close
                 onClick={() => handleToggleClose()}
-                className="w-6 h-6 fill-terra-text hover:fill-terra-navy"
+                className="w-6 h-6 fill-terra-text hover:fill-terra-main-bg"
               />
               <span className="sr-only">Close modal</span>
             </button>
@@ -185,7 +185,7 @@ export default function SettingsModal({ handleToggleClose }: { handleToggleClose
               data-modal-toggle="top-left-modal"
               type="button"
               onClick={() => handleSubmit(saveSettings)()}
-              className="bg-terra-button-primary text-white text-sm font-medium ml-auto px-14 py-3.5 rounded-3xl
+              className="bg-terra-button-secondary text-white text-sm font-medium ml-auto px-14 py-3.5 rounded-3xl
               hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
             >
               Save

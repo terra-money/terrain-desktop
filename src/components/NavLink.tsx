@@ -9,7 +9,7 @@ const NavLink = (props: { to: any, children: any, className: string }) => {
       {...props}
       className={`${props.className} flex ${
         match
-          ? 'selected text-white bg-terra-button-primary fill-white'
+          ? 'selected text-white bg-terra-button-secondary fill-white'
           : 'text-terra-text-grey fill-terra-text-grey hover:bg-[#0f40b9] hover:text-white hover:fill-white'
       } space-x-1 items-center rounded mt-2`}
     />

@@ -20,7 +20,7 @@ function KeyViewModal({
           <button type="button" className="ml-auto">
             <Close
               onClick={handleClose}
-              className="w-6 h-6 fill-terra-text hover:fill-terra-navy"
+              className="w-6 h-6 fill-terra-text hover:fill-terra-main-bg"
             />
             <span className="sr-only">Close modal</span>
           </button>

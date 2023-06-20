@@ -34,6 +34,8 @@ app.setAboutPanelOptions({
   applicationVersion: pkg.version,
 });
 
+store.clear();
+
 async function init() {
   const win = new BrowserWindow({
     width: Number(BROWSER_WINDOW_WIDTH),

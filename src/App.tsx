@@ -13,8 +13,7 @@ import {
   useTerraBlockUpdate, useGetLatestHeight, useLocalTerraPathConfigured, useLocalTerraStarted,
 } from './hooks/terra';
 import { parseSearchUrl } from './utils';
-import { ReactComponent as TerraLogo } from '../assets/terra-logo.svg';
-import TerrariumLettersImg from '../assets/TerrariumLettersImg.png';
+import { ReactComponent as Logo } from '../assets/logo.svg';
 import useAppRoutes from './hooks/routes';
 
 const App = () => {
@@ -94,38 +93,19 @@ const App = () => {
     <div className="flex flex-col w-screen h-screen bg-terra-background-gray">
       <div className="flex">
         <div
-          className={`left-nav bg-terra-navy h-screen p-5 pt-7 ${
-            open ? 'w-72 min-w-[260px]' : 'w-20 min-w-20'
+          className={`left-nav bg-terra-main-bg h-screen p-5 pt-7 ${
+            open ? 'w-72 min-w-[260px]' : 'w-20 min-w-50'
           } duration-300 relative`}
         >
           <BsArrowLeftShort
-            className={`bg-white text-terra-navy text-3xl rounded-full absolute -right-4 top-8 border border-terra-navy cursor-pointer z-50 ${
+            className={`bg-white text-terra-main-bg text-3xl rounded-full absolute -right-4 top-8 border border-terra-main-bg cursor-pointer z-50 ${
               !open && 'rotate-180'
             }`}
             onClick={() => setOpen(!open)}
           />
-          <div className="inline-flex items-center">
-            <div className="w-10 aspect-square mr-2">
-              <TerraLogo
-                className={`object-contain cursor-pointer block duration-500 ${
-                  open && 'rotate-[360deg]'
-                }`}
-              />
-            </div>
-            <h1
-              className={`text-white origin-left font-medium text-2xl ${
-                !open && 'scale-0'
-              }`}
-            >
-              <img
-                src={TerrariumLettersImg}
-                alt="name"
-                className="max-w-none"
-              />
-            </h1>
-          </div>
+          {open && <Logo className="w-40" />}
           <div
-            className={`tour__search flex items-center mt-6 bg-terra-darknavy border border-terra-text-muted rounded-lg py-3 ${
+            className={`tour__search flex items-center bg-terra-button-primary border border-terra-text-muted rounded-lg py-3 ${
               !open ? 'px-2.5' : 'px-4'
             }`}
           >
@@ -159,7 +139,7 @@ const App = () => {
                           handleToggleClose={handleToggleClose}
                         />,
                       )}
-                      className={`flex bg-terra-darknavy h-[52px] w-full space-x-1 items-center rounded-md hover:border-2 hover:border-terra-text-muted
+                      className={`flex bg-terra-button-primary h-[52px] w-full space-x-1 items-center rounded-md hover:border-2 hover:border-terra-text-muted
                       ${
                         open
                           ? 'px-3 hover:px-[calc(0.75rem-2px)]'
@@ -209,9 +189,9 @@ const App = () => {
         </div>
 
         <div className="relative flex-auto w-full h-screen overflow-hidden">
-          <header className="absolute w-full bg-white z-40 flex justify-between p-6 pl-12 border-b border-[#CFD8EA] shadow-light-bottom">
+          <header className="absolute w-full bg-terra-button-primary z-40 flex justify-between p-6 pl-12 border-b border-[#CFD8EA] shadow-light-bottom">
             <ul className="flex flex-row w-full gap-1 lg:gap-10 xl:gap-20 items-center font-medium">
-              <li className="tour__current-block flex-col px-2 font-medium text-xs text-terra-navy whitespace-nowrap">
+              <li className="tour__current-block flex-col px-2 font-medium text-xs text-terra-main-bg whitespace-nowrap">
                 <p className="text-terra-text-muted md:text-md">
                   Current Block
                 </p>
@@ -219,13 +199,13 @@ const App = () => {
                   {latestHeight}
                 </p>
               </li>
-              <li className="flex-col px-2 font-medium text-xs text-terra-navy whitespace-nowrap">
+              <li className="flex-col px-2 font-medium text-xs text-terra-main-bg whitespace-nowrap">
                 <p className="text-terra-text-muted md:text-md">Network ID</p>
                 <p className="text-lg md:leading-7 text-terra-text">
                   {terra.config.chainID}
                 </p>
               </li>
-              <li className="flex-col px-2 font-medium text-xs text-terra-navy whitespace-nowrap">
+              <li className="flex-col px-2 font-medium text-xs text-terra-main-bg whitespace-nowrap">
                 <p className="text-terra-text-muted md:text-md">RPC Server</p>
                 <p className="text-lg md:leading-7 text-terra-text">
                   {terra.config.URL}
@@ -236,7 +216,7 @@ const App = () => {
                   type="button"
                   onClick={debouncedToggleLocalTerra}
                   className={`${isLoading ? 'cursor-pointer' : ''}
-                  tour__toggle-terra flex items-center justify-center py-1.5 px-3 space-x-1.5 rounded bg-terra-background-gray border-2 border-terra-button-secondary`}
+                  tour__toggle-terra flex items-center justify-center py-1.5 px-3 space-x-1.5 rounded bg-terra-background-gray border-2 border-terra-button-primary`}
                 >
                   <BsCircleFill
                     className={`w-[8px]
