@@ -103,15 +103,15 @@ const App = () => {
             }`}
             onClick={() => setOpen(!open)}
           />
-          {open && <Logo className="w-40" />}
+          <Logo className={`w-40 ${!open && 'invisible'}`} />
           <div
-            className={`tour__search flex items-center bg-terra-button-primary border border-terra-text-muted rounded-lg py-3 ${
+            className={`tour__search flex items-center bg-terra-button-secondary border border-terra-text-muted rounded-lg py-3 ${
               !open ? 'px-2.5' : 'px-4'
             }`}
           >
             <BsSearch
               onClick={() => setOpen(true)}
-              className={`text-white text-lg block cursor-pointer ${
+              className={`text-terra-text-muted text-lg block cursor-pointer ${
                 open && 'mr-2 float-left'
               }`}
             />
@@ -119,8 +119,8 @@ const App = () => {
               onChange={handleSearchInput}
               onKeyDown={handleSearch}
               type="search"
-              placeholder="Txs, blocks, addresses..."
-              className={`text-sm bg-transparent w-full text-white placeholder:text-terra-text-muted focus:outline-none duration-300 ${
+              placeholder="Search"
+              className={`text-sm w-full bg-terra-main-bg text-terra-text-muted placeholder:text-terra-text-muted focus:outline-none duration-300 ${
                 !open && 'hidden'
               }`}
             />
